@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.a09_damage_application.data.Damage
+import com.example.a09_damage_application.data.TypeOfDamage
 import com.example.a09_damage_application.ui.theme.BoxRounded
 
 
@@ -38,7 +39,8 @@ class DamageCreationComponent {
     fun DamageCreationComposable(){
 
         var selectedTypeOfDamage = remember{
-            mutableStateOf("")
+            mutableStateOf(TypeOfDamage.NOTHING_SELECTED) // selectedTypeOfDamage wird mit einem
+        // leeren String initalisiert
 
         }
         TestTitleComponent().TestTitleComposable("Hallo World")
@@ -111,7 +113,7 @@ class DamageCreationComponent {
                         BoxRounded().boxRounded
                     ){
                         Column {
-                            Text(text = ""+it.typeOfDemage
+                            Text(text = ""+it.typeOfDemage.description
                                 //+ it.number,
                                 ,fontSize = 18.sp)
                             Text(text = ""+it.descriptionTitle
