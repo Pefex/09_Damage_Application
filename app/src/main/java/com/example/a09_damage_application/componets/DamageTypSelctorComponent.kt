@@ -30,7 +30,8 @@ class DamageTypSelctorComponent {
     fun DamageTypSelctorComposable(selectedTypeOfDamage: MutableState<String>){
 
         var rowColor by remember { mutableStateOf(Color(55, 87, 65,66)) }
-        //rowColor = Color(55, 87, 65,66)
+        //rowColor = Color(55, 87, 65,66) // rember Aktualisierung des Sreens bei
+        // Änderung eines abhängigen Wertes
 
         when(selectedTypeOfDamage.value){
             "Optischer Mangel" -> rowColor = Color(55, 87, 65,66)
