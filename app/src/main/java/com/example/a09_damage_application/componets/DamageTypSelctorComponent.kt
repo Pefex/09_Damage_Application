@@ -22,33 +22,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.a09_damage_application.MainActivity
-import com.example.a09_damage_application.data.TYPE_OF_DAMAGE
+import com.example.a09_damage_application.data.TypeOfDamage
 
 class DamageTypSelctorComponent {
     @Composable
-    fun DamageTypSelctorComposable(selectedTypeOfDamage: MutableState<String>){
+    fun DamageTypSelctorComposable(selectedTypeOfDamage: MutableState<TypeOfDamage>){
 
         var rowColor by remember { mutableStateOf(Color(55, 87, 65,66)) }
-        //rowColor = Color(55, 87, 65,66)
+        //rowColor = Color(55, 87, 65,66) // rember Aktualisierung des Sreens bei
+        // Änderung eines abhängigen Wertes
 
         when(selectedTypeOfDamage.value){
-            "Optischer Mangel" -> rowColor = Color(55, 87, 65,66)
-            "Gefahr für Bausubstanz" -> rowColor = Color(55, 187, 65,66)
-            "Gefahr in Verzug" -> rowColor = Color(250, 0, 0,66)
+            TypeOfDamage.OPTIC -> rowColor = Color(55, 87, 65,66)
+            TypeOfDamage.DANGER_TO_SUBSTANCE -> rowColor = Color(55, 187, 65,66)
+            TypeOfDamage.IMMINENT_DANGER-> rowColor = Color(250, 0, 0,66)
+            TypeOfDamage.NOTHING_SELECTED -> Color(55, 87, 65,66)
         }
-/*
-        if (selectedTypeOfDamage.value == "Optischer Mangel"){
-            rowColor = Color(55, 87, 65,66)
-        }
-        if (selectedTypeOfDamage.value == "Gefahr für Bausubstanz"){
-            rowColor = Color(55, 187, 65,66)
-        }
-        else{
-            if (selectedTypeOfDamage.value == "Gefahr in Verzug"){
-                rowColor = Color(250, 0, 0,66)
-            }
-        }*/
 
         Column (modifier = Modifier
             .height(70.dp)
@@ -74,7 +63,8 @@ class DamageTypSelctorComponent {
                     .fillMaxWidth(),
                     contentAlignment = Alignment.Center)
                 {
-                    Text(text = selectedTypeOfDamage.value)
+                    Text(text = selectedTypeOfDamage.value.description)  // value brauche ich weil
+                    // selectedTypeOfDamage ein "MutableState" ist.
 
                 }
 
@@ -82,19 +72,20 @@ class DamageTypSelctorComponent {
                     .weight(1f)
                     .fillMaxWidth()){
                     Row {
-                        RadioButton(selected = selectedTypeOfDamage.value == TYPE_OF_DAMAGE.Type_Of_Demage.visualDefect,
-                            onClick = {selectedTypeOfDamage.value = TYPE_OF_DAMAGE.Type_Of_Demage.visualDefect
+                        RadioButton(selected = selectedTypeOfDamage.value == TypeOfDamage.OPTIC,//Hier
+                            // wird nicht der Text des Schadens, sondern nur der Schadestyp verglichen
+                            onClick = {selectedTypeOfDamage.value = TypeOfDamage.OPTIC
                                 },
                             colors = RadioButtonDefaults.colors(Color.Gray))
                         Spacer(modifier = Modifier.size(10.dp))
 
-                        RadioButton(selected = selectedTypeOfDamage.value == TYPE_OF_DAMAGE.Type_Of_Demage.dangerToTheBuildingFabric,
-                            onClick = {selectedTypeOfDamage.value = TYPE_OF_DAMAGE.Type_Of_Demage.dangerToTheBuildingFabric},
+                        RadioButton(selected = selectedTypeOfDamage.value == TypeOfDamage.DANGER_TO_SUBSTANCE,
+                            onClick = {selectedTypeOfDamage.value = TypeOfDamage.DANGER_TO_SUBSTANCE},
                             colors = RadioButtonDefaults.colors(Color.Yellow))
                         Spacer(modifier = Modifier.size(10.dp))
 
-                        RadioButton(selected = selectedTypeOfDamage.value == TYPE_OF_DAMAGE.Type_Of_Demage.dangerInDelay,
-                            onClick = {selectedTypeOfDamage.value = TYPE_OF_DAMAGE.Type_Of_Demage.dangerInDelay},
+                        RadioButton(selected = selectedTypeOfDamage.value == TypeOfDamage.IMMINENT_DANGER,
+                            onClick = {selectedTypeOfDamage.value = TypeOfDamage.IMMINENT_DANGER},
                             colors = RadioButtonDefaults.colors(Color.Red))
                         Spacer(modifier = Modifier.size(10.dp))
 
