@@ -45,11 +45,11 @@ import com.example.a09_damage_application.ui.theme._09_Damage_ApplicationTheme
 
 class MainActivity : ComponentActivity() {
 
-    object Type_Of_Demage {
+    /*object Type_Of_Demage {
         const val visualDefect = "Optischer Mangel"
         const val dangerToTheBuildingFabric = "Gefahr für Bausubstanz"
         const val dangerInDelay = "Gefahr in Verzug"
-    }
+    }*/
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
