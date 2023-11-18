@@ -1,6 +1,10 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    //id 'com.google.devtools.ksp' version("1.8.0-1.8.0")
+    //id("com.google.devtools.ksp")
+    id("com.google.devtools.ksp") version "1.9.0-1.0.12"
+
 }
 
 android {
@@ -66,4 +70,9 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    implementation("androidx.room:room-runtime:2.6.0") // Laufzeichtumgebung für room
+    ksp("androidx.room:room-compiler:2.6.0")
+
+    implementation("androidx.room:room-ktx:2.6.0")
 }
