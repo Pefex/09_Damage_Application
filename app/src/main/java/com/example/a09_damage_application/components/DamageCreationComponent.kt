@@ -1,4 +1,4 @@
-package com.example.a09_damage_application.componets
+package com.example.a09_damage_application.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,14 +30,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.a09_damage_application.data.Damage
+import com.example.a09_damage_application.data.DamageDao
+import com.example.a09_damage_application.data.DamageEvent
+import com.example.a09_damage_application.data.DamageState
 import com.example.a09_damage_application.data.TypeOfDamage
 import com.example.a09_damage_application.ui.theme.BoxRounded
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 
 class DamageCreationComponent {
     @ExperimentalMaterial3Api
     @Composable
-    fun DamageCreationComposable(){
+    fun DamageCreationComposable(dao: DamageDao){
+
+        val coroutineScope = rememberCoroutineScope()
 
         var selectedTypeOfDamage = remember{
             mutableStateOf(TypeOfDamage.NOTHING_SELECTED) // selectedTypeOfDamage wird mit einem
@@ -44,7 +58,7 @@ class DamageCreationComponent {
 
         }
         TestTitleComponent().TestTitleComposable("Hallo World")
-        DamageTypSelctorComponent().DamageTypSelctorComposable(selectedTypeOfDamage)
+        DamageTypSelectorComponent().DamageTypSelctorComposable(selectedTypeOfDamage)
 
         //     Radio Button
 
@@ -58,10 +72,31 @@ class DamageCreationComponent {
             mutableStateOf("")
         }
 
+        var _damageListFlow = remember {
+            dao.getDamagesOrderedByTitle().stateIn(coroutineScope, SharingStarted.WhileSubscribed(), emptyList())
+        }
 
-        //=== to handle onclick to add to list of Lazycolumn
-        var damageList = remember {
-            mutableStateListOf<Damage>() // Hier kann man auch schon Einträge übergeben.
+        val _state = MutableStateFlow(DamageState())
+        val state = remember {
+            combine(_state, _damageListFlow) {state, damages ->
+                state.copy(
+                    damages = damages
+                )
+            }.stateIn(coroutineScope, SharingStarted.WhileSubscribed(5000), DamageState())
+        }
+
+
+        fun onEvent(event: DamageEvent){
+            when(event){
+                is DamageEvent.DeleteDamage -> {
+                    coroutineScope.launch { dao.deleteDamage(event.damage) }
+                }
+                is DamageEvent.SaveDamage -> {
+                    coroutineScope.launch { dao.upsertDamage(event.damage) }
+                    descriptionTitleInput = "";
+                    descriptionInput = "";
+                }
+            }
         }
 
 
@@ -86,10 +121,20 @@ class DamageCreationComponent {
                 label = { Text("Mangelbeschreibung") },
             )
             //padding in button to get top margin from textfield to button
-            Button(onClick = { var d: Damage = Damage(selectedTypeOfDamage.value ,descriptionInput, descriptionTitleInput ); ;// Es wird ein neues Objekt der Klasse Damage erzeugt.
-                damageList.add(d);descriptionTitleInput = "" ;descriptionInput = ""}, modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp)) {
+            Button(
+                onClick = {
+                    var damageToAdd =
+                        Damage(
+                            typeOfDamage = selectedTypeOfDamage.value,
+                            description = descriptionInput,
+                            descriptionTitle = descriptionTitleInput
+                        ); ;// Es wird ein neues Objekt der Klasse Damage erzeugt.
+                    onEvent(DamageEvent.SaveDamage(damageToAdd))
+                }
+
+                , modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp)) {
                 Text(text = "Add to List", fontSize = 28.sp)
             }
 
@@ -101,19 +146,15 @@ class DamageCreationComponent {
                 .fillMaxWidth()
                 .background(Color(37, 150, 190, 150))){
                 LazyColumn(modifier = Modifier
-
                     .padding(1.5.dp)
                     //.border(2.dp, color = Color.Red)
                     .background(Color(37, 150, 190, 150), shape = RoundedCornerShape(5.dp))
-
-                ){ items(items=damageList) {
-
-
+                ){ items(items=state.value.damages) {
                     Box(
                         BoxRounded().boxRounded
                     ){
                         Column {
-                            Text(text = ""+it.typeOfDemage.description
+                            Text(text = ""+it.typeOfDamage.description
                                 //+ it.number,
                                 ,fontSize = 18.sp)
                             Text(text = ""+it.descriptionTitle

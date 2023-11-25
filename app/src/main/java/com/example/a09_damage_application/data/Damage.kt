@@ -1,14 +1,12 @@
 package com.example.a09_damage_application.data
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-class Damage (typeOfDemage: TypeOfDamage , descriptionTitle: String, description: String){
-    var typeOfDemage: TypeOfDamage = typeOfDemage
-    var descriptionTitle: String = descriptionTitle
-    var description: String = description
-
-
-    fun Get_description(): String {
-        return description
-    }
-
-
-}
+@Entity
+data class Damage (
+    @PrimaryKey(autoGenerate = true)
+    val id: Int? = null,
+    val typeOfDamage: TypeOfDamage,
+    val descriptionTitle: String,
+    val description: String
+)

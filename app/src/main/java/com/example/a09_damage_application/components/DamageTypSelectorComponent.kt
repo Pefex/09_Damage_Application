@@ -1,4 +1,4 @@
-package com.example.a09_damage_application.componets
+package com.example.a09_damage_application.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.a09_damage_application.data.TypeOfDamage
 
-class DamageTypSelctorComponent {
+class DamageTypSelectorComponent {
     @Composable
     fun DamageTypSelctorComposable(selectedTypeOfDamage: MutableState<TypeOfDamage>){
 

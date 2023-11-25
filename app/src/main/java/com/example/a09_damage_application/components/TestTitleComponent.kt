@@ -1,4 +1,4 @@
-package com.example.a09_damage_application.componets
+package com.example.a09_damage_application.components
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

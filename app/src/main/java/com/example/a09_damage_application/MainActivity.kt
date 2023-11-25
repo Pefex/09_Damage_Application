@@ -3,44 +3,20 @@ package com.example.a09_damage_application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.a09_damage_application.componets.DamageCreationComponent
-import com.example.a09_damage_application.data.Damage
+import androidx.room.Room
+import com.example.a09_damage_application.components.DamageCreationComponent
+import com.example.a09_damage_application.data.DamageDatabase
 import com.example.a09_damage_application.ui.theme._09_Damage_ApplicationTheme
 
 class MainActivity : ComponentActivity() {
@@ -50,6 +26,14 @@ class MainActivity : ComponentActivity() {
         const val dangerToTheBuildingFabric = "Gefahr für Bausubstanz"
         const val dangerInDelay = "Gefahr in Verzug"
     }*/
+
+    private val db by lazy {
+        Room.databaseBuilder(
+            applicationContext,
+            DamageDatabase::class.java,
+            "damages.db"
+        ).build()
+    }
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +46,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     //Greeting("Android")
-                    Mainscreen()
+                    Mainscreen(db)
                 }
             }
         }
@@ -71,7 +55,7 @@ class MainActivity : ComponentActivity() {
 
 @ExperimentalMaterial3Api
 @Composable
-fun Mainscreen(){
+fun Mainscreen(db: DamageDatabase) {
     Column (modifier = Modifier
         .fillMaxSize()
         .padding((10.dp)),
@@ -79,7 +63,7 @@ fun Mainscreen(){
         horizontalAlignment = Alignment.CenterHorizontally)
     {
         Radio_Buttons()
-        DamageCreationComponent().DamageCreationComposable()
+        DamageCreationComponent().DamageCreationComposable(db.dao)
     }
 }
 
