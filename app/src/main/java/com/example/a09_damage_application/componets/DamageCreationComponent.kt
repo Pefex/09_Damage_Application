@@ -38,6 +38,8 @@ class DamageCreationComponent {
     @Composable
     fun DamageCreationComposable(){
 
+
+
         var selectedTypeOfDamage = remember{
             mutableStateOf(TypeOfDamage.NOTHING_SELECTED) // selectedTypeOfDamage wird mit einem
         // leeren String initalisiert
@@ -86,7 +88,9 @@ class DamageCreationComponent {
                 label = { Text("Mangelbeschreibung") },
             )
             //padding in button to get top margin from textfield to button
-            Button(onClick = { var d: Damage = Damage(selectedTypeOfDamage.value ,descriptionInput, descriptionTitleInput ); ;// Es wird ein neues Objekt der Klasse Damage erzeugt.
+            Button(onClick = {
+
+                var d: Damage = Damage(selectedTypeOfDamage.value ,descriptionInput, descriptionTitleInput ); ;// Es wird ein neues Objekt der Klasse Damage erzeugt.
                 damageList.add(d);descriptionTitleInput = "" ;descriptionInput = ""}, modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)) {
