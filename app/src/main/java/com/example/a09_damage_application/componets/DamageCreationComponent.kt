@@ -21,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,16 +29,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.a09_damage_application.componets.events.DamageEvent
 import com.example.a09_damage_application.data.entities.Damage
 import com.example.a09_damage_application.data.TypeOfDamage
 import com.example.a09_damage_application.data.interfaces.DamageDao
 import com.example.a09_damage_application.ui.theme.BoxRounded
+import kotlinx.coroutines.launch
 
 
 class DamageCreationComponent {
     @ExperimentalMaterial3Api
     @Composable
     fun DamageCreationComposable(dao: DamageDao){
+
+        val coroutineScope = rememberCoroutineScope()
 
         var typeOfDamageInput = remember{
             mutableStateOf(TypeOfDamage.NOTHING_SELECTED) // selectedTypeOfDamage wird mit einem
@@ -63,6 +68,16 @@ class DamageCreationComponent {
         //=== to handle onclick to add to list of Lazycolumn
         var damageList = remember {
             mutableStateListOf<Damage>() // Hier kann man auch schon Einträge übergeben.
+        }
+
+        fun onEvent(event: DamageEvent){
+            when(event){
+                is DamageEvent.SaveDamage -> {
+                    coroutineScope.launch{ dao.upsertDamage(event.damage) }
+                }
+
+                else -> {}
+            }
         }
 
 
@@ -93,6 +108,7 @@ class DamageCreationComponent {
                     description = descriptionInput,
                     descriptionTitle = descriptionTitleInput
                 ); ;// Es wird ein neues Objekt der Klasse Damage erzeugt.
+                onEvent(DamageEvent.SaveDamage(d))
                 damageList.add(d);descriptionTitleInput = "" ;descriptionInput = ""}, modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)) {
