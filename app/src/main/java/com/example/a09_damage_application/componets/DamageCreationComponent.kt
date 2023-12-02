@@ -28,23 +28,24 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.a09_damage_application.data.Damage
+import com.example.a09_damage_application.data.entities.Damage
 import com.example.a09_damage_application.data.TypeOfDamage
+import com.example.a09_damage_application.data.interfaces.DamageDao
 import com.example.a09_damage_application.ui.theme.BoxRounded
 
 
 class DamageCreationComponent {
     @ExperimentalMaterial3Api
     @Composable
-    fun DamageCreationComposable(){
+    fun DamageCreationComposable(dao: DamageDao){
 
-        var selectedTypeOfDamage = remember{
+        var typeOfDamageInput = remember{
             mutableStateOf(TypeOfDamage.NOTHING_SELECTED) // selectedTypeOfDamage wird mit einem
         // leeren String initalisiert
 
         }
         TestTitleComponent().TestTitleComposable("Hallo World")
-        DamageTypSelctorComponent().DamageTypSelctorComposable(selectedTypeOfDamage)
+        DamageTypSelctorComponent().DamageTypSelctorComposable(typeOfDamageInput)
 
         //     Radio Button
 
@@ -86,7 +87,12 @@ class DamageCreationComponent {
                 label = { Text("Mangelbeschreibung") },
             )
             //padding in button to get top margin from textfield to button
-            Button(onClick = { var d: Damage = Damage(selectedTypeOfDamage.value ,descriptionInput, descriptionTitleInput ); ;// Es wird ein neues Objekt der Klasse Damage erzeugt.
+            Button(onClick = {
+                var d: Damage = Damage(
+                    typeOfDamage = typeOfDamageInput.value ,
+                    description = descriptionInput,
+                    descriptionTitle = descriptionTitleInput
+                ); ;// Es wird ein neues Objekt der Klasse Damage erzeugt.
                 damageList.add(d);descriptionTitleInput = "" ;descriptionInput = ""}, modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)) {
@@ -113,7 +119,7 @@ class DamageCreationComponent {
                         BoxRounded().boxRounded
                     ){
                         Column {
-                            Text(text = ""+it.typeOfDemage.description
+                            Text(text = ""+it.typeOfDamage.description
                                 //+ it.number,
                                 ,fontSize = 18.sp)
                             Text(text = ""+it.descriptionTitle
