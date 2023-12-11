@@ -1,4 +1,4 @@
-package com.example.a09_damage_application.data
+package com.example.a09_damage_application.data.enums
 
 enum class TypeOfDamage (val description: String){
     OPTIC("Optischer Mangel"),

@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,12 +18,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.a09_damage_application.componets.events.DamageEvent
 import com.example.a09_damage_application.data.entities.Damage
-import com.example.a09_damage_application.data.TypeOfDamage
+import com.example.a09_damage_application.data.enums.TypeOfDamage
 import com.example.a09_damage_application.data.interfaces.DamageDao
 import com.example.a09_damage_application.ui.theme.BoxRounded
 import kotlinx.coroutines.launch
@@ -83,19 +87,22 @@ class DamageCreationComponent {
 
         Column (modifier = Modifier
             .fillMaxSize()
-            .padding(20.dp),
+            .heightIn(100.dp)
+            .padding(2.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally){
             //Texteingabe für Titel
             OutlinedTextField(modifier = Modifier
+                .background(color = Color(255, 255, 255))
                 .border(3.dp, Color(37, 150, 190, 150), shape = RoundedCornerShape(5.dp))
                 .fillMaxWidth(), value = descriptionInput, onValueChange = {descriptionInput= it}, // it ist Platzhalter für das jeweilige Element.
                 label = { Text("Titel") },
             )
             //Texteingabe für Mangeltext
             OutlinedTextField( modifier = Modifier
-                .padding(top = 10.dp)
-                .fillMaxHeight(0.5f)
+                .padding(top = 1.dp)
+                //.fillMaxHeight(0.5f)
+                .height(60.dp)
                 .fillMaxWidth()
                 .border(3.dp, Color(37, 150, 190, 150), shape = RoundedCornerShape(5.dp)),
                 value = descriptionTitleInput, onValueChange = {descriptionTitleInput= it},
@@ -111,7 +118,7 @@ class DamageCreationComponent {
                 onEvent(DamageEvent.SaveDamage(d))
                 damageList.add(d);descriptionTitleInput = "" ;descriptionInput = ""}, modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp)) {
+                .padding(2.dp)) {
                 Text(text = "Add to List", fontSize = 28.sp)
             }
 
@@ -121,6 +128,7 @@ class DamageCreationComponent {
             Column (modifier = Modifier
                 .clip(RoundedCornerShape(5.dp))
                 .fillMaxWidth()
+                .height(80.dp)
                 .background(Color(37, 150, 190, 150))){
                 LazyColumn(modifier = Modifier
 
@@ -149,6 +157,14 @@ class DamageCreationComponent {
                 }
                 }
             }
+            var text by rememberSaveable { mutableStateOf("") }
+
+            TextField(
+                value = text,
+                onValueChange = { text = it },
+                label = { Text("Label") },
+                singleLine = true
+            )
         }
 
 

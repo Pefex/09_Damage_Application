@@ -3,6 +3,7 @@ package com.example.a09_damage_application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,8 +14,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.room.Room
+import com.example.a09_damage_application.componets.AddressCreationComponent
 import com.example.a09_damage_application.componets.DamageCreationComponent
 import com.example.a09_damage_application.data.DamageDatabase
 import com.example.a09_damage_application.ui.theme._09_Damage_ApplicationTheme
@@ -57,12 +60,14 @@ class MainActivity : ComponentActivity() {
 fun Mainscreen(db: DamageDatabase){
     Column (modifier = Modifier
         .fillMaxSize()
-        .padding((10.dp)),
+        .padding((10.dp))
+        .background(color = Color(251, 249, 241)),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally)
     {
         Radio_Buttons()
-        DamageCreationComponent().DamageCreationComposable(db.damageDao)
+        //DamageCreationComponent().DamageCreationComposable(db.damageDao)
+        AddressCreationComponent().AddressCreationComposable()
     }
 }
 
