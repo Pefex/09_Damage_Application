@@ -1,5 +1,8 @@
 package com.example.a09_damage_application.componets
 
+import android.content.ContentValues.TAG
+import android.util.Log
+import androidx.annotation.Nullable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -27,12 +30,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Observer
 import com.example.a09_damage_application.componets.events.DamageEvent
 import com.example.a09_damage_application.data.entities.Damage
 import com.example.a09_damage_application.data.enums.TypeOfDamage
@@ -74,12 +81,26 @@ class DamageCreationComponent {
             mutableStateListOf<Damage>() // Hier kann man auch schon Einträge übergeben.
         }
 
+        dao.getDamagesOrderedByTitle().observe(
+            LocalLifecycleOwner.current,
+            Observer { allDamages ->
+                damageList.clear()
+                damageList.addAll(allDamages)
+            })
+
+       // Log.d(TAG, "Schadensliste: " + damageList.toString())
+
+
+
+
         fun onEvent(event: DamageEvent){
             when(event){
                 is DamageEvent.SaveDamage -> {
                     coroutineScope.launch{ dao.upsertDamage(event.damage) }
                 }
-
+                is DamageEvent.DeleteDamage -> {
+                    coroutineScope.launch{ dao.deleteDamage(event.damage) }
+                }
                 else -> {}
             }
         }
@@ -100,7 +121,7 @@ class DamageCreationComponent {
             )
             //Texteingabe für Mangeltext
             OutlinedTextField( modifier = Modifier
-                .padding(top = 1.dp)
+                .padding(top = 10.dp)
                 //.fillMaxHeight(0.5f)
                 .height(60.dp)
                 .fillMaxWidth()
@@ -116,7 +137,8 @@ class DamageCreationComponent {
                     descriptionTitle = descriptionTitleInput
                 ); ;// Es wird ein neues Objekt der Klasse Damage erzeugt.
                 onEvent(DamageEvent.SaveDamage(d))
-                damageList.add(d);descriptionTitleInput = "" ;descriptionInput = ""}, modifier = Modifier
+               // Log.d(TAG, "Schadensliste: " + damageList.toString())
+                descriptionTitleInput = "" ;descriptionInput = ""}, modifier = Modifier
                 .fillMaxWidth()
                 .padding(2.dp)) {
                 Text(text = "Add to List", fontSize = 28.sp)
@@ -128,7 +150,7 @@ class DamageCreationComponent {
             Column (modifier = Modifier
                 .clip(RoundedCornerShape(5.dp))
                 .fillMaxWidth()
-                .height(80.dp)
+                //.height(80.dp)
                 .background(Color(37, 150, 190, 150))){
                 LazyColumn(modifier = Modifier
 
@@ -158,15 +180,6 @@ class DamageCreationComponent {
                 }
             }
             var text by rememberSaveable { mutableStateOf("") }
-
-            TextField(
-                value = text,
-                onValueChange = { text = it },
-                label = { Text("Label") },
-                singleLine = true
-            )
         }
-
-
     }
 }

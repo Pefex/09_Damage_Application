@@ -66,8 +66,8 @@ fun Mainscreen(db: DamageDatabase){
         horizontalAlignment = Alignment.CenterHorizontally)
     {
         Radio_Buttons()
-        //DamageCreationComponent().DamageCreationComposable(db.damageDao)
-        AddressCreationComponent().AddressCreationComposable()
+        DamageCreationComponent().DamageCreationComposable(db.damageDao)
+        //AddressCreationComponent().AddressCreationComposable()
     }
 }
 
