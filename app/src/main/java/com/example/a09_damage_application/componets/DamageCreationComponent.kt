@@ -81,8 +81,10 @@ class DamageCreationComponent {
             mutableStateListOf<Damage>() // Hier kann man auch schon Einträge übergeben.
         }
 
-        dao.getDamagesOrderedByTitle().observe(
-            LocalLifecycleOwner.current,
+        dao.getDamagesOrderedByTitle().observe( //Wenn sich Werte in der Liste ändern, dann wird
+            // die Liste gelöscht und neu befüllt.
+            LocalLifecycleOwner.current, //Es wird nur solange der aktuelle Lifecycle (Screen) läuft, beobachtet,
+            //ob sich die Einträge in der Schadenstabelle der Datenbank verändert haben.
             Observer { allDamages ->
                 damageList.clear()
                 damageList.addAll(allDamages)
@@ -116,7 +118,8 @@ class DamageCreationComponent {
             OutlinedTextField(modifier = Modifier
                 .background(color = Color(255, 255, 255))
                 .border(3.dp, Color(37, 150, 190, 150), shape = RoundedCornerShape(5.dp))
-                .fillMaxWidth(), value = descriptionInput, onValueChange = {descriptionInput= it}, // it ist Platzhalter für das jeweilige Element.
+                .fillMaxWidth(), value = descriptionInput,
+                onValueChange = {descriptionInput= it}, // it ist Platzhalter für das jeweilige Element.
                 label = { Text("Titel") },
             )
             //Texteingabe für Mangeltext
@@ -126,7 +129,8 @@ class DamageCreationComponent {
                 .height(60.dp)
                 .fillMaxWidth()
                 .border(3.dp, Color(37, 150, 190, 150), shape = RoundedCornerShape(5.dp)),
-                value = descriptionTitleInput, onValueChange = {descriptionTitleInput= it},
+                value = descriptionTitleInput,
+                onValueChange = {descriptionTitleInput= it},
                 label = { Text("Mangelbeschreibung") },
             )
             //padding in button to get top margin from textfield to button
@@ -137,12 +141,15 @@ class DamageCreationComponent {
                     descriptionTitle = descriptionTitleInput
                 ); ;// Es wird ein neues Objekt der Klasse Damage erzeugt.
                 onEvent(DamageEvent.SaveDamage(d))
-               // Log.d(TAG, "Schadensliste: " + damageList.toString())
-                descriptionTitleInput = "" ;descriptionInput = ""}, modifier = Modifier
+                //Log.d(TAG, "Addressliste: " + addressList.toString())
+                descriptionTitleInput = "" ;descriptionInput = ""}, modifier = Modifier  // Die
+                    // Texteingabefelder werden wieder auf null gesetzt.
                 .fillMaxWidth()
                 .padding(2.dp)) {
                 Text(text = "Add to List", fontSize = 28.sp)
             }
+
+
 
             //LazyColumn(){ items(items=damageList) { Text(text = ""+it.description + it.number, fontSize = 28.sp)}
             //}

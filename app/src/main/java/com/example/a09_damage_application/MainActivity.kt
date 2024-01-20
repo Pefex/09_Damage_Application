@@ -18,16 +18,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.room.Room
 import com.example.a09_damage_application.componets.AddressCreationComponent
-import com.example.a09_damage_application.componets.DamageCreationComponent
-import com.example.a09_damage_application.data.DamageDatabase
+import com.example.a09_damage_application.data.AppDatabase
 import com.example.a09_damage_application.ui.theme._09_Damage_ApplicationTheme
 
 class MainActivity : ComponentActivity() {
-    private val damageDatabase by lazy {
+    private val appDatabase by lazy {
         Room.databaseBuilder(
             applicationContext,
-            DamageDatabase :: class.java,
-            "damages.db"
+            AppDatabase :: class.java,
+            "address.db"
         ).build()
     }
 
@@ -48,7 +47,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     //Greeting("Android")
-                    Mainscreen(damageDatabase)
+                    //Mainscreen(damageDatabase)
+                    Mainscreen(appDatabase)
                 }
             }
         }
@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
 
 @ExperimentalMaterial3Api
 @Composable
-fun Mainscreen(db: DamageDatabase){
+fun Mainscreen(db: AppDatabase){
     Column (modifier = Modifier
         .fillMaxSize()
         .padding((10.dp))
@@ -66,8 +66,8 @@ fun Mainscreen(db: DamageDatabase){
         horizontalAlignment = Alignment.CenterHorizontally)
     {
         Radio_Buttons()
-        DamageCreationComponent().DamageCreationComposable(db.damageDao)
-        //AddressCreationComponent().AddressCreationComposable()
+        //DamageCreationComponent().DamageCreationComposable(db.damageDao)
+        AddressCreationComponent().AddressCreationComposable(db.addressDao)
     }
 }
 
