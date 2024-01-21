@@ -181,6 +181,20 @@ class DamageCreationComponent {
                             Text(text = ""+it.description
                                 //+ it.number,
                                 ,fontSize = 18.sp)
+                            Button(onClick = {
+                                var d: Damage = Damage(
+                                    typeOfDamage = typeOfDamageInput.value ,
+                                    description = descriptionInput,
+                                    descriptionTitle = descriptionTitleInput
+                                ); ;// Es wird ein neues Objekt der Klasse Damage erzeugt.
+                                onEvent(DamageEvent.SaveDamage(d))
+                                //Log.d(TAG, "Addressliste: " + addressList.toString())
+                                descriptionTitleInput = "" ;descriptionInput = ""}, modifier = Modifier  // Die
+                                // Texteingabefelder werden wieder auf null gesetzt.
+                                .fillMaxWidth()
+                                .padding(2.dp)) {
+                                Text(text = "Add to List", fontSize = 28.sp)
+                            }
                         }
                     }
                 }
