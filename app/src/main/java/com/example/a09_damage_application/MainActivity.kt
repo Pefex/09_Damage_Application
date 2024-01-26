@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.room.Room
 import com.example.a09_damage_application.componets.AddressCreationComponent
+import com.example.a09_damage_application.componets.NameCreationComponent
 import com.example.a09_damage_application.data.AppDatabase
 import com.example.a09_damage_application.ui.theme._09_Damage_ApplicationTheme
 
@@ -68,6 +69,7 @@ fun Mainscreen(db: AppDatabase){
         Radio_Buttons()
         //DamageCreationComponent().DamageCreationComposable(db.damageDao)
         AddressCreationComponent().AddressCreationComposable(db.addressDao)
+        NameCreationComponent().NameCreationComposable(db.nameDao)
     }
 }
 

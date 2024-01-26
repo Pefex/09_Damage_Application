@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -24,12 +25,19 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.rounded.ShoppingCart
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -147,14 +155,14 @@ class AddressCreationComponent {
                 Spacer(modifier = Modifier
                     .height(20.dp))
 
-
+                var streetText = "Straße"
                 OutlinedTextField(
                     modifier = Modifier
                         .background(Color.White)
                         .width(300.dp),
                     value = streetInput,
                     onValueChange = { streetInput = it },
-                    label = { Text("Straße") },
+                    label = { Text(streetText) },
                     singleLine = true
                 )
                 Spacer(modifier = Modifier
@@ -255,22 +263,76 @@ class AddressCreationComponent {
                             BoxRounded().boxRounded
                         ){
                             Column {
-                                Text(text = ""+it.street
-                                    //+ it.number,
-                                    ,fontSize = 18.sp)
-                                Text(text = ""+it.streetNumber
-                                    //+ it.number,
-                                    ,fontSize = 18.sp)
-                                Text(text = ""+it.postalCode
-                                    //+ it.number,
-                                    ,fontSize = 18.sp)
-                                Text(text = ""+it.city
-                                    //+ it.number,
-                                    ,fontSize = 18.sp)
-                                Text(text = ""+it.country
-                                    //+ it.number,
-                                    ,fontSize = 18.sp,
-                                    color = Pink40)
+                                Row {
+                                    Column (
+                                        modifier = Modifier
+                                            .width(230.dp)
+                                    ){
+                                        Text(text = ""+it.street
+                                            //+ it.number,
+                                            ,fontSize = 18.sp)
+                                        Text(text = ""+it.streetNumber
+                                            //+ it.number,
+                                            ,fontSize = 18.sp)
+                                        Text(text = ""+it.postalCode
+                                            //+ it.number,
+                                            ,fontSize = 18.sp)
+                                        Text(text = ""+it.city
+                                            //+ it.number,
+                                            ,fontSize = 18.sp)
+                                        Text(text = ""+it.country
+                                            //+ it.number,
+                                            ,fontSize = 18.sp,
+                                            color = Pink40)
+
+                                }
+
+                                    Column {
+                                        Box(modifier = Modifier
+                                            .width(30.dp)
+                                            .heightIn(30.dp),
+                                            contentAlignment = Alignment.Center)
+                                        {
+                                            BadgedBox(badge = {
+
+                                            }
+                                            )
+                                            {
+                                                IconButton(onClick = {onEvent(AddressEvent.DeleteAddress(it)) }) {
+                                                    Icon(imageVector = Icons.Default.Delete,
+                                                        contentDescription = "Favorite",
+                                                        modifier = Modifier.size(40.dp),
+                                                        tint= AppBlue,)
+                                                }
+                                            }
+                                        }
+
+                                        Box(modifier = Modifier
+                                            .width(30.dp)
+                                            .heightIn(30.dp),
+                                            contentAlignment = Alignment.Center)
+                                        {
+                                            BadgedBox(badge = {
+
+                                            }
+                                            )
+                                            {
+                                                IconButton(onClick = { streetInput = it.street;postalCodeInput = it.postalCode;  }) {
+                                                    Icon(imageVector = Icons.Default.Create,
+                                                        contentDescription = "Favorite",
+                                                        modifier = Modifier.size(40.dp),
+                                                        tint= AppBlue,)
+
+                                                }
+
+                                            }
+                                        }
+
+                                    }
+
+                            }
+
+                                /*
                                 Icon(
                                     modifier = Modifier.size(20.dp),
                                     tint= Color.Cyan,
@@ -295,7 +357,37 @@ class AddressCreationComponent {
 
                                 {
                                     Text(text = "Delete", fontSize = 12.sp)
-                                } } } } } } } }
+                                }*/
+
+
+
+                                /*
+
+                                Box(modifier = Modifier
+                                    .width(70.dp)
+                                    .heightIn(70.dp),
+                                    contentAlignment = Alignment.Center)
+                                {
+                                    BadgedBox(badge = {
+                                        Badge {
+                                            Text(text = "99+")
+                                        }
+                                    }
+                                    )
+                                    {
+                                        Icon(imageVector = Icons.Default.Delete,
+                                            contentDescription = "Favorite",
+                                            modifier = Modifier.size(40.dp))
+                                    }
+                                }*/
+
+                                }
+                            }
+                        }
+                    }
+                    }
+                }
+            }
 
         Log.d(TAG, "Schadensliste: " + addressList.joinToString())
         
