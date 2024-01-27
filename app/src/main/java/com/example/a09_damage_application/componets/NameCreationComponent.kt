@@ -31,11 +31,11 @@ class NameCreationComponent {
         // GenderTypeSelectorComponent().GenderTypSelectorComposable(typeOfGenderInput)
         // TitleTypeSelectorComponent().TitleTypSelectorComposable(typeOfTitleInput)
 
-        var descrptionFirstName by remember{
+        var FirstName by remember{
             mutableStateOf("")
         }
 
-        var descriptionLastName by remember{
+        var LastName by remember{
             mutableStateOf("")
         }
 

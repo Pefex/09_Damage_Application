@@ -29,7 +29,8 @@ class TitleCreationComponent {
             mutableStateOf(false)
         }
 
-        var building_element by remember{
+        var nameTitle by remember{
+
             mutableStateOf("")
         }
 
@@ -37,7 +38,7 @@ class TitleCreationComponent {
             contentAlignment = Alignment.Center){
             ExposedDropdownMenuBox(expanded = isExpanded, onExpandedChange = {isExpanded = it}) {
 
-                TextField(value = building_element, onValueChange = {},
+                TextField(value = nameTitle, onValueChange = {},
                     readOnly = true,
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
@@ -51,17 +52,17 @@ class TitleCreationComponent {
 
                     DropdownMenuItem(
                         text = { Text(text = "Ohne Titel") },
-                        onClick = { building_element = "Ohne Titel"
+                        onClick = { nameTitle = "Ohne Titel"
                             isExpanded = false })
 
                     DropdownMenuItem(
                         text = { Text(text = "Dipl.-Ing.") },
-                        onClick = { building_element = "Dipl.-Ing."
+                        onClick = { nameTitle = "Dipl.-Ing."
                             isExpanded = false })
 
                     DropdownMenuItem(
                         text = { Text(text = "Dr.") },
-                        onClick = { building_element = "Dr."
+                        onClick = { nameTitle = "Dr."
                             isExpanded = false })
 
                 }
@@ -70,7 +71,7 @@ class TitleCreationComponent {
         }
 
         Log.d(ContentValues.TAG,"Hallo")
-        Log.d(ContentValues.TAG,building_element)
+        Log.d(ContentValues.TAG,nameTitle)
     }
 
 

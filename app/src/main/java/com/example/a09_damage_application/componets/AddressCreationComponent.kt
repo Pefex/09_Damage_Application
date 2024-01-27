@@ -84,6 +84,15 @@ class AddressCreationComponent {
 
         val coroutineScope = rememberCoroutineScope()
 
+        var addressId: Int? = null
+
+        var addButtonText by remember {
+            mutableStateOf("Kontakt hinzufügen")
+        }
+
+
+
+
         var streetInput by remember {
             mutableStateOf("")
         }
@@ -220,15 +229,16 @@ class AddressCreationComponent {
 
                     onClick = {
                     var f: Address = Address(
+                        id = addressId,
                         street = streetInput ,
                         streetNumber = streetNumberInput,
                         postalCode = postalCodeInput,
                         city = cityInput,
                         country = countryInput
-                    ); ;// Es wird ein neues Objekt der Klasse Damage erzeugt.
+                    ); ;// Es wird ein neues Objekt der Klasse Address erzeugt.
                     onEvent(AddressEvent.SaveAddress(f))
 
-                    streetInput = "" ;streetNumberInput = "" ;postalCodeInput ="";cityInput = ""; countryInput = ""},
+                    addressId = null; streetInput = "" ;streetNumberInput = "" ;postalCodeInput ="";cityInput = ""; countryInput = ""; addButtonText = "Kontakt hinzufügen"},
                     colors = ButtonDefaults.buttonColors
                         (contentColor = Color.White,   //pre-created colour
                         containerColor = AppBlue),
@@ -237,7 +247,7 @@ class AddressCreationComponent {
                     .size(170.dp, 40.dp)
 
                 ) {
-                    Text(text = "Kontakt hinzufügen", fontSize = 12.sp)
+                    Text(text = addButtonText, fontSize = 12.sp)
                 }
 
                 Spacer(modifier = Modifier
@@ -317,7 +327,7 @@ class AddressCreationComponent {
                                             }
                                             )
                                             {
-                                                IconButton(onClick = { streetInput = it.street;postalCodeInput = it.postalCode;  }) {
+                                                IconButton(onClick = { streetInput = it.street;postalCodeInput = it.postalCode; addressId = it.id; addButtonText = "Änderungen speichern"}) {
                                                     Icon(imageVector = Icons.Default.Create,
                                                         contentDescription = "Favorite",
                                                         modifier = Modifier.size(40.dp),
