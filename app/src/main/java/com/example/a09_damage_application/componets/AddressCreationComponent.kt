@@ -66,6 +66,7 @@ import androidx.lifecycle.Observer
 import com.example.a09_damage_application.R
 import com.example.a09_damage_application.componets.events.AddressEvent
 import com.example.a09_damage_application.data.entities.Address
+import com.example.a09_damage_application.data.enums.TypeOfDamage
 import com.example.a09_damage_application.data.interfaces.AddressDao
 import com.example.a09_damage_application.ui.theme.AppBackground
 import com.example.a09_damage_application.ui.theme.AppBlue
@@ -79,7 +80,7 @@ import kotlinx.coroutines.launch
 class AddressCreationComponent {
     @ExperimentalMaterial3Api
     @Composable
-    fun AddressCreationComposable(dao: AddressDao){
+    fun AddressCreationComposable(dao: AddressDao, onNavigateDamage: ()->Unit, onNavigateName: ()->Unit){
         //var text by rememberSaveable { mutableStateOf("") }
 
         val coroutineScope = rememberCoroutineScope()
@@ -89,6 +90,7 @@ class AddressCreationComponent {
         var addButtonText by remember {
             mutableStateOf("Kontakt hinzufügen")
         }
+
 
 
 
@@ -154,6 +156,41 @@ class AddressCreationComponent {
                 .width(300.dp),
                 //.verticalScroll(state = scrollState)
                 horizontalAlignment = Alignment.CenterHorizontally){
+
+                Row (modifier = Modifier
+                    .width(300.dp)
+                    .height(50.dp)
+
+
+                ){
+                    Button(onClick = {onNavigateDamage()},
+
+                        colors = ButtonDefaults.buttonColors
+                            (contentColor = Color.White,   //pre-created colour
+                            containerColor = AppBlue),
+
+                        modifier = Modifier
+                            .size(120.dp, 40.dp)){
+
+                    Text(text = "Zu Damage", fontSize = 12.sp)
+                    }
+
+                    Button(onClick = {onNavigateName()},
+
+                        colors = ButtonDefaults.buttonColors
+                            (contentColor = Color.White,   //pre-created colour
+                            containerColor = AppBlue),
+
+                        modifier = Modifier
+                            .size(120.dp, 40.dp)){
+
+                        Text(text = "Zu Name", fontSize = 12.sp)
+                    }
+                }
+
+
+
+
                 Row (modifier = Modifier
                     .width(300.dp)
                     .align((Alignment.Start))
@@ -225,8 +262,6 @@ class AddressCreationComponent {
                     .height(40.dp))
 
                 Button(
-
-
                     onClick = {
                     var f: Address = Address(
                         id = addressId,
@@ -246,7 +281,7 @@ class AddressCreationComponent {
                     modifier = Modifier
                     .size(170.dp, 40.dp)
 
-                ) {
+                )  {
                     Text(text = addButtonText, fontSize = 12.sp)
                 }
 
@@ -401,7 +436,7 @@ class AddressCreationComponent {
 
         Log.d(TAG, "Schadensliste: " + addressList.joinToString())
         
-        Text(text = "Hallo Welt")
+        //Text(text = "Hallo Welt")
 
         var text by rememberSaveable { mutableStateOf("") }
     }

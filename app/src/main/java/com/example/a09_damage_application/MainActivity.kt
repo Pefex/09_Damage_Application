@@ -16,8 +16,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.a09_damage_application.componets.AddressCreationComponent
+import com.example.a09_damage_application.componets.DamageCreationComponent
 import com.example.a09_damage_application.componets.NameCreationComponent
 import com.example.a09_damage_application.data.AppDatabase
 import com.example.a09_damage_application.ui.theme._09_Damage_ApplicationTheme
@@ -58,7 +62,37 @@ class MainActivity : ComponentActivity() {
 
 @ExperimentalMaterial3Api
 @Composable
-fun Mainscreen(db: AppDatabase){
+fun Mainscreen(db: AppDatabase) {
+    //AddressCreationComponent().AddressCreationComposable(db.addressDao)
+
+
+    //NameCreationComponent().NameCreationComposable(db.nameDao)
+
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "damageCreation") {
+        composable("damageCreation") {
+            DamageCreationComponent().DamageCreationComposable(
+                db.damageDao,
+                onNavigateName = { navController.navigate("nameCreation") },
+            )
+        }
+        composable("addressCreation") {
+            AddressCreationComponent().AddressCreationComposable(
+                db.addressDao,
+                onNavigateDamage = { navController.navigate("damageCreation") },
+                onNavigateName = { navController.navigate("nameCreation") })
+        }
+        composable("nameCreation") {
+            NameCreationComponent().NameCreationComposable(
+                db.nameDao,
+                onNavigateDamage = { navController.navigate("damageCreation") },
+                onNavigateAddress = { navController.navigate("addressCreation") })
+        }
+        //composable("addressCreation"){ NameCreationComponent().NameCreationComposable(db.nameDao,  onNavigateDamage = {navController.navigate("damageCreation")})}
+        //composable("addressCreation"){ NameCreationComponent().NameCreationComposable(db.nameDao,  onNavigateAddress = {navController.navigate("addressCreation")})}
+    }
+}
+/*
     Column (modifier = Modifier
         .fillMaxSize()
         .padding((10.dp))
@@ -66,17 +100,18 @@ fun Mainscreen(db: AppDatabase){
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally)
     {
+
         Radio_Buttons()
         //DamageCreationComponent().DamageCreationComposable(db.damageDao)
-        AddressCreationComponent().AddressCreationComposable(db.addressDao)
-        NameCreationComponent().NameCreationComposable(db.nameDao)
-    }
-}
+        //AddressCreationComponent().AddressCreationComposable(db.addressDao)
+        //NameCreationComponent().NameCreationComposable(db.nameDao)
+    }*/
 
+/*
 @Composable
-fun Radio_Buttons(){
+fun Radio_Buttons() {
 
-}
+}*/
 
 
 

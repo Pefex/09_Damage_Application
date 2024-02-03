@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.a09_damage_application.data.enums.TypeOfGender
 
-class GenderTypSelectorComponent {
+class GenderTypeSelectorComponent {
     @Composable
     fun GenderTypeSelectorComposable(selectedTypeOfGender: MutableState<TypeOfGender>){
         Column (modifier = Modifier

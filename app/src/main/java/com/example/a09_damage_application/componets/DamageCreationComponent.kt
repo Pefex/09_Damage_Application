@@ -8,12 +8,15 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -51,17 +54,21 @@ import kotlinx.coroutines.launch
 class DamageCreationComponent {
     @ExperimentalMaterial3Api
     @Composable
-    fun DamageCreationComposable(dao: DamageDao){
+    fun DamageCreationComposable(dao: DamageDao, onNavigateName: ()->Unit){
 
         val coroutineScope = rememberCoroutineScope()
+
+        var damageId: Int? = null
 
         var typeOfDamageInput = remember{
             mutableStateOf(TypeOfDamage.NOTHING_SELECTED) // selectedTypeOfDamage wird mit einem
         // leeren String initalisiert
 
         }
-        TestTitleComponent().TestTitleComposable("Hallo World")
-        DamageTypSelctorComponent().DamageTypSelctorComposable(typeOfDamageInput)
+
+
+        //TestTitleComponent().TestTitleComposable("Hallo World")
+        //DamageTypSelctorComponent().DamageTypSelctorComposable(typeOfDamageInput)
 
         //     Radio Button
 
@@ -115,6 +122,20 @@ class DamageCreationComponent {
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally){
             //Texteingabe für Titel
+
+            Row (modifier = Modifier
+                .width(300.dp)
+                .height(50.dp)
+
+
+            ){
+                Button(onClick = {onNavigateName()}) {
+                    Text(text = "Zu Address", fontSize = 28.sp)
+
+                }
+
+            }
+            DamageTypSelctorComponent().DamageTypSelctorComposable(typeOfDamageInput)
             OutlinedTextField(modifier = Modifier
                 .background(color = Color(255, 255, 255))
                 .border(3.dp, Color(37, 150, 190, 150), shape = RoundedCornerShape(5.dp))
@@ -136,10 +157,12 @@ class DamageCreationComponent {
             //padding in button to get top margin from textfield to button
             Button(onClick = {
                 var d: Damage = Damage(
+                    id = damageId,
                     typeOfDamage = typeOfDamageInput.value ,
                     description = descriptionInput,
                     descriptionTitle = descriptionTitleInput
                 ); ;// Es wird ein neues Objekt der Klasse Damage erzeugt.
+                //onNavigateAddress()
                 onEvent(DamageEvent.SaveDamage(d))
                 //Log.d(TAG, "Addressliste: " + addressList.toString())
                 descriptionTitleInput = "" ;descriptionInput = ""}, modifier = Modifier  // Die
@@ -197,6 +220,8 @@ class DamageCreationComponent {
                             }
                         }
                     }
+
+
                 }
                 }
             }
