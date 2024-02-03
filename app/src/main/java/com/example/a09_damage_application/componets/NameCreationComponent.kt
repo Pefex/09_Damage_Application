@@ -32,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
@@ -150,16 +149,29 @@ class NameCreationComponent {
                     }
 
                 }
-
+/*
                 Row (modifier = Modifier
                     .width(300.dp)
                     .align((Alignment.Start))
                 ){
                     Text(text = "Name",  fontWeight = FontWeight.Medium)
-                }
+                }*/
 
                 Spacer(modifier = Modifier
-                    .height(20.dp))
+                    .height(5.dp))
+
+                GenderTypeSelectorComponent().GenderTypeSelectorComposable(typeOfGenderInput)
+
+                Spacer(modifier = Modifier
+                    .height(25.dp))
+
+                TitleCreationComponent().TitleCreationComposable(typeOfTitleInput)
+
+                Spacer(modifier = Modifier
+                    .height(10.dp))
+
+
+
 
                 OutlinedTextField(
                     modifier = Modifier

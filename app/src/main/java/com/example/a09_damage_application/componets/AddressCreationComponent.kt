@@ -153,12 +153,12 @@ class AddressCreationComponent {
 
             Column (modifier = Modifier
 
-                .width(300.dp),
+                .width(320.dp),
                 //.verticalScroll(state = scrollState)
                 horizontalAlignment = Alignment.CenterHorizontally){
 
                 Row (modifier = Modifier
-                    .width(300.dp)
+                    .fillMaxWidth()
                     .height(50.dp)
 
 
@@ -174,7 +174,6 @@ class AddressCreationComponent {
 
                     Text(text = "Zu Damage", fontSize = 12.sp)
                     }
-
                     Button(onClick = {onNavigateName()},
 
                         colors = ButtonDefaults.buttonColors
@@ -186,13 +185,14 @@ class AddressCreationComponent {
 
                         Text(text = "Zu Name", fontSize = 12.sp)
                     }
+
                 }
 
 
 
 
                 Row (modifier = Modifier
-                    .width(300.dp)
+                    .fillMaxWidth()
                     .align((Alignment.Start))
                 ){
                     Text(text = "Anschrift",  fontWeight = FontWeight.Medium)
@@ -205,7 +205,7 @@ class AddressCreationComponent {
                 OutlinedTextField(
                     modifier = Modifier
                         .background(Color.White)
-                        .width(300.dp),
+                        .fillMaxWidth(),
                     value = streetInput,
                     onValueChange = { streetInput = it },
                     label = { Text(streetText) },
@@ -216,7 +216,7 @@ class AddressCreationComponent {
                 OutlinedTextField(
                     modifier = Modifier
                         .background(Color.White)
-                        .width(300.dp),
+                        .fillMaxWidth(),
                     value = streetNumberInput,
                     onValueChange = { streetNumberInput = it },
                     label = { Text("Hausnummer") },
@@ -227,7 +227,7 @@ class AddressCreationComponent {
                 OutlinedTextField(
                     modifier = Modifier
                         .background(Color.White)
-                        .width(300.dp),
+                        .fillMaxWidth(),
                     value = postalCodeInput,
                     onValueChange = { postalCodeInput = it },
                     label = { Text("Postleitzahl") },
@@ -239,7 +239,7 @@ class AddressCreationComponent {
                 OutlinedTextField(
                     modifier = Modifier
                         .background(Color.White)
-                        .width(300.dp),
+                        .fillMaxWidth(),
                     value = cityInput,
                     onValueChange = { cityInput = it },
                     label = { Text("Ort") },
@@ -252,7 +252,7 @@ class AddressCreationComponent {
                 OutlinedTextField(
                     modifier = Modifier
                         .background(Color.White)
-                        .width(300.dp),
+                        .fillMaxWidth(),
                     value = countryInput,
                     onValueChange = { countryInput = it },
                     label = { Text("Land") },
@@ -311,7 +311,7 @@ class AddressCreationComponent {
                                 Row {
                                     Column (
                                         modifier = Modifier
-                                            .width(230.dp)
+                                            .fillMaxWidth()
                                     ){
                                         Text(text = ""+it.street
                                             //+ it.number,
