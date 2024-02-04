@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -106,16 +108,25 @@ class NameCreationComponent {
             .fillMaxSize()
             .height(100.dp)
             .padding(1.dp)
-            .background(AppBackground),
+            .background(AppBackground)
+            //.verticalScroll(rememberScrollState()).fillMaxSize()
+            ,
 
             verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally){
+            horizontalAlignment = Alignment.CenterHorizontally)
+
+            {
 
             Column (modifier = Modifier
 
-                .width(300.dp),
+                .width(300.dp)
+               // .verticalScroll(rememberScrollState())
+
+                ,
                 //.verticalScroll(state = scrollState)
-                horizontalAlignment = Alignment.CenterHorizontally){
+                horizontalAlignment = Alignment.CenterHorizontally
+                 )
+            {
 
                 Row (modifier = Modifier
                     .width(300.dp)
@@ -246,6 +257,8 @@ class NameCreationComponent {
                         }
                         }
                 }
+                Spacer(modifier = Modifier
+                    .height(325.dp))
                     }
                 }
 
