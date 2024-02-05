@@ -158,7 +158,6 @@ class NameCreationComponent {
 
                         Text(text = "Zu Address", fontSize = 12.sp)
                     }
-
                 }
 /*
                 Row (modifier = Modifier
@@ -180,8 +179,6 @@ class NameCreationComponent {
 
                 Spacer(modifier = Modifier
                     .height(10.dp))
-
-
 
 
                 OutlinedTextField(

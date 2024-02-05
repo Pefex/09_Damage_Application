@@ -54,7 +54,9 @@ import kotlinx.coroutines.launch
 class DamageCreationComponent {
     @ExperimentalMaterial3Api
     @Composable
-    fun DamageCreationComposable(dao: DamageDao, onNavigateName: ()->Unit){
+    fun DamageCreationComposable(dao: DamageDao, onNavigateName: ()->Unit, onNavigateDamageList: ()->Unit,
+                                 onNavigateAddress: ()->Unit, onNavigateContact: ()->Unit,
+                                 onNavigateOwner: ()->Unit) {
 
         val coroutineScope = rememberCoroutineScope()
 
@@ -130,7 +132,35 @@ class DamageCreationComponent {
 
             ){
                 Button(onClick = {onNavigateName()}) {
-                    Text(text = "Zu Address", fontSize = 28.sp)
+                    Text(text = "Zu Name", fontSize = 14.sp)
+
+                }
+
+                Button(onClick = {onNavigateDamageList()}) {
+                    Text(text = "Zu DamageList", fontSize = 14.sp)
+
+                }
+
+            }
+
+            Row (modifier = Modifier
+                .width(300.dp)
+                .height(50.dp)
+
+
+            ){
+                Button(onClick = {onNavigateAddress()}) {
+                    Text(text = "Zu Address", fontSize = 10.sp)
+
+                }
+
+                Button(onClick = {onNavigateContact()}) {
+                    Text(text = "Zu Contact", fontSize = 10.sp)
+
+                }
+
+                Button(onClick = {onNavigateOwner}) {
+                    Text(text = "Zu Owner", fontSize = 10.sp)
 
                 }
 

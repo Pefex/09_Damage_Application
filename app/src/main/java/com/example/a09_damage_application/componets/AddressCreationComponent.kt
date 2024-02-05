@@ -92,9 +92,6 @@ class AddressCreationComponent {
         }
 
 
-
-
-
         var streetInput by remember {
             mutableStateOf("")
         }
@@ -288,7 +285,147 @@ class AddressCreationComponent {
                 Spacer(modifier = Modifier
                     .height(40.dp)
                     .width(150.dp))
+                Column (modifier = Modifier
+                    .clip(RoundedCornerShape(5.dp))
+                    .fillMaxWidth()
+                    //.height(28.dp)
+                    .background(AppBlue)){
+                    LazyColumn(modifier = Modifier
 
+                        .padding(1.5.dp)
+                        //.border(2.dp, color = Color.Red)
+                        .background(Color(37, 150, 190, 150), shape = RoundedCornerShape(5.dp))
+
+                    ){ items(items=addressList) {
+
+
+                        Box(
+                            BoxRounded().boxRounded
+                        ){
+                            Column {
+                                Row {
+                                    Column (
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                    ){
+                                        Text(text = ""+it.street
+                                            //+ it.number,
+                                            ,fontSize = 18.sp)
+                                        Text(text = ""+it.streetNumber
+                                            //+ it.number,
+                                            ,fontSize = 18.sp)
+                                        Text(text = ""+it.postalCode
+                                            //+ it.number,
+                                            ,fontSize = 18.sp)
+                                        Text(text = ""+it.city
+                                            //+ it.number,
+                                            ,fontSize = 18.sp)
+                                        Text(text = ""+it.country
+                                            //+ it.number,
+                                            ,fontSize = 18.sp,
+                                            color = Pink40)
+
+                                    }
+
+                                    Column {
+                                        Box(modifier = Modifier
+                                            .width(30.dp)
+                                            .heightIn(30.dp),
+                                            contentAlignment = Alignment.Center)
+                                        {
+                                            BadgedBox(badge = {
+
+                                            }
+                                            )
+                                            {
+                                                IconButton(onClick = {onEvent(AddressEvent.DeleteAddress(it)) }) {
+                                                    Icon(imageVector = Icons.Default.Delete,
+                                                        contentDescription = "Favorite",
+                                                        modifier = Modifier.size(40.dp),
+                                                        tint= AppBlue,)
+                                                }
+                                            }
+                                        }
+
+                                        Box(modifier = Modifier
+                                            .width(30.dp)
+                                            .heightIn(30.dp),
+                                            contentAlignment = Alignment.Center)
+                                        {
+                                            BadgedBox(badge = {
+
+                                            }
+                                            )
+                                            {
+                                                IconButton(onClick = { streetInput = it.street;postalCodeInput = it.postalCode; addressId = it.id; addButtonText = "Änderungen speichern"}) {
+                                                    Icon(imageVector = Icons.Default.Create,
+                                                        contentDescription = "Favorite",
+                                                        modifier = Modifier.size(40.dp),
+                                                        tint= AppBlue,)
+
+                                                }
+
+                                            }
+                                        }
+
+                                    }
+
+                                }
+
+                                /*
+                                Icon(
+                                    modifier = Modifier.size(20.dp),
+                                    tint= Color.Cyan,
+                                    painter = painterResource(id = androidx.core.R.drawable.ic_call_answer), contentDescription = "Icon")
+                                Icon(
+                                    modifier = Modifier.size(20.dp),
+                                    tint= AppBlue,
+                                    painter = painterResource(id = androidx.core.R.drawable.ic_call_decline_low), contentDescription = "Icon")
+
+
+                                Button(onClick = {
+
+                                    onEvent(AddressEvent.DeleteAddress(it))
+
+                                    },
+                                        colors = ButtonDefaults.buttonColors
+                                        (contentColor = Color.White,   //pre-created colour
+                                    containerColor = AppBlue),
+
+                                modifier = Modifier
+                                    .size(170.dp, 40.dp))
+
+                                {
+                                    Text(text = "Delete", fontSize = 12.sp)
+                                }*/
+
+
+
+                                /*
+
+                                Box(modifier = Modifier
+                                    .width(70.dp)
+                                    .heightIn(70.dp),
+                                    contentAlignment = Alignment.Center)
+                                {
+                                    BadgedBox(badge = {
+                                        Badge {
+                                            Text(text = "99+")
+                                        }
+                                    }
+                                    )
+                                    {
+                                        Icon(imageVector = Icons.Default.Delete,
+                                            contentDescription = "Favorite",
+                                            modifier = Modifier.size(40.dp))
+                                    }
+                                }*/
+
+                            }
+                        }
+                    }
+                    }
+                }
 
                 Column (modifier = Modifier
                     .clip(RoundedCornerShape(5.dp))

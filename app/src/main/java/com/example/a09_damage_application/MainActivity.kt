@@ -3,25 +3,21 @@ package com.example.a09_damage_application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
+import com.example.a09_damage_application.componets.AddAndEditOwnersComponent
 import com.example.a09_damage_application.componets.AddressCreationComponent
+import com.example.a09_damage_application.componets.ContactCreationComponent
 import com.example.a09_damage_application.componets.DamageCreationComponent
+import com.example.a09_damage_application.componets.DamageListCreationComponent
 import com.example.a09_damage_application.componets.NameCreationComponent
 import com.example.a09_damage_application.data.AppDatabase
 import com.example.a09_damage_application.ui.theme._09_Damage_ApplicationTheme
@@ -74,6 +70,11 @@ fun Mainscreen(db: AppDatabase) {
             DamageCreationComponent().DamageCreationComposable(
                 db.damageDao,
                 onNavigateName = { navController.navigate("nameCreation") },
+                onNavigateDamageList = { navController.navigate("damageListCreation") },
+                onNavigateAddress = { navController.navigate("addressCreation") },
+                onNavigateContact = { navController.navigate("contactCreation") },
+                onNavigateOwner = { navController.navigate("ownerCreation") }
+
             )
         }
         composable("addressCreation") {
@@ -86,8 +87,39 @@ fun Mainscreen(db: AppDatabase) {
             NameCreationComponent().NameCreationComposable(
                 db.nameDao,
                 onNavigateDamage = { navController.navigate("damageCreation") },
-                onNavigateAddress = { navController.navigate("addressCreation") })
+                onNavigateAddress = { navController.navigate("addressCreation") },
+                )
         }
+
+        composable("damageListCreation") {
+            DamageListCreationComponent().DamageListCreationComposable(
+                //db.damageDao,
+
+                onNavigateDamage = { navController.navigate("damageCreation") },
+                onNavigateName = { navController.navigate("nameCreation") },
+                onNavigateAddress = { navController.navigate("addressCreation") }
+            )
+        }
+
+        composable("contactCreation") {
+            ContactCreationComponent().ContactCreationComposable(
+                db.contactDao,
+
+                onNavigateDamage = { navController.navigate("damageCreation") },
+                onNavigateName = { navController.navigate("nameCreation") }
+            )
+        }
+
+        composable("contactCreation") {
+            AddAndEditOwnersComponent().AddAndEditOwnersComposable(
+                db.addAndEditOwnerDao,
+
+                onNavigateDamage = { navController.navigate("damageCreation") },
+                onNavigateAddress = { navController.navigate("addressCreation") }
+            )
+        }
+
+
         //composable("addressCreation"){ NameCreationComponent().NameCreationComposable(db.nameDao,  onNavigateDamage = {navController.navigate("damageCreation")})}
         //composable("addressCreation"){ NameCreationComponent().NameCreationComposable(db.nameDao,  onNavigateAddress = {navController.navigate("addressCreation")})}
     }
