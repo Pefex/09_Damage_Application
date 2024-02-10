@@ -162,7 +162,7 @@ class DamageListCreationComponent{
         .height(100.dp)
         .width(100.dp)
         ){
-        Image(painter = painterResource(id = R.drawable.p1), contentDescription = "pic2")
+        Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = "pic2")
 
     }
     Box (modifier = Modifier
@@ -170,7 +170,7 @@ class DamageListCreationComponent{
         .width(100.dp)
         )
    {
-       Image(painter = painterResource(id = R.drawable.p1), contentDescription = "pic1")
+       Image(painter = painterResource(id = R.drawable.ic_launcher_background), contentDescription = "pic1")
     }
 
 }    }

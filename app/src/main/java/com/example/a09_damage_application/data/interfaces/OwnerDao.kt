@@ -4,22 +4,28 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
-import com.example.a09_damage_application.data.entities.Damage
+import com.example.a09_damage_application.data.entities.Owner
+import com.example.a09_damage_application.data.entities.OwnerWithContacts
 
-@Dao // Ist der Archiv-Mitarbeiter der zwischen dem Archiv und dem Büro hin und her läuft.
+@Dao
 interface OwnerDao {
+
     @Upsert
-    suspend fun upsertDamage(  // einfügen oder ändern eines Schadens-Ordners
-        damage: Damage
+    suspend fun upsertOwner(
+        owner: Owner
     )
 
     @Delete
-    suspend fun deleteDamage(damage: Damage)  //suspend kennzeichnet, dass hier etwas passiert, das
-    //Arbeit in einem bestimmten Scope blockieren kann.
+    suspend fun deleteOwner(owner: Owner)
 
-    @Query("SELECT * FROM damage ORDER BY descriptionTitle ASC")  //hole (SELECT) alle (*),
-// Schäden aus der Schadenstabelle, sortiert nach (ORDER BY), Title (Titelbeschreibung) (descriptionTitle, ASC= aufsteigend)
-    fun getDamagesOrderedByTitle(): LiveData<List<Damage>>
+    @Query("SELECT * FROM owner ORDER BY ownerId ASC")
+    fun getOwnerOrderByTitle(): LiveData<List<Owner>>
+
+    @Transaction
+    @Query("SELECT * FROM Owner")
+    fun getOwnersWithContacts(): LiveData<List<OwnerWithContacts>>
+
 
 }

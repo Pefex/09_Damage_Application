@@ -5,7 +5,8 @@ import androidx.room.PrimaryKey
 @Entity
 data class Address(
     @PrimaryKey(autoGenerate = true) //
-    val id: Int? = null,
+    val addressId: Int? = null,
+    val addressContactId: Int? = null ,
     val street: String,
     val streetNumber: String,
     val postalCode: String,

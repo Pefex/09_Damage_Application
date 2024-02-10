@@ -19,6 +19,7 @@ import com.example.a09_damage_application.componets.ContactCreationComponent
 import com.example.a09_damage_application.componets.DamageCreationComponent
 import com.example.a09_damage_application.componets.DamageListCreationComponent
 import com.example.a09_damage_application.componets.NameCreationComponent
+import com.example.a09_damage_application.componets.OwnerCreationComponent
 import com.example.a09_damage_application.data.AppDatabase
 import com.example.a09_damage_application.ui.theme._09_Damage_ApplicationTheme
 
@@ -77,19 +78,21 @@ fun Mainscreen(db: AppDatabase) {
 
             )
         }
+
+        composable("ownerCreation") {
+            OwnerCreationComponent().OwnerCreationComposable(
+                db.ownerWithContactsDao, db.ownerDao, db.addressDao, db.contactDao
+
+            )
+        }
+        /*
         composable("addressCreation") {
             AddressCreationComponent().AddressCreationComposable(
                 db.addressDao,
                 onNavigateDamage = { navController.navigate("damageCreation") },
                 onNavigateName = { navController.navigate("nameCreation") })
         }
-        composable("nameCreation") {
-            NameCreationComponent().NameCreationComposable(
-                db.nameDao,
-                onNavigateDamage = { navController.navigate("damageCreation") },
-                onNavigateAddress = { navController.navigate("addressCreation") },
-                )
-        }
+
 
         composable("damageListCreation") {
             DamageListCreationComponent().DamageListCreationComposable(
@@ -117,7 +120,7 @@ fun Mainscreen(db: AppDatabase) {
                 onNavigateDamage = { navController.navigate("damageCreation") },
                 onNavigateAddress = { navController.navigate("addressCreation") }
             )
-        }
+        }*/
 
 
         //composable("addressCreation"){ NameCreationComponent().NameCreationComposable(db.nameDao,  onNavigateDamage = {navController.navigate("damageCreation")})}

@@ -47,7 +47,9 @@ import com.example.a09_damage_application.componets.events.AddressEvent
 import com.example.a09_damage_application.componets.events.ContactEvent
 import com.example.a09_damage_application.data.entities.Address
 import com.example.a09_damage_application.data.entities.Contact
+import com.example.a09_damage_application.data.interfaces.AddressDao
 import com.example.a09_damage_application.data.interfaces.ContactDao
+import com.example.a09_damage_application.data.interfaces.ContactWithAddressDao
 import com.example.a09_damage_application.ui.theme.AppBackground
 import com.example.a09_damage_application.ui.theme.AppBlue
 import com.example.a09_damage_application.ui.theme.BoxRounded
@@ -58,7 +60,12 @@ class ContactCreationComponent {
 
     @ExperimentalMaterial3Api
     @Composable
-    fun ContactCreationComposable(dao: ContactDao, onNavigateDamage: ()->Unit, onNavigateName: ()->Unit){
+    fun ContactCreationComposable(
+        contactDao: ContactDao,
+        addressDao: AddressDao,
+
+
+    ) {
 
         val coroutineScope = rememberCoroutineScope()
 
@@ -84,40 +91,46 @@ class ContactCreationComponent {
             mutableStateListOf<Contact>()
         }
 
-        dao.getContactOrderByTitle().observe(LocalLifecycleOwner.current,
+        contactDao.getContactOrderByTitle().observe(LocalLifecycleOwner.current,
             Observer { allContacts ->
                 contactList.clear()
                 contactList.addAll(allContacts)
             })
 
-        fun onEvent(event: ContactEvent){
-            when(event){
+        fun onEvent(event: ContactEvent) {
+            when (event) {
                 is ContactEvent.SaveContact -> {
-                    coroutineScope.launch { dao.upsertContact(event.contact) }
+                    coroutineScope.launch { contactDao.upsertContact(event.contact) }
                 }
+
                 is ContactEvent.DeleteContact -> {
-                    coroutineScope.launch { dao.deleteContact(event.contact) }
+                    coroutineScope.launch { contactDao.deleteContact(event.contact) }
                 }
+
                 else -> {}
             }
         }
 
-        Column (modifier = Modifier
+        Column(
+            modifier = Modifier
 
 
-            .fillMaxSize()
-            .height(100.dp)
-            .padding(1.dp)
-            .background(AppBackground),
+                .fillMaxSize()
+                .height(100.dp)
+                .padding(1.dp)
+                .background(AppBackground),
 
             verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally){
-            Column (modifier = Modifier
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Column(
+                modifier = Modifier
 
-                .width(320.dp),
+                    .width(320.dp),
                 //.verticalScroll(state = scrollState)
-                horizontalAlignment = Alignment.CenterHorizontally){
-
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+/*
                 Row (modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
@@ -149,17 +162,24 @@ class ContactCreationComponent {
                         Text(text = "Zu Name", fontSize = 12.sp)
                     }
 
+                }*/
+
+                val addressCreation = AddressCreationComponent().AddressCreationComposable(
+                    dao = addressDao
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align((Alignment.Start))
+                ) {
+                    Text(text = "Telefonnummer", fontWeight = FontWeight.Medium)
                 }
 
-                Row (modifier = Modifier
-                    .fillMaxWidth()
-                    .align((Alignment.Start))
-                ){
-                    Text(text = "Telefonnummer",  fontWeight = FontWeight.Medium)
-                }
-
-                Spacer(modifier = Modifier
-                    .height(20.dp))
+                Spacer(
+                    modifier = Modifier
+                        .height(20.dp)
+                )
 
 
                 OutlinedTextField(
@@ -171,8 +191,10 @@ class ContactCreationComponent {
                     label = { Text("Handynummer") },
                     singleLine = true
                 )
-                Spacer(modifier = Modifier
-                    .height(10.dp))
+                Spacer(
+                    modifier = Modifier
+                        .height(10.dp)
+                )
                 OutlinedTextField(
                     modifier = Modifier
                         .background(Color.White)
@@ -182,18 +204,23 @@ class ContactCreationComponent {
                     label = { Text("Festnetznummer") },
                     singleLine = true
                 )
-                Spacer(modifier = Modifier
-                    .height(10.dp))
+                Spacer(
+                    modifier = Modifier
+                        .height(10.dp)
+                )
 
-                Row (modifier = Modifier
-                    .fillMaxWidth()
-                    .align((Alignment.Start))
-                ){
-                    Text(text = "Mailadresse",  fontWeight = FontWeight.Medium)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align((Alignment.Start))
+                ) {
+                    Text(text = "Mailadresse", fontWeight = FontWeight.Medium)
                 }
 
-                Spacer(modifier = Modifier
-                    .height(20.dp))
+                Spacer(
+                    modifier = Modifier
+                        .height(20.dp)
+                )
 
                 OutlinedTextField(
                     modifier = Modifier
@@ -205,134 +232,126 @@ class ContactCreationComponent {
                     singleLine = true
                 )
 
-                Spacer(modifier = Modifier
-                    .height(40.dp))
-
-                Button(
-                    onClick = {
-                        var c: Contact = Contact(
-                            id = contactId,
-                            telephoneNumberMobil = telephoneNumberMobilInput ,
-                            telephoneNumberLandline= telephoneNumberLandlineInput,
-                            mailaddress = mailaddressInput,
-
-                        ); ;// Es wird ein neues Objekt der Klasse Address erzeugt.
-                        onEvent(ContactEvent.SaveContact(c))
-
-                        contactId = null; telephoneNumberMobilInput = "" ;telephoneNumberLandlineInput = "" ;mailaddressInput =""},
-                    colors = ButtonDefaults.buttonColors
-                        (contentColor = Color.White,   //pre-created colour
-                        containerColor = AppBlue),
-
+                Spacer(
                     modifier = Modifier
-                        .size(170.dp, 40.dp)
+                        .height(40.dp)
+                )
 
-                )  {
-                    Text(text = addButtonText, fontSize = 12.sp)
+                fun addContact() {
+                    var c: Contact = Contact(
+                        contactId = contactId,
+                        telephoneNumberMobil = telephoneNumberMobilInput,
+                        telephoneNumberLandline = telephoneNumberLandlineInput,
+                        mailAddress = mailaddressInput,
+
+                        );// Es wird ein neues Objekt der Klasse Address erzeugt.
+                    //To do addressCreation.
+                    onEvent(ContactEvent.SaveContact(c))
+
+                    contactId = null; telephoneNumberMobilInput = "";telephoneNumberLandlineInput =
+                        "";mailaddressInput = ""
                 }
 
-                Spacer(modifier = Modifier
-                    .height(40.dp)
-                    .width(150.dp))
-                Column (modifier = Modifier
-                    .clip(RoundedCornerShape(5.dp))
-                    .fillMaxWidth()
-                    //.height(28.dp)
-                    .background(AppBlue)){
-                    LazyColumn(modifier = Modifier
-
-                        .padding(1.5.dp)
-                        //.border(2.dp, color = Color.Red)
-                        .background(Color(37, 150, 190, 150), shape = RoundedCornerShape(5.dp))
-
-                    ){ items(items=contactList) {
 
 
-                        Box(
-                            BoxRounded().boxRounded
-                        ){
-                            Column {
-                                Row {
-                                    Column (
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                    ){
-                                        Text(text = ""+it.telephoneNumberMobil
-                                            //+ it.number,
-                                            ,fontSize = 18.sp)
-                                        Text(text = ""+it.telephoneNumberLandline
-                                            //+ it.number,
-                                            ,fontSize = 18.sp)
-                                        Text(text = ""+it.mailaddress
-                                            //+ it.number,
-                                            ,fontSize = 18.sp)
-                                    }
+                Spacer(
+                    modifier = Modifier
+                        .height(40.dp)
+                        .width(150.dp)
+                )/*
+                Column(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(5.dp))
+                        .fillMaxWidth()
+                        //.height(28.dp)
+                        .background(AppBlue)
+                ) {
+                    LazyColumn(
+                        modifier = Modifier
 
-                                    Column {
-                                        Box(modifier = Modifier
-                                            .width(30.dp)
-                                            .heightIn(30.dp),
-                                            contentAlignment = Alignment.Center)
-                                        {
-                                            BadgedBox(badge = {
+                            .padding(1.5.dp)
+                            //.border(2.dp, color = Color.Red)
+                            .background(Color(37, 150, 190, 150), shape = RoundedCornerShape(5.dp))
 
-                                            }
+                    ) {
+                        items(items = contactList) {
+
+
+                            Box(
+                                BoxRounded().boxRounded
+                            ) {
+                                Column {
+                                    Row {
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                        ) {
+                                            Text(
+                                                text = "" + it.telephoneNumberMobil
+                                                //+ it.number,
+                                                , fontSize = 18.sp
                                             )
-                                            {
-                                                IconButton(onClick = {onEvent(ContactEvent.DeleteContact(it)) }) {
-                                                    Icon(imageVector = Icons.Default.Delete,
-                                                        contentDescription = "Favorite",
-                                                        modifier = Modifier.size(40.dp),
-
-                                                        tint= AppBlue,)
-                                                }
-                                            }
+                                            Text(
+                                                text = "" + it.telephoneNumberLandline
+                                                //+ it.number,
+                                                , fontSize = 18.sp
+                                            )
+                                            Text(
+                                                text = "" + it.mailAddress
+                                                //+ it.number,
+                                                , fontSize = 18.sp
+                                            )
                                         }
 
-                                        Box(modifier = Modifier
-                                            .width(30.dp)
-                                            .heightIn(30.dp),
-                                            contentAlignment = Alignment.Center)
-                                        {
-                                            BadgedBox(badge = {
-
-                                            }
+                                        Column {
+                                            Box(
+                                                modifier = Modifier
+                                                    .width(30.dp)
+                                                    .heightIn(30.dp),
+                                                contentAlignment = Alignment.Center
                                             )
                                             {
-                                                IconButton(onClick = { telephoneNumberMobilInput = it.telephoneNumberMobil; telephoneNumberLandlineInput = it.telephoneNumberLandline; contactId = it.id; mailaddressInput = it.mailaddress ;addButtonText = "Änderungen speichern"}) {
-                                                    Icon(imageVector = Icons.Default.Create,
-                                                        contentDescription = "Favorite",
-                                                        modifier = Modifier.size(40.dp),
-                                                        tint= AppBlue,)
+                                                BadgedBox(badge = {
 
                                                 }
+                                                )
+                                                {
+                                                    IconButton(onClick = {
+                                                        onEvent(
+                                                            ContactEvent.DeleteContact(
+                                                                it
+                                                            )
+                                                        )
+                                                    }) {
+                                                        Icon(
+                                                            imageVector = Icons.Default.Delete,
+                                                            contentDescription = "Favorite",
+                                                            modifier = Modifier.size(40.dp),
 
+                                                            tint = AppBlue,
+                                                        )
+                                                    }
+                                                }
                                             }
+
+
+
                                         }
 
                                     }
+
 
                                 }
-
-
-
                             }
                         }
-                    }
-                    }
-                }
-
-
-
-
+                    }*/
             }
+
 
         }
 
-
-
-
-
     }
 
+
 }
+

@@ -106,7 +106,7 @@ class DamageCreationComponent {
 
         fun onEvent(event: DamageEvent){
             when(event){
-                is DamageEvent.SaveDamage -> {
+                is DamageEvent.SaveDamage -> {  // Wenn "DamageEvent.SaveDamage" aufgerufen, wird "upsertDamage" ausgeführt
                     coroutineScope.launch{ dao.upsertDamage(event.damage) }
                 }
                 is DamageEvent.DeleteDamage -> {

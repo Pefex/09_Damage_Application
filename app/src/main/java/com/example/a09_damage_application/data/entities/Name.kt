@@ -10,6 +10,7 @@ import com.example.a09_damage_application.data.enums.TypeOfTitle
 data class Name(
     @PrimaryKey(autoGenerate = true) //
     val id: Int? = null,
+    val userId: Int? = null,
     val typeOfGender: TypeOfGender,
     val typOfTitle: TypeOfTitle,
     val firstName: String,

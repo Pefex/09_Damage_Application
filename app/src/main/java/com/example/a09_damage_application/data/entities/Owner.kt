@@ -1,9 +1,15 @@
+
 package com.example.a09_damage_application.data.entities
 
+import androidx.room.Embedded
+import androidx.room.Entity
 import androidx.room.PrimaryKey
-
+@Entity
 data class Owner(
     @PrimaryKey(autoGenerate = true)
-    val id: Int? = null,
-
+    val ownerId: Int? = null,  //"? = null" bedeutet, das in der Datenbankl dieser Wert nicht gesetzt werden muss.
+    @Embedded
+    val name: Name,
+    val privateContactId: Int? = null,
+    val businessContactId: Int? = null,
     )

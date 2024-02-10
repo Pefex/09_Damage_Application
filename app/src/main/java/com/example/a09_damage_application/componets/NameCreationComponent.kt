@@ -52,82 +52,62 @@ class NameCreationComponent {
     @ExperimentalMaterial3Api
     @Composable
 
-    fun NameCreationComposable(dao: NameDao, onNavigateDamage: ()->Unit, onNavigateAddress: ()->Unit){
+    fun NameCreationComposable() {
 
         val coroutineScope = rememberCoroutineScope()
 
         var nameId: Int? = null
 
-        var typeOfGenderInput = remember{
+        var typeOfGenderInput = remember {
             mutableStateOf(TypeOfGender.NOTHING_SELECTED)
         }
 
-        var typeOfTitleInput = remember{
+        var typeOfTitleInput = remember {
             mutableStateOf(TypeOfTitle.NOTHING_SELECTED)
         }
 
         GenderTypeSelectorComponent().GenderTypeSelectorComposable(typeOfGenderInput)
         // TitleTypeSelectorComponent().TitleTypSelectorComposable(typeOfTitleInput)
 
-        var firstNameInput by remember{
+        var firstNameInput by remember {
             mutableStateOf("")
         }
 
-        var lastNameInput by remember{
+        var lastNameInput by remember {
             mutableStateOf("")
         }
 
-        var nameList = remember {
-            mutableStateListOf<Name>() // Hier kann man auch schon Einträge übergeben.
-        }
-
-        dao.getNamesOrderedByTitle().observe(
-            LocalLifecycleOwner.current,
-            Observer { allNames->
-                nameList.clear()
-                nameList.addAll(allNames)
-            })
-
-        fun onEvent(event: NameEvent){
-            when(event){
-                is NameEvent.SaveName -> {
-                    coroutineScope.launch{ dao.upsertName(event.name) }
-                }
-                is NameEvent.DeleteName -> {
-                    coroutineScope.launch{ dao.deleteName(event.name) }
-                }
-                else -> {}
-            }
-        }
 
 
+        Column(
+            modifier = Modifier
 
-        Column (modifier = Modifier
 
-
-            .fillMaxSize()
-            .height(100.dp)
-            .padding(1.dp)
-            .background(AppBackground)
+                .fillMaxSize()
+                .height(100.dp)
+                .padding(1.dp)
+                .background(AppBackground)
             //.verticalScroll(rememberScrollState()).fillMaxSize()
             ,
 
             verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally)
+            horizontalAlignment = Alignment.CenterHorizontally
+        )
 
-            {
+        {
 
-            Column (modifier = Modifier
+            Column(
+                modifier = Modifier
 
-                .width(300.dp)
-               // .verticalScroll(rememberScrollState())
+                    .width(300.dp)
+                // .verticalScroll(rememberScrollState())
 
                 ,
                 //.verticalScroll(state = scrollState)
                 horizontalAlignment = Alignment.CenterHorizontally
-                 )
+            )
             {
-
+/*
                 Row (modifier = Modifier
                     .width(300.dp)
                     .height(50.dp)
@@ -158,27 +138,33 @@ class NameCreationComponent {
 
                         Text(text = "Zu Address", fontSize = 12.sp)
                     }
-                }
-/*
-                Row (modifier = Modifier
-                    .width(300.dp)
-                    .align((Alignment.Start))
-                ){
-                    Text(text = "Name",  fontWeight = FontWeight.Medium)
                 }*/
+                /*
+                                Row (modifier = Modifier
+                                    .width(300.dp)
+                                    .align((Alignment.Start))
+                                ){
+                                    Text(text = "Name",  fontWeight = FontWeight.Medium)
+                                }*/
 
-                Spacer(modifier = Modifier
-                    .height(5.dp))
+                Spacer(
+                    modifier = Modifier
+                        .height(5.dp)
+                )
 
                 GenderTypeSelectorComponent().GenderTypeSelectorComposable(typeOfGenderInput)
 
-                Spacer(modifier = Modifier
-                    .height(25.dp))
+                Spacer(
+                    modifier = Modifier
+                        .height(25.dp)
+                )
 
                 TitleCreationComponent().TitleCreationComposable(typeOfTitleInput)
 
-                Spacer(modifier = Modifier
-                    .height(10.dp))
+                Spacer(
+                    modifier = Modifier
+                        .height(10.dp)
+                )
 
 
                 OutlinedTextField(
@@ -190,8 +176,10 @@ class NameCreationComponent {
                     label = { Text("Vorname") },
                     singleLine = true
                 )
-                Spacer(modifier = Modifier
-                    .height(10.dp))
+                Spacer(
+                    modifier = Modifier
+                        .height(10.dp)
+                )
 
                 OutlinedTextField(
                     modifier = Modifier
@@ -202,62 +190,29 @@ class NameCreationComponent {
                     label = { Text("Vorname") },
                     singleLine = true
                 )
-                Spacer(modifier = Modifier
-                    .height(10.dp))
+                Spacer(
+                    modifier = Modifier
+                        .height(10.dp)
+                )
 
-                Button(
-                    onClick = {
-                        var n: Name = Name(
-                            id = nameId,
-                            typeOfGender = typeOfGenderInput.value,
-                            typOfTitle = typeOfTitleInput.value,
-                            firstName = firstNameInput,
-                            lastName = lastNameInput
-                        );
-                        onEvent(NameEvent.SaveName(n))
-                        firstNameInput = ""; lastNameInput = "" },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(2.dp)
-                        ) {
-                    Text(text = "Add to List", fontSize = 18.sp)
+                fun getName(): Name {
+                    var n: Name = Name(
+                        id = nameId,
+                        typeOfGender = typeOfGenderInput.value,
+                        typOfTitle = typeOfTitleInput.value,
+                        firstName = firstNameInput,
+                        lastName = lastNameInput
+                    );
 
+                    firstNameInput = ""; lastNameInput = ""
+                    return n
                 }
 
-                Column (modifier = Modifier
-                    .clip(RoundedCornerShape(5.dp))
-                    .fillMaxWidth()
-                    //.height(80.dp)
-                    .background(Color(37, 150, 190, 150))){
-                    LazyColumn(modifier = Modifier
-
-                        .padding(1.5.dp)
-                        //.border(2.dp, color = Color.Red)
-                        .background(Color(37, 150, 190, 150), shape = RoundedCornerShape(5.dp))){
-
-                        items(items=nameList){
-                            Box(
-                                BoxRounded().boxRounded
-                            ) {
-                                Column {
-                                    Text(text = ""+it.typeOfGender.description,
-                                        fontSize = 18.sp)
-                                    Text(text = ""+it.typOfTitle.description,
-                                        fontSize = 18.sp)
-                                    Text(text = ""+it.firstName,
-                                        fontSize = 18.sp)
-                                    Text(text = ""+it.lastName,
-                                        fontSize = 18.sp)
-                                }
-                            }
-
-                        }
-                        }
-                }
-                Spacer(modifier = Modifier
-                    .height(325.dp))
-                    }
-                }
 
             }
+        }
+
+    }
+
+
 }

@@ -5,9 +5,11 @@ import androidx.room.PrimaryKey
 @Entity
 data class Contact(
     @PrimaryKey(autoGenerate = true)
-    val id: Int? = null,
+    val contactId: Int? = null,
+    val userId: Int? = null, //" val addressId: Int" bedeutet, das in der Datenbankl dieser Wert gesetzt werden muss.
+    val addressId: Int? = null,
     val telephoneNumberMobil: String,
     val telephoneNumberLandline: String,
-    val mailaddress: String
+    val mailAddress: String
 
 )
