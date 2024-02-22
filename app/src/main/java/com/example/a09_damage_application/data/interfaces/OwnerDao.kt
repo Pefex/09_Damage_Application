@@ -4,10 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Upsert
 import com.example.a09_damage_application.data.entities.Owner
-import com.example.a09_damage_application.data.entities.OwnerWithContacts
 
 @Dao
 interface OwnerDao {
@@ -20,12 +18,14 @@ interface OwnerDao {
     @Delete
     suspend fun deleteOwner(owner: Owner)
 
+    @Query("DELETE FROM owner WHERE ownerId = :ownerId")
+    suspend fun deleteOwnerById(ownerId: Int)
+
     @Query("SELECT * FROM owner ORDER BY ownerId ASC")
     fun getOwnerOrderByTitle(): LiveData<List<Owner>>
 
-    @Transaction
-    @Query("SELECT * FROM Owner")
-    fun getOwnersWithContacts(): LiveData<List<OwnerWithContacts>>
+    @Query("SELECT * FROM owner WHERE ownerId = :id")
+    fun getOwnerOrderById(id: Int): LiveData<Owner>
 
 
 }

@@ -81,8 +81,7 @@ fun Mainscreen(db: AppDatabase) {
 
         composable("ownerCreation") {
             OwnerCreationComponent().OwnerCreationComposable(
-                db.ownerWithContactsDao, db.ownerDao, db.addressDao, db.contactDao
-
+                db.ownerDao, db.contactWithAddressDao, db.addressDao, db.contactDao
             )
         }
         /*

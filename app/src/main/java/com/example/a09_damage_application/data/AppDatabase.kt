@@ -13,7 +13,6 @@ import com.example.a09_damage_application.data.interfaces.ContactDao
 import com.example.a09_damage_application.data.interfaces.ContactWithAddressDao
 import com.example.a09_damage_application.data.interfaces.DamageDao
 import com.example.a09_damage_application.data.interfaces.NameDao
-import com.example.a09_damage_application.data.interfaces.OwnerWithContactsDao
 
 @Database(
     entities = [Damage :: class, Address :: class, Name :: class, Contact :: class, Owner :: class],
@@ -24,6 +23,7 @@ abstract class AppDatabase : RoomDatabase (){ // Die Beschreibung des Schadens-A
     abstract val nameDao: NameDao
     abstract val contactDao: ContactDao
     abstract val ownerDao: OwnerDao
+    abstract val contactWithAddressDao: ContactWithAddressDao
 
 
 

@@ -249,7 +249,6 @@ class AddressCreationComponent {
                 fun addAddress(contactId: Int?) {
                     var f: Address = Address(
                         addressId = addressId,
-                        addressContactId = contactId,
                         street = streetInput,
                         streetNumber = streetNumberInput,
                         postalCode = postalCodeInput,

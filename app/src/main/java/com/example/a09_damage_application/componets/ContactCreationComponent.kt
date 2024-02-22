@@ -165,7 +165,7 @@ class ContactCreationComponent {
                 }*/
 
                 val addressCreation = AddressCreationComponent().AddressCreationComposable(
-                    dao = addressDao
+                    dao = addressDao,
                 )
 
                 Row(
@@ -238,14 +238,17 @@ class ContactCreationComponent {
                 )
 
                 fun addContact() {
+                    // Es wird ein neues Objekt der Klasse Address erzeugt.
+                    //To do addressCreation.
                     var c: Contact = Contact(
                         contactId = contactId,
                         telephoneNumberMobil = telephoneNumberMobilInput,
                         telephoneNumberLandline = telephoneNumberLandlineInput,
+                        isBusinessContact = false, //TODO
+                        businessName = null, //TODO
                         mailAddress = mailaddressInput,
-
-                        );// Es wird ein neues Objekt der Klasse Address erzeugt.
-                    //To do addressCreation.
+                        contactAddressId = null, //TODO
+                        );
                     onEvent(ContactEvent.SaveContact(c))
 
                     contactId = null; telephoneNumberMobilInput = "";telephoneNumberLandlineInput =

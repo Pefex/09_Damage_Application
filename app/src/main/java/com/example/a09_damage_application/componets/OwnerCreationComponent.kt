@@ -16,8 +16,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
@@ -38,35 +36,55 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
-import com.example.a09_damage_application.componets.events.AddressEvent
 import com.example.a09_damage_application.componets.events.OwnerEvent
-import com.example.a09_damage_application.data.entities.Owner
-import com.example.a09_damage_application.data.entities.OwnerWithContacts
+import com.example.a09_damage_application.data.combinedData.ContactWithAddress
+import com.example.a09_damage_application.data.combinedData.OwnerWithContacts
 import com.example.a09_damage_application.data.interfaces.AddressDao
 import com.example.a09_damage_application.data.interfaces.ContactDao
+import com.example.a09_damage_application.data.interfaces.ContactWithAddressDao
 import com.example.a09_damage_application.data.interfaces.OwnerDao
-import com.example.a09_damage_application.data.interfaces.OwnerWithContactsDao
 import com.example.a09_damage_application.ui.theme.AppBackground
 import com.example.a09_damage_application.ui.theme.AppBlue
 import com.example.a09_damage_application.ui.theme.BoxRounded
-import com.example.a09_damage_application.ui.theme.Pink40
 import kotlinx.coroutines.launch
 
 class OwnerCreationComponent {
     @ExperimentalMaterial3Api
     @Composable
-    fun OwnerCreationComposable( ownerDao: OwnerDao, addressDao: AddressDao, contactDao: ContactDao){
+    fun OwnerCreationComposable(
+        ownerDao: OwnerDao,
+        contactWithAddressDao: ContactWithAddressDao,
+        addressDao: AddressDao,
+        contactDao: ContactDao
+    ){
         val coroutineScope = rememberCoroutineScope()
 
         var ownerList = remember {
             mutableStateListOf<OwnerWithContacts>() // Hier kann man auch schon Einträge übergeben.
         }
 
-        ownerDao.getOwnersWithContacts().observe(
+        ownerDao.getOwnerOrderByTitle().observe(
             LocalLifecycleOwner.current,
             Observer { allOwners ->
                 ownerList.clear()
-                ownerList.addAll(allOwners)
+
+                for (owner in allOwners) {
+                    var privateContact: ContactWithAddress? = null
+                    var businessContact: ContactWithAddress? = null
+                    if (owner.privateContactId != null){
+                        privateContact = contactWithAddressDao.getContactWithAddress(owner.privateContactId).value
+                    }
+                    if (owner.businessContactId != null){
+                        businessContact = contactWithAddressDao.getContactWithAddress(owner.businessContactId).value
+                    }
+                    var ownerWithContacts = OwnerWithContacts(
+                        owner.ownerId!!,
+                        privateContact,
+                        businessContact
+                    )
+                    ownerList.add(ownerWithContacts)
+                }
+
             })
 
         fun onEvent(event: OwnerEvent){
@@ -75,7 +93,7 @@ class OwnerCreationComponent {
                     coroutineScope.launch{ ownerDao.upsertOwner(event.owner) }
                 }
                 is OwnerEvent.DeleteOwner -> {
-                    coroutineScope.launch{ ownerDao.deleteOwner(event.owner) }
+                    coroutineScope.launch{ ownerDao.deleteOwnerById(event.ownerId) }
                 }
                 else -> {}
             }
@@ -230,16 +248,17 @@ class OwnerCreationComponent {
                                 modifier = Modifier
                                     .fillMaxWidth()
                             ){
-                                Text(text = ""+it.privateContact.contact.mailAddress
+                                Text(text = ""+it.privateContact?.mailAddress
                                     //+ it.number,
                                     ,fontSize = 18.sp)
-                                Text(text = ""+it.owner.name.firstName
+                                /*
+                                Text(text = ""+it.name.firstName
                                     //+ it.number,
                                     ,fontSize = 18.sp)
-                                Text(text = ""+it.businessContact.address.city
+                                 */
+                                Text(text = ""+it.businessContact?.city
                                     //+ it.number,
                                     ,fontSize = 18.sp)
-
 
                             }
 
@@ -254,7 +273,7 @@ class OwnerCreationComponent {
                                     }
                                     )
                                     {
-                                        IconButton(onClick = {onEvent(OwnerEvent.DeleteOwner(it.owner)) }) {
+                                        IconButton(onClick = {onEvent(OwnerEvent.DeleteOwner(it.ownerId)) }) {
                                             Icon(imageVector = Icons.Default.Delete,
                                                 contentDescription = "Favorite",
                                                 modifier = Modifier.size(40.dp),
