@@ -63,6 +63,7 @@ class ContactCreationComponent {
     fun ContactCreationComposable(
         contactDao: ContactDao,
         addressDao: AddressDao,
+        isBusinessContact: Boolean
 
 
     ) {
@@ -163,6 +164,11 @@ class ContactCreationComponent {
                     }
 
                 }*/
+                
+                if (isBusinessContact == true){
+                    Text(text = "Firmenkontakt:")
+                    
+                }
 
                 val addressCreation = AddressCreationComponent().AddressCreationComposable(
                     dao = addressDao,

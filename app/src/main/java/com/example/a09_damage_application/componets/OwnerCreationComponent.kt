@@ -55,8 +55,11 @@ class OwnerCreationComponent {
         ownerDao: OwnerDao,
         contactWithAddressDao: ContactWithAddressDao,
         addressDao: AddressDao,
-        contactDao: ContactDao
-    ){
+        contactDao: ContactDao,
+        onNavigateDamage: () -> Unit,
+        //onNavigateDamageList: () -> Unit,
+
+        ){
         val coroutineScope = rememberCoroutineScope()
 
         var ownerList = remember {
@@ -99,7 +102,7 @@ class OwnerCreationComponent {
             }
         }
 
-        NameCreationComponent().NameCreationComposable()
+
 
         Column (modifier = Modifier
 
@@ -107,7 +110,7 @@ class OwnerCreationComponent {
             .fillMaxSize()
             .height(100.dp)
             .padding(1.dp)
-            .background(AppBackground)
+            .background(Color.Green)
             //.verticalScroll(rememberScrollState()).fillMaxSize()
             ,
 
@@ -115,6 +118,27 @@ class OwnerCreationComponent {
             horizontalAlignment = Alignment.CenterHorizontally
 
         ){
+
+
+
+            Row (modifier = Modifier
+                .width(300.dp)
+                .height(50.dp)
+
+
+            ){
+                Button(onClick = {
+                    onNavigateDamage()}) {
+                    Text(text = "Zu Schaden", fontSize = 14.sp)
+
+                }
+/*
+                Button(onClick = {onNavigateDamageList()}) {
+                    Text(text = "Zu DamageList", fontSize = 14.sp)
+
+                }*/
+
+            }
             Column (modifier = Modifier
 
                 .width(300.dp)
@@ -139,7 +163,7 @@ class OwnerCreationComponent {
 
         }
 
-        ContactCreationComponent().ContactCreationComposable( contactDao, addressDao)  //Privatadresse
+        ContactCreationComponent().ContactCreationComposable( contactDao, addressDao, false)  //Privatadresse
 
         Column (modifier = Modifier
 
@@ -147,7 +171,7 @@ class OwnerCreationComponent {
             .fillMaxSize()
             .height(100.dp)
             .padding(1.dp)
-            .background(AppBackground)
+            .background(Color.Magenta)
             //.verticalScroll(rememberScrollState()).fillMaxSize()
             ,
 
@@ -179,17 +203,17 @@ class OwnerCreationComponent {
 
         }
 
-        ContactCreationComponent().ContactCreationComposable( contactDao, addressDao) // Firmenkontakt
+        ContactCreationComponent().ContactCreationComposable( contactDao, addressDao, true) // Firmenkontakt
 
 
 
         Column (modifier = Modifier
 
 
-            .fillMaxSize()
+            .fillMaxWidth()
             .height(100.dp)
             .padding(1.dp)
-            .background(AppBackground)
+            .background(Color.Gray)
             //.verticalScroll(rememberScrollState()).fillMaxSize()
             ,
 
@@ -197,6 +221,8 @@ class OwnerCreationComponent {
             horizontalAlignment = Alignment.CenterHorizontally
 
         ){
+
+            NameCreationComponent().NameCreationComposable()
             Column (modifier = Modifier
 
                 .width(300.dp)
@@ -213,7 +239,7 @@ class OwnerCreationComponent {
                 Button(onClick = { // to do add owner, add contact
                     },
                     modifier = Modifier
-                        .size(170.dp, 40.dp)
+                        .size(270.dp, 40.dp)
                 ) {
 
                     Text(text = "Eigentümer hinzufügen", fontSize = 18.sp) }

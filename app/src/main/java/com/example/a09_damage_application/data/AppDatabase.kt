@@ -15,11 +15,15 @@ import com.example.a09_damage_application.data.interfaces.DamageDao
 import com.example.a09_damage_application.data.interfaces.NameDao
 
 @Database(
-    entities = [Damage :: class, Address :: class, Name :: class, Contact :: class, Owner :: class],
+    entities = [Damage :: class,
+        Address :: class, Name :: class,
+        Contact :: class, Owner :: class],
     version = 1)
 abstract class AppDatabase : RoomDatabase (){ // Die Beschreibung des Schadens-Archives als AppDatabase.
-    abstract val damageDao: DamageDao
-    abstract val addressDao: AddressDao
+    abstract val
+            damageDao: DamageDao
+    abstract val
+            addressDao: AddressDao
     abstract val nameDao: NameDao
     abstract val contactDao: ContactDao
     abstract val ownerDao: OwnerDao

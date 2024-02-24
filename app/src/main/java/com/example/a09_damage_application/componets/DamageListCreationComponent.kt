@@ -30,16 +30,16 @@ class DamageListCreationComponent{
 
     @ExperimentalMaterial3Api
     @Composable
-    fun DamageListCreationComposable(onNavigateName: () -> Unit, onNavigateDamage: () -> Unit,onNavigateAddress: () -> Unit ) {
+    fun DamageListCreationComposable(onNavigateOwner: () -> Unit, onNavigateDamage: () -> Unit ) {
 
         //var id1:String = "p1.png"
         //var id2 = 2
         //val recipeImage: Bitmap = getImageFromAssets(p001.png)
 
-        val imgRes = painterResource(id = R.drawable.p1)
+        val imgRes = painterResource(id = R.drawable.ic_launcher_background)
 
         val imageId = arrayOf(
-            R.drawable.p1,
+            R.drawable.ic_launcher_background,
             R.drawable.ic_launcher_background,
             R.drawable.ic_launcher_foreground
         )
@@ -92,7 +92,7 @@ class DamageListCreationComponent{
 
                 Text(text = "Zu Damage", fontSize = 12.sp)
             }
-            Button(onClick = {onNavigateName()},
+            Button(onClick = {onNavigateOwner()},
 
                 colors = ButtonDefaults.buttonColors
                     (contentColor = Color.White,   //pre-created colour

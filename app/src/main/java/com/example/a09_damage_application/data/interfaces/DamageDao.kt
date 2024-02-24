@@ -9,18 +9,22 @@ import com.example.a09_damage_application.data.entities.Damage
 
 
 
-@Dao // Ist der Archiv-Mitarbeiter der zwischen dem Archiv und dem Büro hin und her läuft.
-interface DamageDao { // Das ist eine Beschreibung von dem, was ein Schadens-Archivmitarbeiter machen kann.
+@Dao // Ist der Archiv-Mitarbeiter der zwischen dem Archiv und dem Büro
+// hin und her läuft.
+interface DamageDao { // Das ist eine Beschreibung von dem, was ein
+    // Schadens-Archivmitarbeiter machen kann.
     @Upsert
-    suspend fun upsertDamage(  // einfügen oder ändern eines Schadens-Ordners
+    suspend fun upsertDamage(  // einfügen oder
+        // ändern eines Schadens-Ordners
         damage: Damage)
 
     @Delete
-    suspend fun deleteDamage(damage: Damage)  //suspend kennzeichnet, dass hier etwas passiert, das
-    //Arbeit in einem bestimmten Scope blockieren kann.
+    suspend fun deleteDamage(damage: Damage)  //suspend kennzeichnet, dass
+    // hier etwas passiert, das Arbeit in einem bestimmten Scope blockieren kann.
 
-    @Query("SELECT * FROM damage ORDER BY descriptionTitle ASC")  //hole (SELECT) alle (*),
-// Schäden aus der Schadenstabelle, sortiert nach (ORDER BY), Title (Titelbeschreibung) (descriptionTitle, ASC= aufsteigend)
+    @Query("SELECT * FROM damage ORDER BY descriptionTitle ASC")  //hole (SELECT)
+    // alle (*), Schäden aus der Schadenstabelle, sortiert nach (ORDER BY), Title
+// (Titelbeschreibung) (descriptionTitle, ASC= aufsteigend)
     fun getDamagesOrderedByTitle(): LiveData<List<Damage>>
 }
 

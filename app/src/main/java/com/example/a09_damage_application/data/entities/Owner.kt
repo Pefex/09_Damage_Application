@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class Owner(
     @PrimaryKey(autoGenerate = true)
-    val ownerId: Int? = null,  //"? = null" bedeutet, das in der Datenbankl dieser Wert nicht gesetzt werden muss.
+    val ownerId: Int? = null,  //"? = null" bedeutet, das in der Datenbank dieser Wert nicht gesetzt werden muss.
     val nameId: Int,
     val privateContactId: Int? = null,
     val businessContactId: Int? = null,

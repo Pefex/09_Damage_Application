@@ -54,8 +54,8 @@ import kotlinx.coroutines.launch
 class DamageCreationComponent {
     @ExperimentalMaterial3Api
     @Composable
-    fun DamageCreationComposable(dao: DamageDao, onNavigateName: ()->Unit, onNavigateDamageList: ()->Unit,
-                                 onNavigateAddress: ()->Unit, onNavigateContact: ()->Unit,
+    fun DamageCreationComposable(dao: DamageDao, //onNavigateDamageList: ()->Unit,
+
                                  onNavigateOwner: ()->Unit) {
 
         val coroutineScope = rememberCoroutineScope()
@@ -87,13 +87,15 @@ class DamageCreationComponent {
 
         //=== to handle onclick to add to list of Lazycolumn
         var damageList = remember {
-            mutableStateListOf<Damage>() // Hier kann man auch schon Einträge übergeben.
+            mutableStateListOf<Damage>() // Hier kann
+        // man auch schon Einträge übergeben.
         }
 
-        dao.getDamagesOrderedByTitle().observe( //Wenn sich Werte in der Liste ändern, dann wird
-            // die Liste gelöscht und neu befüllt.
-            LocalLifecycleOwner.current, //Es wird nur solange der aktuelle Lifecycle (Screen) läuft, beobachtet,
-            //ob sich die Einträge in der Schadenstabelle der Datenbank verändert haben.
+        dao.getDamagesOrderedByTitle().observe( //Wenn sich Werte in der Liste ändern,
+            // dann wird die Liste gelöscht und neu befüllt.
+            LocalLifecycleOwner.current, //Es wird nur solange der aktuelle Lifecycle
+            // (Screen) läuft, beobachtet, ob sich die Einträge in der Schadenstabelle
+            // der Datenbank verändert haben.
             Observer { allDamages ->
                 damageList.clear()
                 damageList.addAll(allDamages)
@@ -106,7 +108,8 @@ class DamageCreationComponent {
 
         fun onEvent(event: DamageEvent){
             when(event){
-                is DamageEvent.SaveDamage -> {  // Wenn "DamageEvent.SaveDamage" aufgerufen, wird "upsertDamage" ausgeführt
+                is DamageEvent.SaveDamage -> {  // Wenn "DamageEvent.SaveDamage"
+                    //aufgerufen, wird "upsertDamage" ausgeführt
                     coroutineScope.launch{ dao.upsertDamage(event.damage) }
                 }
                 is DamageEvent.DeleteDamage -> {
@@ -131,40 +134,20 @@ class DamageCreationComponent {
 
 
             ){
-                Button(onClick = {onNavigateName()}) {
-                    Text(text = "Zu Name", fontSize = 14.sp)
+                Button(onClick = {
+                    onNavigateOwner()}) {
+                    Text(text = "Zu Eigentümer", fontSize = 14.sp)
 
                 }
-
+/*
                 Button(onClick = {onNavigateDamageList()}) {
                     Text(text = "Zu DamageList", fontSize = 14.sp)
 
-                }
+                }*/
 
             }
 
-            Row (modifier = Modifier
-                .width(300.dp)
-                .height(50.dp)
 
-
-            ){
-                Button(onClick = {onNavigateAddress()}) {
-                    Text(text = "Zu Address", fontSize = 10.sp)
-
-                }
-
-                Button(onClick = {onNavigateContact()}) {
-                    Text(text = "Zu Contact", fontSize = 10.sp)
-
-                }
-
-                Button(onClick = {onNavigateOwner}) {
-                    Text(text = "Zu Owner", fontSize = 10.sp)
-
-                }
-
-            }
             DamageTypSelctorComponent().DamageTypSelctorComposable(typeOfDamageInput)
             OutlinedTextField(modifier = Modifier
                 .background(color = Color(255, 255, 255))

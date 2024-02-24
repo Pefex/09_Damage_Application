@@ -86,7 +86,7 @@ class NameCreationComponent {
                 .fillMaxSize()
                 .height(100.dp)
                 .padding(1.dp)
-                .background(AppBackground)
+                .background(Color.Red)
             //.verticalScroll(rememberScrollState()).fillMaxSize()
             ,
 

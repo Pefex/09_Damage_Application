@@ -13,12 +13,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
-import com.example.a09_damage_application.componets.AddAndEditOwnersComponent
-import com.example.a09_damage_application.componets.AddressCreationComponent
-import com.example.a09_damage_application.componets.ContactCreationComponent
 import com.example.a09_damage_application.componets.DamageCreationComponent
 import com.example.a09_damage_application.componets.DamageListCreationComponent
-import com.example.a09_damage_application.componets.NameCreationComponent
 import com.example.a09_damage_application.componets.OwnerCreationComponent
 import com.example.a09_damage_application.data.AppDatabase
 import com.example.a09_damage_application.ui.theme._09_Damage_ApplicationTheme
@@ -61,30 +57,49 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Mainscreen(db: AppDatabase) {
     //AddressCreationComponent().AddressCreationComposable(db.addressDao)
+    //OwnerCreationComponent().OwnerCreationComposable
 
 
     //NameCreationComponent().NameCreationComposable(db.nameDao)
 
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "damageCreation") {
+
         composable("damageCreation") {
             DamageCreationComponent().DamageCreationComposable(
                 db.damageDao,
-                onNavigateName = { navController.navigate("nameCreation") },
-                onNavigateDamageList = { navController.navigate("damageListCreation") },
-                onNavigateAddress = { navController.navigate("addressCreation") },
-                onNavigateContact = { navController.navigate("contactCreation") },
+                //onNavigateDamageList = { navController.navigate("damageListCreation") },
                 onNavigateOwner = { navController.navigate("ownerCreation") }
-
             )
         }
 
         composable("ownerCreation") {
             OwnerCreationComponent().OwnerCreationComposable(
-                db.ownerDao, db.contactWithAddressDao, db.addressDao, db.contactDao
+                db.ownerDao,
+                db.contactWithAddressDao,
+                db.addressDao,
+                db.contactDao,
+
+
+                onNavigateDamage = { navController.navigate("damageCreation") }
+
+                //onNavigateDamageList = { navController.navigate("damageListCreation") }
+
+
             )
         }
+/*
+        composable("damageListCreation") {
+            DamageListCreationComponent().DamageListCreationComposable(
+                onNavigateDamage = { navController.navigate("damageCreation") },
+                onNavigateOwner = { navController.navigate("nameCreation") },
+                )
+        }*/
+
+
+
         /*
+
         composable("addressCreation") {
             AddressCreationComponent().AddressCreationComposable(
                 db.addressDao,
@@ -93,15 +108,7 @@ fun Mainscreen(db: AppDatabase) {
         }
 
 
-        composable("damageListCreation") {
-            DamageListCreationComponent().DamageListCreationComposable(
-                //db.damageDao,
 
-                onNavigateDamage = { navController.navigate("damageCreation") },
-                onNavigateName = { navController.navigate("nameCreation") },
-                onNavigateAddress = { navController.navigate("addressCreation") }
-            )
-        }
 
         composable("contactCreation") {
             ContactCreationComponent().ContactCreationComposable(

@@ -22,12 +22,12 @@ interface ContactWithAddressDao {
                 "telephoneNumberLandline AS telephoneNumberLandline, " +
                 "mailAddress AS mailAddress " +
         "FROM address, contact " +
-        "WHERE addressId = contactAddressId")
+        "WHERE addressId = contactAddressId") //
     fun getContactsWithAddress(): LiveData<List<ContactWithAddress>>
 
     @Query(
         "SELECT " +
-                "contactId AS contactId, " +
+                "contactId AS contactId, " +  // links ist der Wert aus der Datenbank-Tabelle - rechts ist der Wert der in die Klasse "ContactWithAddress übergeben wird
                 "addressId AS addressId, " +
                 "street AS street, " +
                 "streetNumber AS streetNumber, " +
