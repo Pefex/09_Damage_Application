@@ -66,7 +66,7 @@ class NameCreationComponent {
             mutableStateOf(TypeOfTitle.NOTHING_SELECTED)
         }
 
-        GenderTypeSelectorComponent().GenderTypeSelectorComposable(typeOfGenderInput)
+        //GenderTypeSelectorComponent().GenderTypeSelectorComposable(typeOfGenderInput)
         // TitleTypeSelectorComponent().TitleTypSelectorComposable(typeOfTitleInput)
 
         var firstNameInput by remember {
@@ -77,14 +77,75 @@ class NameCreationComponent {
             mutableStateOf("")
         }
 
+        Spacer(
+            modifier = Modifier
+                .height(5.dp)
+        )
 
+        GenderTypeSelectorComponent().GenderTypeSelectorComposable(typeOfGenderInput)
+
+        Spacer(
+            modifier = Modifier
+                .height(25.dp)
+        )
+
+        TitleCreationComponent().TitleCreationComposable(typeOfTitleInput)
+
+        Spacer(
+            modifier = Modifier
+                .height(10.dp)
+        )
+
+
+        OutlinedTextField(
+            modifier = Modifier
+                .background(Color.White)
+                .width(300.dp),
+            value = firstNameInput,
+            onValueChange = { firstNameInput = it },
+            label = { Text("Vorname") },
+            singleLine = true
+        )
+        Spacer(
+            modifier = Modifier
+                .height(10.dp)
+        )
+
+        OutlinedTextField(
+            modifier = Modifier
+                .background(Color.White)
+                .width(300.dp),
+            value = lastNameInput,
+            onValueChange = { lastNameInput = it },
+            label = { Text("Nachname") },
+            singleLine = true
+        )
+        Spacer(
+            modifier = Modifier
+                .height(10.dp)
+        )
+
+        fun getName(): Name {
+            var n: Name = Name(
+                id = nameId,
+                typeOfGender = typeOfGenderInput.value,
+                typOfTitle = typeOfTitleInput.value,
+                firstName = firstNameInput,
+                lastName = lastNameInput
+            );
+
+            firstNameInput = ""; lastNameInput = ""
+            return n
+        }
+
+/*
 
         Column(
             modifier = Modifier
 
 
-                .fillMaxSize()
-                .height(100.dp)
+               // .fillMaxSize()
+                .height(200.dp)
                 .padding(1.dp)
                 .background(Color.Red)
             //.verticalScroll(rememberScrollState()).fillMaxSize()
@@ -99,7 +160,7 @@ class NameCreationComponent {
             Column(
                 modifier = Modifier
 
-                    .width(300.dp)
+                    .width(200.dp)
                 // .verticalScroll(rememberScrollState())
 
                 ,
@@ -147,70 +208,11 @@ class NameCreationComponent {
                                     Text(text = "Name",  fontWeight = FontWeight.Medium)
                                 }*/
 
-                Spacer(
-                    modifier = Modifier
-                        .height(5.dp)
-                )
 
-                GenderTypeSelectorComponent().GenderTypeSelectorComposable(typeOfGenderInput)
-
-                Spacer(
-                    modifier = Modifier
-                        .height(25.dp)
-                )
-
-                TitleCreationComponent().TitleCreationComposable(typeOfTitleInput)
-
-                Spacer(
-                    modifier = Modifier
-                        .height(10.dp)
-                )
-
-
-                OutlinedTextField(
-                    modifier = Modifier
-                        .background(Color.White)
-                        .width(300.dp),
-                    value = firstNameInput,
-                    onValueChange = { firstNameInput = it },
-                    label = { Text("Vorname") },
-                    singleLine = true
-                )
-                Spacer(
-                    modifier = Modifier
-                        .height(10.dp)
-                )
-
-                OutlinedTextField(
-                    modifier = Modifier
-                        .background(Color.White)
-                        .width(300.dp),
-                    value = lastNameInput,
-                    onValueChange = { lastNameInput = it },
-                    label = { Text("Vorname") },
-                    singleLine = true
-                )
-                Spacer(
-                    modifier = Modifier
-                        .height(10.dp)
-                )
-
-                fun getName(): Name {
-                    var n: Name = Name(
-                        id = nameId,
-                        typeOfGender = typeOfGenderInput.value,
-                        typOfTitle = typeOfTitleInput.value,
-                        firstName = firstNameInput,
-                        lastName = lastNameInput
-                    );
-
-                    firstNameInput = ""; lastNameInput = ""
-                    return n
-                }
 
 
             }
-        }
+        }*/
 
     }
 

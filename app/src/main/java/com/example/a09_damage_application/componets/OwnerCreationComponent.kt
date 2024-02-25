@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.BadgedBox
@@ -59,7 +61,7 @@ class OwnerCreationComponent {
         onNavigateDamage: () -> Unit,
         //onNavigateDamageList: () -> Unit,
 
-        ){
+    ) {
         val coroutineScope = rememberCoroutineScope()
 
         var ownerList = remember {
@@ -74,11 +76,13 @@ class OwnerCreationComponent {
                 for (owner in allOwners) {
                     var privateContact: ContactWithAddress? = null
                     var businessContact: ContactWithAddress? = null
-                    if (owner.privateContactId != null){
-                        privateContact = contactWithAddressDao.getContactWithAddress(owner.privateContactId).value
+                    if (owner.privateContactId != null) {
+                        privateContact =
+                            contactWithAddressDao.getContactWithAddress(owner.privateContactId).value
                     }
-                    if (owner.businessContactId != null){
-                        businessContact = contactWithAddressDao.getContactWithAddress(owner.businessContactId).value
+                    if (owner.businessContactId != null) {
+                        businessContact =
+                            contactWithAddressDao.getContactWithAddress(owner.businessContactId).value
                     }
                     var ownerWithContacts = OwnerWithContacts(
                         owner.ownerId!!,
@@ -90,122 +94,231 @@ class OwnerCreationComponent {
 
             })
 
-        fun onEvent(event: OwnerEvent){
-            when(event){
+        fun onEvent(event: OwnerEvent) {
+            when (event) {
                 is OwnerEvent.SaveOwner -> {
-                    coroutineScope.launch{ ownerDao.upsertOwner(event.owner) }
+                    coroutineScope.launch { ownerDao.upsertOwner(event.owner) }
                 }
+
                 is OwnerEvent.DeleteOwner -> {
-                    coroutineScope.launch{ ownerDao.deleteOwnerById(event.ownerId) }
+                    coroutineScope.launch { ownerDao.deleteOwnerById(event.ownerId) }
                 }
+
                 else -> {}
             }
         }
 
 
 
-        Column (modifier = Modifier
+        Column(
+            modifier = Modifier
 
 
-            .fillMaxSize()
-            .height(100.dp)
-            .padding(1.dp)
-            .background(Color.Green)
-            //.verticalScroll(rememberScrollState()).fillMaxSize()
-            ,
-
+                .fillMaxSize()
+                .height(500.dp)
+                .padding(1.dp)
+                .background(Color.Green)
+                //.verticalScroll(rememberScrollState()).fillMaxSize(),
+,
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
 
-        ){
+        ) {
+
+            LazyColumn(
+                modifier = Modifier
 
 
+                    .width(300.dp)
+                    .height(700.dp)
+                    .padding(1.dp)
+                    .background(Color.Yellow)
+                .verticalScroll(rememberScrollState()),
 
-            Row (modifier = Modifier
-                .width(300.dp)
-                .height(50.dp)
-
-
-            ){
-                Button(onClick = {
-                    onNavigateDamage()}) {
-                    Text(text = "Zu Schaden", fontSize = 14.sp)
-
-                }
-/*
-                Button(onClick = {onNavigateDamageList()}) {
-                    Text(text = "Zu DamageList", fontSize = 14.sp)
-
-                }*/
-
-            }
-            Column (modifier = Modifier
-
-                .width(300.dp)
-                // .verticalScroll(rememberScrollState())
-
-                ,
-                //.verticalScroll(state = scrollState)
+                verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
 
+            ) {
 
-            ){
 
-                Row (modifier = Modifier
-                    .fillMaxWidth()
-                    .align((Alignment.Start))
-                ){
-                    Text(text = "Privatkontakt",  fontWeight = FontWeight.Medium)
+                Row(
+                    modifier = Modifier
+                        .width(300.dp)
+                        .height(50.dp)
+
+
+                ) {
+                    Button(onClick = {
+                        onNavigateDamage()
+                    }) {
+                        Text(text = "Zu Schaden", fontSize = 14.sp)
+
+                    }
+                    /*
+                    Button(onClick = {onNavigateDamageList()}) {
+                        Text(text = "Zu DamageList", fontSize = 14.sp)
+
+                    }*/
                 }
+
+                NameCreationComponent().NameCreationComposable()
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align((Alignment.Start))
+                ) {
+                    Text(text = "Privatkontakt:", fontWeight = FontWeight.Medium)
+                }
+
+                ContactCreationComponent().ContactCreationComposable(
+                    contactDao,
+                    addressDao,
+                    false
+                ) // Firmenkontakt
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align((Alignment.Start))
+                ) {
+                    Text(text = "Firmenkontakt:", fontWeight = FontWeight.Medium)
+                }
+
+
+
+
+
+                ContactCreationComponent().ContactCreationComposable(
+                    contactDao,
+                    addressDao,
+                    true
+                ) // Firmenkontakt
+
+                Column(
+                    modifier = Modifier
+
+                        .width(300.dp)
+                    // .verticalScroll(rememberScrollState())
+
+                    ,
+                    //.verticalScroll(state = scrollState)
+                    horizontalAlignment = Alignment.CenterHorizontally
+
+
+                ) {
+
+
+                    Button(
+                        onClick = { // to do add owner, add contact
+                        },
+                        modifier = Modifier
+                            .size(270.dp, 40.dp)
+                    ) {
+
+                        Text(text = "Eigentümer hinzufügen", fontSize = 18.sp)
+                    }
+
+
+                }
+
+                // Ausgabe Kontaktliste
+
+                Column(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(5.dp))
+                        .fillMaxWidth()
+                        //.height(28.dp)
+                        .background(AppBlue)
+                ) {
+                    LazyColumn(
+                        modifier = Modifier
+
+                            .padding(1.5.dp)
+                            //.border(2.dp, color = Color.Red)
+                            .background(Color(37, 150, 190, 150), shape = RoundedCornerShape(5.dp))
+
+                    ) {
+                        items(items = ownerList) {
+
+
+                            Box(
+                                BoxRounded().boxRounded
+                            ) {
+                                Column {
+                                    Row {
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                        ) {
+                                            Text(
+                                                text = "" + it.privateContact?.mailAddress
+                                                //+ it.number,
+                                                , fontSize = 18.sp
+                                            )
+                                            /*
+                                        Text(text = ""+it.name.firstName
+                                            //+ it.number,
+                                            ,fontSize = 18.sp)
+                                         */
+                                            Text(
+                                                text = "" + it.businessContact?.city
+                                                //+ it.number,
+                                                , fontSize = 18.sp
+                                            )
+
+                                        }
+
+                                        Column {
+                                            Box(
+                                                modifier = Modifier
+                                                    .width(30.dp)
+                                                    .heightIn(30.dp),
+                                                contentAlignment = Alignment.Center
+                                            )
+                                            {
+                                                BadgedBox(badge = {
+
+                                                }
+                                                )
+                                                {
+                                                    IconButton(onClick = {
+                                                        onEvent(
+                                                            OwnerEvent.DeleteOwner(
+                                                                it.ownerId
+                                                            )
+                                                        )
+                                                    }) {
+                                                        Icon(
+                                                            imageVector = Icons.Default.Delete,
+                                                            contentDescription = "Favorite",
+                                                            modifier = Modifier.size(40.dp),
+                                                            tint = AppBlue,
+                                                        )
+                                                    }
+                                                }
+                                            }
+
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+
 
 
             }
 
-        }
 
-        ContactCreationComponent().ContactCreationComposable( contactDao, addressDao, false)  //Privatadresse
-
-        Column (modifier = Modifier
+ //////
 
 
-            .fillMaxSize()
-            .height(100.dp)
-            .padding(1.dp)
-            .background(Color.Magenta)
-            //.verticalScroll(rememberScrollState()).fillMaxSize()
-            ,
-
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
-
-        ){
-            Column (modifier = Modifier
-
-                .width(300.dp)
-                // .verticalScroll(rememberScrollState())
-
-                ,
-                //.verticalScroll(state = scrollState)
-                horizontalAlignment = Alignment.CenterHorizontally
-
-
-            ){
-
-                Row (modifier = Modifier
-                    .fillMaxWidth()
-                    .align((Alignment.Start))
-                ){
-                    Text(text = "Firmenkontakt",  fontWeight = FontWeight.Medium)
-                }
-
-
-            }
-
-        }
-
-        ContactCreationComponent().ContactCreationComposable( contactDao, addressDao, true) // Firmenkontakt
-
-
+            /*
 
         Column (modifier = Modifier
 
@@ -222,101 +335,11 @@ class OwnerCreationComponent {
 
         ){
 
-            NameCreationComponent().NameCreationComposable()
-            Column (modifier = Modifier
-
-                .width(300.dp)
-                // .verticalScroll(rememberScrollState())
-
-                ,
-                //.verticalScroll(state = scrollState)
-                horizontalAlignment = Alignment.CenterHorizontally
 
 
-            ){
+        }*/
 
 
-                Button(onClick = { // to do add owner, add contact
-                    },
-                    modifier = Modifier
-                        .size(270.dp, 40.dp)
-                ) {
-
-                    Text(text = "Eigentümer hinzufügen", fontSize = 18.sp) }
-
-
-
-            }
         }
-
-        // Ausgabe Kontaktliste
-
-        Column (modifier = Modifier
-            .clip(RoundedCornerShape(5.dp))
-            .fillMaxWidth()
-            //.height(28.dp)
-            .background(AppBlue)){
-            LazyColumn(modifier = Modifier
-
-                .padding(1.5.dp)
-                //.border(2.dp, color = Color.Red)
-                .background(Color(37, 150, 190, 150), shape = RoundedCornerShape(5.dp))
-
-            ){ items(items=ownerList) {
-
-
-                Box(
-                    BoxRounded().boxRounded
-                ){
-                    Column {
-                        Row {
-                            Column (
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                            ){
-                                Text(text = ""+it.privateContact?.mailAddress
-                                    //+ it.number,
-                                    ,fontSize = 18.sp)
-                                /*
-                                Text(text = ""+it.name.firstName
-                                    //+ it.number,
-                                    ,fontSize = 18.sp)
-                                 */
-                                Text(text = ""+it.businessContact?.city
-                                    //+ it.number,
-                                    ,fontSize = 18.sp)
-
-                            }
-
-                            Column {
-                                Box(modifier = Modifier
-                                    .width(30.dp)
-                                    .heightIn(30.dp),
-                                    contentAlignment = Alignment.Center)
-                                {
-                                    BadgedBox(badge = {
-
-                                    }
-                                    )
-                                    {
-                                        IconButton(onClick = {onEvent(OwnerEvent.DeleteOwner(it.ownerId)) }) {
-                                            Icon(imageVector = Icons.Default.Delete,
-                                                contentDescription = "Favorite",
-                                                modifier = Modifier.size(40.dp),
-                                                tint= AppBlue,)
-                                        }
-                                    }
-                                }
-
-
-
-
-                            }
-                        }
-                    }
-                }
-            }
-            }
-        }
-}
+    }
 }
