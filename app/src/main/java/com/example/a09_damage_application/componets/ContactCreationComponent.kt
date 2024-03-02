@@ -52,6 +52,7 @@ import com.example.a09_damage_application.data.interfaces.ContactDao
 import com.example.a09_damage_application.data.interfaces.ContactWithAddressDao
 import com.example.a09_damage_application.ui.theme.AppBackground
 import com.example.a09_damage_application.ui.theme.AppBlue
+import com.example.a09_damage_application.ui.theme.AppOrange
 import com.example.a09_damage_application.ui.theme.BoxRounded
 import com.example.a09_damage_application.ui.theme.Pink40
 import kotlinx.coroutines.launch
@@ -117,78 +118,88 @@ class ContactCreationComponent {
 
         }
 
-        val addressCreation = AddressCreationComponent().AddressCreationComposable(
-            dao = addressDao,
-        )
+        Column (modifier = Modifier
+            .height(900.dp)
+            .width(310.dp)
+            .background(AppOrange)){
+            val addressCreation = AddressCreationComponent().AddressCreationComposable(
+                dao = addressDao,
+            )
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
+            Row(
+                modifier = Modifier
+                    .height(50.dp)
+                    .background(Color.Gray)
 
-        ) {
-            Text(text = "Telefonnummer", fontWeight = FontWeight.Medium)
+
+            ) {
+                Text(text = "Telefonnummer:", fontWeight = FontWeight.Medium)
+            }
+
+            Spacer(
+                modifier = Modifier
+                    .height(20.dp)
+            )
+
+
+            OutlinedTextField(
+                modifier = Modifier
+                    .background(Color.White)
+                    .fillMaxWidth(),
+                value = telephoneNumberMobilInput,
+                onValueChange = { telephoneNumberMobilInput = it },
+                label = { Text("Handynummer") },
+                singleLine = true
+            )
+            Spacer(
+                modifier = Modifier
+                    .height(10.dp)
+            )
+            OutlinedTextField(
+                modifier = Modifier
+                    .background(Color.White)
+                    .fillMaxWidth(),
+                value = telephoneNumberLandlineInput,
+                onValueChange = { telephoneNumberLandlineInput = it },
+                label = { Text("Festnetznummer") },
+                singleLine = true
+            )
+            Spacer(
+                modifier = Modifier
+                    .height(10.dp)
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+
+            ) {
+                Text(text = "Mailadresse:", fontWeight = FontWeight.Medium)
+            }
+
+            Spacer(
+                modifier = Modifier
+                    .height(20.dp)
+            )
+
+            OutlinedTextField(
+                modifier = Modifier
+                    .background(Color.White)
+                    .fillMaxWidth(),
+                value = mailaddressInput,
+                onValueChange = { mailaddressInput = it },
+                label = { Text("Mailadresse") },
+                singleLine = true
+            )
+
+            Spacer(
+                modifier = Modifier
+                    .height(40.dp)
+            )
+
         }
 
-        Spacer(
-            modifier = Modifier
-                .height(20.dp)
-        )
 
-
-        OutlinedTextField(
-            modifier = Modifier
-                .background(Color.White)
-                .fillMaxWidth(),
-            value = telephoneNumberMobilInput,
-            onValueChange = { telephoneNumberMobilInput = it },
-            label = { Text("Handynummer") },
-            singleLine = true
-        )
-        Spacer(
-            modifier = Modifier
-                .height(10.dp)
-        )
-        OutlinedTextField(
-            modifier = Modifier
-                .background(Color.White)
-                .fillMaxWidth(),
-            value = telephoneNumberLandlineInput,
-            onValueChange = { telephoneNumberLandlineInput = it },
-            label = { Text("Festnetznummer") },
-            singleLine = true
-        )
-        Spacer(
-            modifier = Modifier
-                .height(10.dp)
-        )
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-
-        ) {
-            Text(text = "Mailadresse", fontWeight = FontWeight.Medium)
-        }
-
-        Spacer(
-            modifier = Modifier
-                .height(20.dp)
-        )
-
-        OutlinedTextField(
-            modifier = Modifier
-                .background(Color.White)
-                .fillMaxWidth(),
-            value = mailaddressInput,
-            onValueChange = { mailaddressInput = it },
-            label = { Text("Mailadresse") },
-            singleLine = true
-        )
-
-        Spacer(
-            modifier = Modifier
-                .height(40.dp)
-        )
 
         fun addContact() {
             // Es wird ein neues Objekt der Klasse Address erzeugt.

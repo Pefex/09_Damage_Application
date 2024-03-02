@@ -5,26 +5,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -32,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
@@ -47,11 +38,8 @@ import com.example.a09_damage_application.data.interfaces.AddressDao
 import com.example.a09_damage_application.data.interfaces.ContactDao
 import com.example.a09_damage_application.data.interfaces.ContactWithAddressDao
 import com.example.a09_damage_application.data.interfaces.OwnerDao
-import com.example.a09_damage_application.ui.theme.AppBackground
-import com.example.a09_damage_application.ui.theme.AppBlue
-import com.example.a09_damage_application.ui.theme.BoxRounded
+import com.example.a09_damage_application.ui.theme.AppDarkGreen
 import kotlinx.coroutines.launch
-import java.lang.Character.getName
 
 class OwnerCreationComponent {
     @ExperimentalMaterial3Api
@@ -193,13 +181,19 @@ class OwnerCreationComponent {
                 }
 
                 Box (modifier = Modifier
-                    .height(450.dp)){
+                    .background(Color.Blue)
+                    .height(850.dp)){
                     ContactCreationComponent().ContactCreationComposable(
                         contactDao,
                         addressDao,
                         false
-                    ) // Firmenkontakt
+                    ) // Privatkontakt
                 }
+
+                Spacer(
+                    modifier = Modifier
+                        .height(20.dp)
+                )
 
                 Box (modifier = Modifier
                     .background(Color.Magenta)){
@@ -212,22 +206,27 @@ class OwnerCreationComponent {
 
                 }
 
+                Spacer(
+                    modifier = Modifier
+                        .height(20.dp)
+                )
+
                 Box  (modifier = Modifier
-                    .height(500.dp)){
-                    Column {
-                        ContactCreationComponent().ContactCreationComposable(
-                            contactDao,
-                            addressDao,
-                            true
-                        ) // Firmenkontakt
+                    .height(850.dp)
+                    .background(AppDarkGreen)){
+                    ContactCreationComponent().ContactCreationComposable(
+                        contactDao,
+                        addressDao,
+                        true
+                    ) // Firmenkontakt
 
-
-                    }
 
 
                 }
 
-                Box {
+                Box  (modifier = Modifier
+                    .height(60.dp)
+                    .background(Color.DarkGray)){
                     Button(
                         onClick = {
                                   // to do add owner, add contact
