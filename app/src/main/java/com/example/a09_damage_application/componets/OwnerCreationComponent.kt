@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,6 +42,7 @@ import androidx.lifecycle.Observer
 import com.example.a09_damage_application.componets.events.OwnerEvent
 import com.example.a09_damage_application.data.combinedData.ContactWithAddress
 import com.example.a09_damage_application.data.combinedData.OwnerWithContacts
+import com.example.a09_damage_application.data.entities.Name
 import com.example.a09_damage_application.data.interfaces.AddressDao
 import com.example.a09_damage_application.data.interfaces.ContactDao
 import com.example.a09_damage_application.data.interfaces.ContactWithAddressDao
@@ -49,6 +51,7 @@ import com.example.a09_damage_application.ui.theme.AppBackground
 import com.example.a09_damage_application.ui.theme.AppBlue
 import com.example.a09_damage_application.ui.theme.BoxRounded
 import kotlinx.coroutines.launch
+import java.lang.Character.getName
 
 class OwnerCreationComponent {
     @ExperimentalMaterial3Api
@@ -63,6 +66,8 @@ class OwnerCreationComponent {
 
     ) {
         val coroutineScope = rememberCoroutineScope()
+
+       var nameState: Name? = null
 
         var ownerList = remember {
             mutableStateListOf<OwnerWithContacts>() // Hier kann man auch schon Einträge übergeben.
@@ -125,7 +130,7 @@ class OwnerCreationComponent {
 
         ) {
 
-            LazyColumn(
+            Column(
                 modifier = Modifier
 
 
@@ -133,84 +138,99 @@ class OwnerCreationComponent {
                     .height(700.dp)
                     .padding(1.dp)
                     .background(Color.Yellow)
-                .verticalScroll(rememberScrollState()),
+                    .verticalScroll(rememberScrollState()),
+
+
 
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
 
             ) {
 
+                Box {
+                    Row(
+                        modifier = Modifier
+                            .width(300.dp)
+                            .height(50.dp)
 
-                Row(
-                    modifier = Modifier
-                        .width(300.dp)
-                        .height(50.dp)
 
+                    ) {
+                        Button(onClick = {
+                            onNavigateDamage()
+                        }) {
+                            Text(text = "Zu Schaden", fontSize = 14.sp)
+                        }
+                        /*
+                        Button(onClick = {onNavigateDamageList()}) {
+                            Text(text = "Zu DamageList", fontSize = 14.sp)
 
-                ) {
-                    Button(onClick = {
-                        onNavigateDamage()
-                    }) {
-                        Text(text = "Zu Schaden", fontSize = 14.sp)
+                        }*/
+                    }
+                }
+
+                Box (modifier = Modifier
+                    .height(300.dp)){
+                    Column {
+                        NameCreationComponent().NameCreationComposable(nameState)
+
 
                     }
-                    /*
-                    Button(onClick = {onNavigateDamageList()}) {
-                        Text(text = "Zu DamageList", fontSize = 14.sp)
 
-                    }*/
+
                 }
 
-                NameCreationComponent().NameCreationComposable()
+                Box (modifier = Modifier
+                    .background(Color.Magenta)){
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align((Alignment.Start))
-                ) {
-                    Text(text = "Privatkontakt:", fontWeight = FontWeight.Medium)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            //.horizontalArrangement(Arrangement.Start),
+                    //verticalAlignment: Alignment.Vertical,
+                    ) {
+                        Text(text = "Privatkontakt:", fontWeight = FontWeight.Medium)
+                    }
                 }
 
-                ContactCreationComponent().ContactCreationComposable(
-                    contactDao,
-                    addressDao,
-                    false
-                ) // Firmenkontakt
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align((Alignment.Start))
-                ) {
-                    Text(text = "Firmenkontakt:", fontWeight = FontWeight.Medium)
+                Box (modifier = Modifier
+                    .height(450.dp)){
+                    ContactCreationComponent().ContactCreationComposable(
+                        contactDao,
+                        addressDao,
+                        false
+                    ) // Firmenkontakt
                 }
 
+                Box (modifier = Modifier
+                    .background(Color.Magenta)){
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        Text(text = "Firmenkontakt:", fontWeight = FontWeight.Medium)
+                    }
+
+                }
+
+                Box  (modifier = Modifier
+                    .height(500.dp)){
+                    Column {
+                        ContactCreationComponent().ContactCreationComposable(
+                            contactDao,
+                            addressDao,
+                            true
+                        ) // Firmenkontakt
 
 
+                    }
 
 
-                ContactCreationComponent().ContactCreationComposable(
-                    contactDao,
-                    addressDao,
-                    true
-                ) // Firmenkontakt
+                }
 
-                Column(
-                    modifier = Modifier
-
-                        .width(300.dp)
-                    // .verticalScroll(rememberScrollState())
-
-                    ,
-                    //.verticalScroll(state = scrollState)
-                    horizontalAlignment = Alignment.CenterHorizontally
-
-
-                ) {
-
-
+                Box {
                     Button(
-                        onClick = { // to do add owner, add contact
+                        onClick = {
+                                  // to do add owner, add contact
                         },
                         modifier = Modifier
                             .size(270.dp, 40.dp)
@@ -219,18 +239,9 @@ class OwnerCreationComponent {
                         Text(text = "Eigentümer hinzufügen", fontSize = 18.sp)
                     }
 
-
                 }
-
-                // Ausgabe Kontaktliste
-
-                Column(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(5.dp))
-                        .fillMaxWidth()
-                        //.height(28.dp)
-                        .background(AppBlue)
-                ) {
+/*
+                Box {
                     LazyColumn(
                         modifier = Modifier
 
@@ -307,8 +318,26 @@ class OwnerCreationComponent {
                         }
                     }
 
+                }*/
 
-                }
+
+
+
+
+
+
+
+
+
+
+/*
+                Column(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(5.dp))
+                        .fillMaxWidth()
+                        //.height(28.dp)
+                        .background(AppBlue)
+                ) {}*/
 
 
 

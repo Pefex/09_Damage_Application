@@ -112,25 +112,111 @@ class ContactCreationComponent {
             }
         }
 
-        Column(
+        if (isBusinessContact == true){
+            Text(text = "Firmenkontakt:")
+
+        }
+
+        val addressCreation = AddressCreationComponent().AddressCreationComposable(
+            dao = addressDao,
+        )
+
+        Row(
             modifier = Modifier
+                .fillMaxWidth()
 
-
-                .fillMaxSize()
-                .height(100.dp)
-                .padding(1.dp)
-                .background(AppBackground),
-
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier
+            Text(text = "Telefonnummer", fontWeight = FontWeight.Medium)
+        }
 
-                    .width(320.dp),
-                //.verticalScroll(state = scrollState)
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+        Spacer(
+            modifier = Modifier
+                .height(20.dp)
+        )
+
+
+        OutlinedTextField(
+            modifier = Modifier
+                .background(Color.White)
+                .fillMaxWidth(),
+            value = telephoneNumberMobilInput,
+            onValueChange = { telephoneNumberMobilInput = it },
+            label = { Text("Handynummer") },
+            singleLine = true
+        )
+        Spacer(
+            modifier = Modifier
+                .height(10.dp)
+        )
+        OutlinedTextField(
+            modifier = Modifier
+                .background(Color.White)
+                .fillMaxWidth(),
+            value = telephoneNumberLandlineInput,
+            onValueChange = { telephoneNumberLandlineInput = it },
+            label = { Text("Festnetznummer") },
+            singleLine = true
+        )
+        Spacer(
+            modifier = Modifier
+                .height(10.dp)
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+
+        ) {
+            Text(text = "Mailadresse", fontWeight = FontWeight.Medium)
+        }
+
+        Spacer(
+            modifier = Modifier
+                .height(20.dp)
+        )
+
+        OutlinedTextField(
+            modifier = Modifier
+                .background(Color.White)
+                .fillMaxWidth(),
+            value = mailaddressInput,
+            onValueChange = { mailaddressInput = it },
+            label = { Text("Mailadresse") },
+            singleLine = true
+        )
+
+        Spacer(
+            modifier = Modifier
+                .height(40.dp)
+        )
+
+        fun addContact() {
+            // Es wird ein neues Objekt der Klasse Address erzeugt.
+            //To do addressCreation.
+            var c: Contact = Contact(
+                contactId = contactId,
+                telephoneNumberMobil = telephoneNumberMobilInput,
+                telephoneNumberLandline = telephoneNumberLandlineInput,
+                isBusinessContact = false, //TODO
+                businessName = null, //TODO
+                mailAddress = mailaddressInput,
+                contactAddressId = null, //TODO
+            );
+            onEvent(ContactEvent.SaveContact(c))
+
+            contactId = null; telephoneNumberMobilInput = "";telephoneNumberLandlineInput =
+                "";mailaddressInput = ""
+        }
+
+
+
+        Spacer(
+            modifier = Modifier
+                .height(40.dp)
+                .width(150.dp)
+        )
+
+
 /*
                 Row (modifier = Modifier
                     .fillMaxWidth()
@@ -165,109 +251,7 @@ class ContactCreationComponent {
 
                 }*/
                 
-                if (isBusinessContact == true){
-                    Text(text = "Firmenkontakt:")
-                    
-                }
-
-                val addressCreation = AddressCreationComponent().AddressCreationComposable(
-                    dao = addressDao,
-                )
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align((Alignment.Start))
-                ) {
-                    Text(text = "Telefonnummer", fontWeight = FontWeight.Medium)
-                }
-
-                Spacer(
-                    modifier = Modifier
-                        .height(20.dp)
-                )
-
-
-                OutlinedTextField(
-                    modifier = Modifier
-                        .background(Color.White)
-                        .fillMaxWidth(),
-                    value = telephoneNumberMobilInput,
-                    onValueChange = { telephoneNumberMobilInput = it },
-                    label = { Text("Handynummer") },
-                    singleLine = true
-                )
-                Spacer(
-                    modifier = Modifier
-                        .height(10.dp)
-                )
-                OutlinedTextField(
-                    modifier = Modifier
-                        .background(Color.White)
-                        .fillMaxWidth(),
-                    value = telephoneNumberLandlineInput,
-                    onValueChange = { telephoneNumberLandlineInput = it },
-                    label = { Text("Festnetznummer") },
-                    singleLine = true
-                )
-                Spacer(
-                    modifier = Modifier
-                        .height(10.dp)
-                )
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align((Alignment.Start))
-                ) {
-                    Text(text = "Mailadresse", fontWeight = FontWeight.Medium)
-                }
-
-                Spacer(
-                    modifier = Modifier
-                        .height(20.dp)
-                )
-
-                OutlinedTextField(
-                    modifier = Modifier
-                        .background(Color.White)
-                        .fillMaxWidth(),
-                    value = mailaddressInput,
-                    onValueChange = { mailaddressInput = it },
-                    label = { Text("Mailadresse") },
-                    singleLine = true
-                )
-
-                Spacer(
-                    modifier = Modifier
-                        .height(40.dp)
-                )
-
-                fun addContact() {
-                    // Es wird ein neues Objekt der Klasse Address erzeugt.
-                    //To do addressCreation.
-                    var c: Contact = Contact(
-                        contactId = contactId,
-                        telephoneNumberMobil = telephoneNumberMobilInput,
-                        telephoneNumberLandline = telephoneNumberLandlineInput,
-                        isBusinessContact = false, //TODO
-                        businessName = null, //TODO
-                        mailAddress = mailaddressInput,
-                        contactAddressId = null, //TODO
-                        );
-                    onEvent(ContactEvent.SaveContact(c))
-
-                    contactId = null; telephoneNumberMobilInput = "";telephoneNumberLandlineInput =
-                        "";mailaddressInput = ""
-                }
-
-
-
-                Spacer(
-                    modifier = Modifier
-                        .height(40.dp)
-                        .width(150.dp)
-                )/*
+                /*
                 Column(
                     modifier = Modifier
                         .clip(RoundedCornerShape(5.dp))
@@ -354,7 +338,7 @@ class ContactCreationComponent {
                             }
                         }
                     }*/
-            }
+
 
 
         }
@@ -362,5 +346,5 @@ class ContactCreationComponent {
     }
 
 
-}
+
 

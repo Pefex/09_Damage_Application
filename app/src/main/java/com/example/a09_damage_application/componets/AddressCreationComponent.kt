@@ -266,9 +266,9 @@ class AddressCreationComponent {
 
                 Spacer(
                     modifier = Modifier
-                        .height(40.dp)
+                        .height(4.dp)
                         .width(150.dp)
-                )
+                )/*
                 Column(
                     modifier = Modifier
                         .clip(RoundedCornerShape(5.dp))
@@ -441,7 +441,12 @@ class AddressCreationComponent {
                             }
                         }
                     }
-                }
+                }*/
+
+                /////////////////////////////////////////////////////////////
+
+
+
                 /*
                                 Column (modifier = Modifier
                                     .clip(RoundedCornerShape(5.dp))
