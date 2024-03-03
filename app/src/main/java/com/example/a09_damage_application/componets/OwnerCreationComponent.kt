@@ -19,9 +19,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -55,8 +58,7 @@ class OwnerCreationComponent {
     ) {
         val coroutineScope = rememberCoroutineScope()
 
-       var nameState: Name? = null
-
+        var ownerName by remember {mutableStateOf<Name?> (null)}
         var ownerList = remember {
             mutableStateListOf<OwnerWithContacts>() // Hier kann man auch schon Einträge übergeben.
         }
@@ -159,9 +161,9 @@ class OwnerCreationComponent {
                 Box (modifier = Modifier
                     .height(300.dp)){
                     Column {
-                        NameCreationComponent().NameCreationComposable(nameState)
-
-
+                        NameCreationComponent().NameCreationComposable(
+                            onNameChanged = { n -> {ownerName = n}}
+                        )
                     }
 
 
