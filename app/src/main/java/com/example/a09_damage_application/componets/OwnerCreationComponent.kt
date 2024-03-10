@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,6 +44,7 @@ import com.example.a09_damage_application.data.interfaces.ContactDao
 import com.example.a09_damage_application.data.interfaces.ContactWithAddressDao
 import com.example.a09_damage_application.data.interfaces.OwnerDao
 import com.example.a09_damage_application.ui.theme.AppDarkGreen
+import com.example.a09_damage_application.ui.theme.BoxRounded
 import kotlinx.coroutines.launch
 
 class OwnerCreationComponent {
@@ -226,11 +229,23 @@ class OwnerCreationComponent {
 
                 }
 
+                Box(modifier = Modifier
+                    .height(60.dp)
+                    .width(250.dp)
+                    .background(Color.Red)){
+                    Text(text = "HALLO")
+
+                    if (ownerName != null ){
+                        Text(text = ownerName!!.firstName  + "Hallo", fontSize = 18.sp)
+                    }
+                }
+
                 Box  (modifier = Modifier
                     .height(60.dp)
                     .background(Color.DarkGray)){
                     Button(
                         onClick = {
+                                
                                   // to do add owner, add contact
                         },
                         modifier = Modifier
@@ -238,6 +253,8 @@ class OwnerCreationComponent {
                     ) {
 
                         Text(text = "Eigentümer hinzufügen", fontSize = 18.sp)
+
+
                     }
 
                 }
