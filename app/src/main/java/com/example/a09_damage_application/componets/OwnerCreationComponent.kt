@@ -1,5 +1,7 @@
 package com.example.a09_damage_application.componets
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -56,6 +58,7 @@ class OwnerCreationComponent {
         addressDao: AddressDao,
         contactDao: ContactDao,
         onNavigateDamage: () -> Unit,
+        onNavigateOwnerList: () -> Unit,
         //onNavigateDamageList: () -> Unit,
 
     ) {
@@ -153,6 +156,12 @@ class OwnerCreationComponent {
                         }) {
                             Text(text = "Zu Schaden", fontSize = 14.sp)
                         }
+
+                        Button(onClick = {
+                            onNavigateOwnerList()
+                        }) {
+                            Text(text = "Zu Eigentümerliste", fontSize = 14.sp)
+                        }
                         /*
                         Button(onClick = {onNavigateDamageList()}) {
                             Text(text = "Zu DamageList", fontSize = 14.sp)
@@ -165,7 +174,15 @@ class OwnerCreationComponent {
                     .height(300.dp)){
                     Column {
                         NameCreationComponent().NameCreationComposable(
-                            onNameChanged = { n -> {ownerName = n}}
+                            onNameChanged = { n ->
+                                if (n != null) {
+                                    {ownerName = n; Log.d(TAG, n.firstName)}
+                                }
+
+                                else{
+                                    Log.d(TAG, "name is null")
+                                }
+                            }
                         )
                     }
 
@@ -233,7 +250,7 @@ class OwnerCreationComponent {
                     .height(60.dp)
                     .width(250.dp)
                     .background(Color.Red)){
-                    Text(text = "HALLO")
+                    //Text(text = "HALLO")
 
                     if (ownerName != null ){
                         Text(text = ownerName!!.firstName  + "Hallo", fontSize = 18.sp)

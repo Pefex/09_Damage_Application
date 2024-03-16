@@ -1,9 +1,15 @@
 package com.example.a09_damage_application.componets
 
+import android.content.ContentValues
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -17,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.a09_damage_application.data.entities.Name
 import com.example.a09_damage_application.data.enums.TypeOfGender
 import com.example.a09_damage_application.data.enums.TypeOfTitle
@@ -101,7 +108,11 @@ class NameCreationComponent {
                 .height(10.dp)
         )
 
+
+
         fun getName(): Name {
+
+            //Log.d(TAG, "Name changed"  + firstNameInput)
             return Name(
                 id = nameId,
                 typeOfGender = typeOfGenderInput.value,
@@ -112,6 +123,25 @@ class NameCreationComponent {
         }
 
         onNameChanged(getName())
+
+
+        Box {
+            Row(
+                modifier = Modifier
+                    .width(300.dp)
+                    .height(50.dp)
+
+
+            ) {
+                Button(onClick = {
+                    onNameChanged(getName())
+                }) {
+                    Text(text = "Zu Schaden", fontSize = 14.sp)
+                }
+
+
+            }
+        }
     /*
 
         Column(

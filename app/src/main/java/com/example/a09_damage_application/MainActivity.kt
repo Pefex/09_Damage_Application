@@ -16,6 +16,7 @@ import androidx.room.Room
 import com.example.a09_damage_application.componets.DamageCreationComponent
 import com.example.a09_damage_application.componets.DamageListCreationComponent
 import com.example.a09_damage_application.componets.OwnerCreationComponent
+import com.example.a09_damage_application.componets.OwnerListCreationComponent
 import com.example.a09_damage_application.data.AppDatabase
 import com.example.a09_damage_application.ui.theme._09_Damage_ApplicationTheme
 
@@ -80,13 +81,17 @@ fun Mainscreen(db: AppDatabase) {
                 db.addressDao,
                 db.contactDao,
 
-
-                onNavigateDamage = { navController.navigate("damageCreation") }
-
-                //onNavigateDamageList = { navController.navigate("damageListCreation") }
-
-
+                onNavigateDamage = { navController.navigate("damageCreation") },
+                onNavigateOwnerList = { navController.navigate("ownerListCreation")}
+            //onNavigateDamageList = { navController.navigate("damageListCreation") }
             )
+        }
+
+        composable("ownerListCreation"){
+            OwnerListCreationComponent().OwnerListComposable(onNavigateDamage = { /*TODO*/ }) {
+                
+            }
+
         }
 /*
         composable("damageListCreation") {

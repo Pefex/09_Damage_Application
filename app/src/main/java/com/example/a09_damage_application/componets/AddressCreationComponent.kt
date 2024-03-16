@@ -552,7 +552,7 @@ class AddressCreationComponent {
                                 }
                             }*/
 
-                Log.d(TAG, "Schadensliste: " + addressList.joinToString())
+                //Log.d(TAG, "Schadensliste: " + addressList.joinToString())
 
                 //Text(text = "Hallo Welt")
 
