@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -27,6 +28,7 @@ class NameCreationComponent {
     @Composable
 
     fun NameCreationComposable(
+        ownerName: Name?,
         onNameChanged: (Name?) -> Unit
     ) {
 
@@ -110,8 +112,12 @@ class NameCreationComponent {
                 lastName = lastNameInput
             )
         }
-
-        onNameChanged(getName())
+        
+        Button(
+            onClick = { onNameChanged(getName()) }
+        ) {
+            Text(text = "Update Name")
+        }
     /*
 
         Column(
