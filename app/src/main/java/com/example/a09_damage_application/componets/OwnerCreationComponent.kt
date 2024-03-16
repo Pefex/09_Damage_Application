@@ -161,8 +161,7 @@ class OwnerCreationComponent {
                     .height(300.dp)){
                     Column {
                         NameCreationComponent().NameCreationComposable(
-                            ownerName = ownerName,
-                            onNameChanged = { n -> {ownerName = n}}
+                            onNameChanged = { n -> run {ownerName = n}}
                         )
                     }
 
@@ -221,15 +220,13 @@ class OwnerCreationComponent {
                         addressDao,
                         true
                     ) // Firmenkontakt
-
-
-
                 }
 
                 Box  (modifier = Modifier
                     .height(60.dp)
-                    .background(Color.DarkGray)){
-                    ownerName?.let { Text(text = it.firstName, fontSize = 18.sp) }
+                    .width(120.dp)
+                    .background(Color.Red)){
+                    ownerName?.let { Text(text = it.firstName +" "+ it.lastName, fontSize = 18.sp) }
                 }
 
                 Box  (modifier = Modifier

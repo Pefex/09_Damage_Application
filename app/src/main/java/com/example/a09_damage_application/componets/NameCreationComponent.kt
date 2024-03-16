@@ -28,7 +28,6 @@ class NameCreationComponent {
     @Composable
 
     fun NameCreationComposable(
-        ownerName: Name?,
         onNameChanged: (Name?) -> Unit
     ) {
 
@@ -53,6 +52,16 @@ class NameCreationComponent {
 
         var lastNameInput by remember {
             mutableStateOf("")
+        }
+
+        fun getName(): Name {
+            return Name(
+                id = nameId,
+                typeOfGender = typeOfGenderInput.value,
+                typOfTitle = typeOfTitleInput.value,
+                firstName = firstNameInput,
+                lastName = lastNameInput
+            )
         }
 
         Spacer(
@@ -80,7 +89,7 @@ class NameCreationComponent {
                 .background(Color.White)
                 .width(300.dp),
             value = firstNameInput,
-            onValueChange = { firstNameInput = it },
+            onValueChange = { firstNameInput = it; onNameChanged(getName()) },
             label = { Text("Vorname") },
             singleLine = true
         )
@@ -94,7 +103,7 @@ class NameCreationComponent {
                 .background(Color.White)
                 .width(300.dp),
             value = lastNameInput,
-            onValueChange = { lastNameInput = it },
+            onValueChange = { lastNameInput = it; onNameChanged(getName()) },
             label = { Text("Nachname") },
             singleLine = true
         )
@@ -102,22 +111,6 @@ class NameCreationComponent {
             modifier = Modifier
                 .height(10.dp)
         )
-
-        fun getName(): Name {
-            return Name(
-                id = nameId,
-                typeOfGender = typeOfGenderInput.value,
-                typOfTitle = typeOfTitleInput.value,
-                firstName = firstNameInput,
-                lastName = lastNameInput
-            )
-        }
-        
-        Button(
-            onClick = { onNameChanged(getName()) }
-        ) {
-            Text(text = "Update Name")
-        }
     /*
 
         Column(
