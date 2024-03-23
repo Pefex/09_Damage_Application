@@ -56,7 +56,8 @@ class DamageCreationComponent {
     @Composable
     fun DamageCreationComposable(dao: DamageDao, //onNavigateDamageList: ()->Unit,
 
-                                 onNavigateOwner: ()->Unit) {
+                                 onNavigateOwner: ()->Unit,
+                                 onNavigateDamageLocalization: ()->Unit) {
 
         val coroutineScope = rememberCoroutineScope()
 
@@ -139,11 +140,11 @@ class DamageCreationComponent {
                     Text(text = "Zu Eigentümer", fontSize = 14.sp)
 
                 }
-/*
-                Button(onClick = {onNavigateDamageList()}) {
+
+                Button(onClick = {onNavigateDamageLocalization()}) {
                     Text(text = "Zu DamageList", fontSize = 14.sp)
 
-                }*/
+                }
 
             }
 

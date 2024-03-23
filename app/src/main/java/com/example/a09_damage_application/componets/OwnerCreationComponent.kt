@@ -99,6 +99,8 @@ class OwnerCreationComponent {
                     coroutineScope.launch { ownerDao.deleteOwnerById(event.ownerId) }
                 }
 
+
+
             }
         }
 
