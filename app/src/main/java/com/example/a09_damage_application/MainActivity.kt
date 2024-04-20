@@ -14,7 +14,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.a09_damage_application.componets.DamageCreationComponent
+import com.example.a09_damage_application.componets.AddAndEditItemComponent
 import com.example.a09_damage_application.componets.LocalizationCreationComponent
+import com.example.a09_damage_application.componets.LocalizationListComponent
 import com.example.a09_damage_application.componets.OwnerCreationComponent
 import com.example.a09_damage_application.data.AppDatabase
 import com.example.a09_damage_application.ui.theme._09_Damage_ApplicationTheme
@@ -70,7 +72,8 @@ fun Mainscreen(db: AppDatabase) {
                 db.damageDao,
                 //onNavigateDamageList = { navController.navigate("damageListCreation") },
                 onNavigateOwner = { navController.navigate("ownerCreation") },
-                onNavigateDamageLocalization = { navController.navigate("DamageLocalizationCreation") }
+                onNavigateDamageLocalization = { navController.navigate("DamageLocalizationCreation") },
+                onNavigateLocalizationList ={ navController.navigate("LocalizationList")}
             )
         }
 
@@ -88,12 +91,28 @@ fun Mainscreen(db: AppDatabase) {
             LocalizationCreationComponent().DamageLocalizationCreationComposable(
                 db.localizationDao,
                 onNavigateDamage = { navController.navigate("damageCreation") },
-                onNavigateOwner = { navController.navigate("ownerCreation") }
+                onNavigateOwner = { navController.navigate("ownerCreation") },
+                onNavigateDamageLocalization = {  navController.navigate("LocalizationAddAndEditCreation")}
+            )
+        }
 
+        composable("LocalizationAddAndEditCreation") {
+            AddAndEditItemComponent().DamageLocalizationAddAndEditCreationComposable(
+                db.localizationDao,
+                onNavigateDamageLocalization = { navController.navigate("DamageLocalizationCreation") },
 
             )
-
         }
+
+        composable("LocalizationList") {
+            LocalizationListComponent().LocalizationListComposable(
+                db.localizationDao,
+                onNavigateDamage = { navController.navigate("damageCreation") }
+
+                )
+        }
+
+
 /*
         composable("damageListCreation") {
             DamageListCreationComponent().DamageListCreationComposable(

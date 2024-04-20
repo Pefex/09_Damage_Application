@@ -26,7 +26,5 @@ import com.example.a09_damage_application.data.entities.Localization
         fun getLocalizationById(id: Int): LiveData<Localization>
 
         @Query("SELECT * FROM localization WHERE rootLocalizationId = :id ORDER BY name ASC")
-        fun getSubLocalizationsById(id: Int): LiveData<Localization>
-
-
+        fun getSubLocalizationsById(id: Int?): LiveData<List<Localization>>
     }

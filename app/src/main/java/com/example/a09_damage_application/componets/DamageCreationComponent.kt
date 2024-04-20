@@ -57,7 +57,8 @@ class DamageCreationComponent {
     fun DamageCreationComposable(dao: DamageDao, //onNavigateDamageList: ()->Unit,
 
                                  onNavigateOwner: ()->Unit,
-                                 onNavigateDamageLocalization: ()->Unit) {
+                                 onNavigateDamageLocalization: ()->Unit,
+                                 onNavigateLocalizationList: ()->Unit){
 
         val coroutineScope = rememberCoroutineScope()
 
@@ -130,19 +131,24 @@ class DamageCreationComponent {
             //Texteingabe für Titel
 
             Row (modifier = Modifier
-                .width(300.dp)
+                .width(400.dp)
                 .height(50.dp)
 
 
             ){
                 Button(onClick = {
                     onNavigateOwner()}) {
-                    Text(text = "Zu Eigentümer", fontSize = 14.sp)
+                    Text(text = "Zu Eigentümer", fontSize = 12.sp)
 
                 }
 
                 Button(onClick = {onNavigateDamageLocalization()}) {
-                    Text(text = "Zu DamageList", fontSize = 14.sp)
+                    Text(text = "Zu DamageList", fontSize = 12.sp)
+
+                }
+
+                Button(onClick = {onNavigateLocalizationList()}) {
+                    Text(text = "Zur Schadensverortung", fontSize = 12.sp)
 
                 }
 

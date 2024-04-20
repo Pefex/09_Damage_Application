@@ -20,6 +20,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
@@ -43,16 +44,21 @@ import com.example.a09_damage_application.ui.theme.AppBlue
 import com.example.a09_damage_application.ui.theme.BoxRounded
 
 class LocalizationCreationComponent {
+
+    //Wird als Screen für Items umgebaut
     @ExperimentalMaterial3Api
     @Composable
     fun DamageLocalizationCreationComposable(
         dao: LocalizationDao,
         localizationId: Int? = null,
         onNavigateDamage: () ->Unit,
-        onNavigateOwner: () ->Unit
+        onNavigateOwner: () ->Unit,
+        onNavigateDamageLocalization: () ->Unit,
+
+
     ) {
 
-        val numbers = listOf("Felix", "Peter", "Walter")
+        val numbers = listOf("Felix", "Peter", "Walter", "Frank", "Jürgen")
 
 
 
@@ -115,24 +121,20 @@ class LocalizationCreationComponent {
                             Row {
                                 Column (
                                     modifier = Modifier
-                                        .fillMaxWidth()
+                                        .height(50.dp)
+                                        .width(250.dp)
                                 ){
-                                    Text(text = ""+it
-                                        //+ it.number,
-                                        ,fontSize = 18.sp)
-
                                     Text(text = ""+it
                                         //+ it.number,
                                         ,fontSize = 18.sp,
                                         color = AppBlue
                                     )
-
                                 }
 
                                 Column {
                                     Box(modifier = Modifier
                                         .width(30.dp)
-                                        .heightIn(20.dp),
+                                        .heightIn(10.dp),
                                         contentAlignment = Alignment.Center)
                                     {
                                         BadgedBox(badge = {
@@ -140,7 +142,7 @@ class LocalizationCreationComponent {
                                         }
                                         )
                                         {
-                                            IconButton(onClick = {}) {
+                                            IconButton(onClick = {onNavigateDamageLocalization()}) {
                                                 Icon(imageVector = Icons.Default.Add,
                                                     contentDescription = "Favorite",
                                                     modifier = Modifier.size(40.dp),
@@ -164,9 +166,26 @@ class LocalizationCreationComponent {
                                                     contentDescription = "Favorite",
                                                     modifier = Modifier.size(40.dp),
                                                     tint= AppBlue,)
-
                                             }
+                                        }
+                                    }
 
+                                    Box(modifier = Modifier
+                                        .width(30.dp)
+                                        .heightIn(30.dp),
+                                        contentAlignment = Alignment.Center)
+                                    {
+                                        BadgedBox(badge = {
+
+                                        }
+                                        )
+                                        {
+                                            IconButton(onClick = {  }) {
+                                                Icon(imageVector = Icons.Default.Delete,
+                                                    contentDescription = "Favorite",
+                                                    modifier = Modifier.size(40.dp),
+                                                    tint= AppBlue,)
+                                            }
                                         }
                                     }
 
@@ -174,7 +193,7 @@ class LocalizationCreationComponent {
 
                             }
 
-
+/*
                             Icon(
                                 modifier = Modifier.size(20.dp),
                                 tint= Color.Cyan,
@@ -201,10 +220,6 @@ class LocalizationCreationComponent {
                                 Text(text = "Delete", fontSize = 12.sp)
                             }
 
-
-
-
-
                             Box(modifier = Modifier
                                 .width(70.dp)
                                 .heightIn(70.dp),
@@ -221,7 +236,7 @@ class LocalizationCreationComponent {
                                         contentDescription = "Favorite",
                                         modifier = Modifier.size(40.dp))
                                 }
-                            }
+                            }*/
 
                         }
                     }
