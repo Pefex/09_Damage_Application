@@ -11,4 +11,5 @@ data class Localization(
     val localizationId: Int? = null,
     val name: String,
     val rootLocalizationId: Int? = null,
+    val position: Int = 0
     )

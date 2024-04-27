@@ -1,7 +1,9 @@
 package com.example.a09_damage_application.componets
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -54,9 +56,10 @@ class LocalizationListComponent {
 
     @ExperimentalMaterial3Api
     @Composable
+
     fun LocalizationListComposable(
         dao: LocalizationDao,
-        localizationId: Int? = 0,
+        rootLocalizationId: Int? = 0,
         onNavigateDamage: () ->Unit,
 
        // onNavigateLocalization: (id: Int)  ->Unit
@@ -64,16 +67,34 @@ class LocalizationListComponent {
 
         val coroutineScope = rememberCoroutineScope()
 
-        var localizationName by remember {
-            mutableStateOf(if (localizationId!=0  && localizationId != null) dao.getLocalizationById(localizationId).value!!.name else "Liegenschaft")
-        // dopelte Ausrufezeichen heißen: Wir garantieren, das der value nicht null sein wird
+        var localizationId = remember {
+            mutableStateOf(rootLocalizationId)
+
+
+        }
+
+        var localizationName by remember()
+
+         {
+            //Log.d("", "localizationId:" + localizationId)
+            mutableStateOf<String?>(null)
+
         }
 
         var localizationSubs =  remember {
             mutableStateListOf<Localization>()
         }
 
-        dao.getSubLocalizationsById(localizationId).observe( //Wenn sich Werte in der Liste ändern,
+        dao.getLocalizationById(localizationId.value).observe(
+            LocalLifecycleOwner.current,
+            Observer{localization -> if (localization!= null){
+
+
+                localizationName = localization.name
+            }}
+            )
+
+        dao.getSubLocalizationsById(localizationId.value).observe( //Wenn sich Werte in der Liste ändern,
             // dann wird die Liste gelöscht und neu befüllt.
             LocalLifecycleOwner.current, //Es wird nur solange der aktuelle Lifecycle
             // (Screen) läuft, beobachtet, ob sich die Einträge in der Schadenstabelle
@@ -137,7 +158,7 @@ class LocalizationListComponent {
 
 
             ){
-                Text(text = localizationName)
+                Text(text = localizationName ?: "Liegenschaft")
             }
 
             Box(modifier = Modifier
@@ -157,7 +178,11 @@ class LocalizationListComponent {
                         ){
                             OutlinedTextField(modifier = Modifier
                                 .background(color = Color(255, 255, 255))
-                                .border(3.dp, Color(37, 150, 190, 150), shape = RoundedCornerShape(5.dp))
+                                .border(
+                                    3.dp,
+                                    Color(37, 150, 190, 150),
+                                    shape = RoundedCornerShape(5.dp)
+                                )
                                 .fillMaxWidth(), value = localizationInput,
                                 onValueChange = {localizationInput= it}, // it ist der Wert im Texteingabefeld
                                 label = { Text("neuer Ort") },
@@ -173,7 +198,7 @@ class LocalizationListComponent {
                             IconButton(onClick = {
                                 var l: Localization = Localization(
                                     name = localizationInput,
-                                    rootLocalizationId = localizationId
+                                    rootLocalizationId = localizationId.value
                                 );
                                 onEvent(LocalizationEvent.SaveLocalization(l))
                                 localizationInput = ""
@@ -210,8 +235,10 @@ class LocalizationListComponent {
                 ){ items(items=localizationSubs) {
 
 
-                    Box(
-                        BoxRounded().boxRounded
+                    Box(modifier = Modifier
+                        .clickable { localizationId.value = it.localizationId}
+                        .background(Color.White),
+                        //BoxRounded().boxRounded
                     ){
                         Column {
                             Row {
