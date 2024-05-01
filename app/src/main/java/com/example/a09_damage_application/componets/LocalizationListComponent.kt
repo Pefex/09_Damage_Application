@@ -1,5 +1,6 @@
 package com.example.a09_damage_application.componets
 
+import android.content.ContentValues
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -8,7 +9,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -18,17 +21,25 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -40,12 +51,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.Observer
 import com.example.a09_damage_application.componets.events.LocalizationEvent
 import com.example.a09_damage_application.data.entities.Localization
+import com.example.a09_damage_application.data.enums.TypeOfTitle
 import com.example.a09_damage_application.data.interfaces.LocalizationDao
 import com.example.a09_damage_application.ui.theme.AppBlue
 import com.example.a09_damage_application.ui.theme.BoxRounded
@@ -64,6 +79,19 @@ class LocalizationListComponent {
 
        // onNavigateLocalization: (id: Int)  ->Unit
         ) {
+
+        ////////////////////////////////////////////////////////////////
+
+        var isExpanded by remember{
+            mutableStateOf(false)
+        }
+
+        var building_element by remember{
+            mutableStateOf("")
+        }
+
+
+        //////////////////////////////////////////////////////////////////
 
         val coroutineScope = rememberCoroutineScope()
 
@@ -129,7 +157,7 @@ class LocalizationListComponent {
             modifier = Modifier
 
 
-                .height(600.dp)
+                .height(800.dp)
                 .width(400.dp)
                 .padding(5.dp)
                 .background(Color.Green)
@@ -154,7 +182,7 @@ class LocalizationListComponent {
 
             Row (modifier = Modifier
                 .width(300.dp)
-                .height(80.dp)
+                .height(60.dp)
 
 
             ){
@@ -163,7 +191,7 @@ class LocalizationListComponent {
 
             Box(modifier = Modifier
                 .width(270.dp)
-                .height(80.dp)
+                .height(70.dp)
                 .background(Color.White)
 
             ){
@@ -172,7 +200,7 @@ class LocalizationListComponent {
                     Row {
                         Column (
                             modifier = Modifier
-                                .height(80.dp)
+                                .height(70.dp)
                                 .width(200.dp)
                                 .background(Color.Yellow)
                         ){
@@ -218,15 +246,75 @@ class LocalizationListComponent {
             }
 
             Spacer(modifier = Modifier
-                .height(30.dp))
+                .height(5.dp))
+
+            //////////////////////////////////////////////////////////////
+
+            Box(modifier = Modifier
+                .width(270.dp)
+                .height(90.dp),
+                contentAlignment = Alignment.Center){
+                ExposedDropdownMenuBox(expanded = isExpanded, onExpandedChange = {isExpanded = it}) {
+
+                    TextField(value = building_element, onValueChange = {},
+                        readOnly = true,
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
+                        },
+                        colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                        modifier = Modifier.menuAnchor())
+
+                    ExposedDropdownMenu(
+                        expanded = isExpanded,
+                        onDismissRequest = {isExpanded = false }) {
+
+                        DropdownMenuItem(
+                            text = { Text(text = "Stiege 1") },
+                            onClick = { building_element = "Wand";
+                                localizationInput = "Stiege 1"
+
+                                isExpanded = false })
+
+                        DropdownMenuItem(
+                            text = { Text(text = "Stiege 2") },
+                            onClick = { building_element = "Decke";
+                                localizationInput = "Stiege 2"
+                                isExpanded = false })
+
+                        DropdownMenuItem(
+                            text = { Text(text = "Stiege 3") },
+                            onClick = { building_element = "Boden";
+                                localizationInput = "Stiege 3"
+                                isExpanded = false })
+
+                    }
+                }
+
+            }
+
+
+            Log.d(ContentValues.TAG,building_element)
+///////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+            ///////////////////////////////////////////////////////////////
 
             Column (modifier = Modifier
                 .clip(RoundedCornerShape(5.dp))
                 .height(500.dp)
-                .width(300.dp)
+                .width(330.dp)
                 //.height(28.dp)
                 .background(AppBlue)){
                 LazyColumn(modifier = Modifier
+                    .clip(shape = RoundedCornerShape(0.5.dp))
+                    .padding(1.5.dp)
+                    .clip(RoundedCornerShape(1.5.dp))
 
                     .padding(1.5.dp)
                     //.border(2.dp, color = Color.Red)
@@ -236,33 +324,63 @@ class LocalizationListComponent {
 
 
                     Box(modifier = Modifier
-                        .clickable { localizationId.value = it.localizationId}
+                        .clickable { localizationId.value = it.localizationId }
                         .background(Color.White),
                         //BoxRounded().boxRounded
                     ){
                         Column {
-                            Row {
+                            Row (verticalAlignment = Alignment.CenterVertically){
                                 Column (
                                     modifier = Modifier
-                                        .height(80.dp)
-                                        .width(250.dp)
+                                        .padding(10.dp, 5.dp, 10.dp, 5.dp)
+                                        .height(50.dp)
+                                        .width(220.dp),
+
+                                    verticalArrangement = Arrangement.Center
+
+
+
                                 ){
                                     Text(text = ""+it.name
                                         //+ it.number,
                                         ,fontSize = 18.sp,
                                         color = AppBlue
                                     )
+                                }
 
+                                Column  (
+                                    modifier = Modifier
+                                        .height(50.dp)
+                                        .width(45.dp)
+                                ){
                                     IconButton(onClick = {
                                         onEvent(LocalizationEvent.DeleteLocalization(it))
 
                                     }) {
                                         Icon(imageVector = Icons.Default.Delete,
                                             contentDescription = "Favorite",
-                                            modifier = Modifier.size(40.dp),
+                                            modifier = Modifier.size(30.dp),
                                             tint= AppBlue,)
                                     }
-                                }  /*
+                                }
+
+                                Column  (
+                                    modifier = Modifier
+                                        .height(50.dp)
+                                        .width(45.dp)
+                                ){
+                                    IconButton(onClick = {
+                                        onEvent(LocalizationEvent.DeleteLocalization(it))
+
+                                    }) {
+                                        Icon(imageVector = Icons.Default.Create,
+                                            contentDescription = "Favorite",
+                                            modifier = Modifier.size(30.dp),
+                                            tint= AppBlue,)
+                                    }
+                                }
+
+                            /*
 
                                 Column {
                                     Box(modifier = Modifier
@@ -373,6 +491,8 @@ class LocalizationListComponent {
 
                         }
                     }
+
+                    Divider(color = AppBlue, thickness = 2.5.dp)
                 }
                 }
 
