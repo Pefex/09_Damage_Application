@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -167,9 +168,12 @@ class LocalizationListComponent {
             horizontalAlignment = Alignment.CenterHorizontally
 
         ) {
+
+            Spacer(modifier = Modifier
+                .height(10.dp))
             Row (modifier = Modifier
-                .width(300.dp)
-                .height(50.dp)
+                .width(400.dp)
+                .height(40.dp)
 
 
             ){
@@ -180,14 +184,33 @@ class LocalizationListComponent {
                 }
             }
 
+            Spacer(modifier = Modifier
+                .height(10.dp))
+
             Row (modifier = Modifier
-                .width(300.dp)
-                .height(60.dp)
+                .width(350.dp)
+                .height(40.dp)
 
 
             ){
-                Text(text = localizationName ?: "Liegenschaft")
+                Column (modifier = Modifier
+                    .width(320.dp)
+                    .background(Color.Yellow)){
+                    Text(text = localizationName ?: "Liegenschaft")
+                }
+
+                IconButton(onClick = {
+                }) {
+                    Icon(imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Favorite",
+                        modifier = Modifier.size(30.dp),
+                        tint= AppBlue,)
+                }
+
+
             }
+
+
 
             Box(modifier = Modifier
                 .width(270.dp)
@@ -270,20 +293,20 @@ class LocalizationListComponent {
 
                         DropdownMenuItem(
                             text = { Text(text = "Stiege 1") },
-                            onClick = { building_element = "Wand";
+                            onClick = { building_element = "Stiege 1";
                                 localizationInput = "Stiege 1"
 
                                 isExpanded = false })
 
                         DropdownMenuItem(
                             text = { Text(text = "Stiege 2") },
-                            onClick = { building_element = "Decke";
+                            onClick = { building_element = "Stiege 2";
                                 localizationInput = "Stiege 2"
                                 isExpanded = false })
 
                         DropdownMenuItem(
                             text = { Text(text = "Stiege 3") },
-                            onClick = { building_element = "Boden";
+                            onClick = { building_element = "Stiege 3";
                                 localizationInput = "Stiege 3"
                                 isExpanded = false })
 
