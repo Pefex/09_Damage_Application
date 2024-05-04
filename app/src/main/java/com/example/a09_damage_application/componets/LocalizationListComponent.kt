@@ -98,30 +98,34 @@ class LocalizationListComponent {
 
         var localizationId = remember {
             mutableStateOf(rootLocalizationId)
-
-
         }
 
-        var localizationName by remember()
+        var rootId by remember(){
+            mutableStateOf<Int?>(null)
+        }
 
-         {
+        var localizationName by remember(){  //ohne .value
             //Log.d("", "localizationId:" + localizationId)
             mutableStateOf<String?>(null)
-
         }
 
-        var localizationSubs =  remember {
+        var localizationSubs =  remember {  // mit .value
             mutableStateListOf<Localization>()
         }
 
         dao.getLocalizationById(localizationId.value).observe(
             LocalLifecycleOwner.current,
-            Observer{localization -> if (localization!= null){
+            Observer{localization ->
+                if (localization!= null){
+                    localizationName = localization.name
+                    rootId = localization.rootLocalizationId
 
-
-                localizationName = localization.name
-            }}
-            )
+                }
+                else {
+                    localizationName = null
+                }
+            }
+        )
 
         dao.getSubLocalizationsById(localizationId.value).observe( //Wenn sich Werte in der Liste ändern,
             // dann wird die Liste gelöscht und neu befüllt.
@@ -196,10 +200,11 @@ class LocalizationListComponent {
                 Column (modifier = Modifier
                     .width(320.dp)
                     .background(Color.Yellow)){
-                    Text(text = localizationName ?: "Liegenschaft")
+                    Text(text = localizationName ?: "Liegenschaft")  //"?:" bedeutet, wenn der Wert link null ist, dann nehmen wir stattdessen den rechten Wert "Liegenschaft".
                 }
 
                 IconButton(onClick = {
+                    localizationId.value = rootId
                 }) {
                     Icon(imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Favorite",
