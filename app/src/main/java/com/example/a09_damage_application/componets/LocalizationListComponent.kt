@@ -1,6 +1,7 @@
 package com.example.a09_damage_application.componets
 
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -25,6 +26,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -42,6 +44,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -62,9 +65,11 @@ import androidx.lifecycle.Observer
 import com.example.a09_damage_application.componets.events.LocalizationEvent
 import com.example.a09_damage_application.data.entities.Localization
 import com.example.a09_damage_application.data.enums.TypeOfTitle
+import com.example.a09_damage_application.data.enums.Type_Of_Level
 import com.example.a09_damage_application.data.interfaces.LocalizationDao
 import com.example.a09_damage_application.ui.theme.AppBlue
 import com.example.a09_damage_application.ui.theme.BoxRounded
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
@@ -74,12 +79,17 @@ class LocalizationListComponent {
     @Composable
 
     fun LocalizationListComposable(
-        dao: LocalizationDao,
+        //selectedTypeOfLevel: MutableState<Type_Of_Level>,
+        dao: LocalizationDao,  // "dao ist die lokale Variable für das "LocalizationDao"
         rootLocalizationId: Int? = 0,
         onNavigateDamage: () ->Unit,
 
        // onNavigateLocalization: (id: Int)  ->Unit
         ) {
+
+        //var selectedTypeOfDamage: MutableState<Type_Of_Level>
+
+
 
         ////////////////////////////////////////////////////////////////
 
@@ -90,8 +100,6 @@ class LocalizationListComponent {
         var building_element by remember{
             mutableStateOf("")
         }
-
-
         //////////////////////////////////////////////////////////////////
 
         val coroutineScope = rememberCoroutineScope()
@@ -109,8 +117,45 @@ class LocalizationListComponent {
             mutableStateOf<String?>(null)
         }
 
+        var localizationLevel by remember {
+            mutableStateOf<Int>(0)
+
+        }
+
+        var path by remember {
+            mutableStateOf<String?>(null)
+        }
+
         var localizationSubs =  remember {  // mit .value
             mutableStateListOf<Localization>()
+        }
+
+        fun getLocalizationPathById(id: Int? ): String{
+
+
+            val path = StringBuilder()
+            var currentId = id
+
+            while (currentId != null) {
+                val localization = dao.getLocalizationByIdOnce(currentId)
+                if (localization != null) {
+                    Log.d(TAG, "localization:  " +localization.name  )
+                }else{
+                    Log.d(TAG, "localization nicht gefunden: $currentId")
+                }
+
+                if (localization != null) {
+                    path.insert(0, localization.name)
+                    if (localization.rootLocalizationId != null) {
+                        path.insert(0, " > ")
+                    }
+                    currentId = localization.rootLocalizationId!!
+                } else {
+                    break
+                }
+            }
+            return path.toString()
+
         }
 
         dao.getLocalizationById(localizationId.value).observe(
@@ -119,13 +164,27 @@ class LocalizationListComponent {
                 if (localization!= null){
                     localizationName = localization.name
                     rootId = localization.rootLocalizationId
+                    localizationLevel = localization.numberOfLevel
+                    coroutineScope.launch (Dispatchers.IO){
+                        try {
+                            path = getLocalizationPathById(localization.localizationId)
+                            Log.d(TAG, "Der aktuelle Pfad" + path)
+                            // Verarbeite die Daten hier
+                        } catch (e: Exception) {
+                            // Behandle den Fehler
+                            Log.e("MyViewModel", "Datenbankabfrage fehlgeschlagen: $e")
+                        }}
+
 
                 }
                 else {
                     localizationName = null
+                    path = ""
+                    localizationLevel = 0
                 }
             }
         )
+
 
         dao.getSubLocalizationsById(localizationId.value).observe( //Wenn sich Werte in der Liste ändern,
             // dann wird die Liste gelöscht und neu befüllt.
@@ -136,6 +195,12 @@ class LocalizationListComponent {
                 localizationSubs.clear()
                 localizationSubs.addAll(allSubs)
             })
+
+        Log.d("", localizationSubs.toString())
+
+
+
+
 
         fun onEvent(event: LocalizationEvent){
             when(event){
@@ -186,6 +251,19 @@ class LocalizationListComponent {
                     Text(text = "Zu Schäden", fontSize = 14.sp)
 
                 }
+
+                IconButton(onClick = {
+                    //localizationId.value = rootId
+                    //localizationId.value = rootID
+
+                    Log.d("", localizationSubs.toString())
+                    //var pathLocalization = getLocalizationPathById()
+                }) {
+                    Icon(imageVector = Icons.Default.Check,
+                        contentDescription = "Favorite",
+                        modifier = Modifier.size(30.dp),
+                        tint= AppBlue,)
+                }
             }
 
             Spacer(modifier = Modifier
@@ -193,7 +271,7 @@ class LocalizationListComponent {
 
             Row (modifier = Modifier
                 .width(350.dp)
-                .height(40.dp)
+                .height(60.dp)
 
 
             ){
@@ -201,18 +279,25 @@ class LocalizationListComponent {
                     .width(320.dp)
                     .background(Color.Yellow)){
                     Text(text = localizationName ?: "Liegenschaft")  //"?:" bedeutet, wenn der Wert link null ist, dann nehmen wir stattdessen den rechten Wert "Liegenschaft".
+
+                    val pic1 = "He"
+                    val pic2 = "llo World"
+                    val pic3 = pic1 + pic2
+                    Text(path?:"LIEGENSCHAFT")
+                    Log.d(TAG, path?:"LIEGENSCHAFT")
+                    Log.d(TAG, localizationId.value.toString())
+                    //Text("")
                 }
 
                 IconButton(onClick = {
                     localizationId.value = rootId
+
                 }) {
                     Icon(imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Favorite",
                         modifier = Modifier.size(30.dp),
                         tint= AppBlue,)
                 }
-
-
             }
 
 
@@ -254,8 +339,14 @@ class LocalizationListComponent {
                             IconButton(onClick = {
                                 var l: Localization = Localization(
                                     name = localizationInput,
-                                    rootLocalizationId = localizationId.value
+                                    rootLocalizationId = localizationId.value,
+                                    numberOfLevel = localizationLevel + 1
+
+
+
                                 );
+
+                                Log.d(TAG, "LEVEL VON NEUEM ELEMENT:" + l.numberOfLevel.toString())
                                 onEvent(LocalizationEvent.SaveLocalization(l))
                                 localizationInput = ""
 
@@ -268,10 +359,13 @@ class LocalizationListComponent {
 
 
 
+
+
                         }
                     }
                 }
             }
+
 
             Spacer(modifier = Modifier
                 .height(5.dp))
@@ -348,7 +442,8 @@ class LocalizationListComponent {
                     //.border(2.dp, color = Color.Red)
                     .background(Color(37, 150, 190, 150), shape = RoundedCornerShape(5.dp))
 
-                ){ items(items=localizationSubs) {
+                ){ items(items=localizationSubs)
+                {
 
 
                     Box(modifier = Modifier
