@@ -44,6 +44,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -93,6 +94,8 @@ class LocalizationListComponent {
 
         ////////////////////////////////////////////////////////////////
 
+
+
         var isExpanded by remember{
             mutableStateOf(false)
         }
@@ -129,6 +132,27 @@ class LocalizationListComponent {
         var localizationSubs =  remember {  // mit .value
             mutableStateListOf<Localization>()
         }
+
+        var cleanTextInput = ""
+
+        /////////////////////////////////////////////////////////
+        val items = listOf("Apple", "Banana", "Cherry", "Date")
+        val selectedItem = "" // Setze hier den ausgewählten Wert
+        val label = "Select a fruit" // Setze hier den Label-Text
+
+        var expanded by remember { mutableStateOf(false) }
+        var listItems by remember(items, selectedItem) {
+            mutableStateOf(
+                if (selectedItem.isNotEmpty()) {
+                    items.filter { x -> x.startsWith(selectedItem.lowercase(), ignoreCase = true) }
+                } else {
+                    items.toList()
+                }
+            )
+        }
+        var  selectedText by remember(selectedItem) { mutableStateOf(selectedItem) }
+
+        ///////////////////////////////////////////////////////////
 
         fun getLocalizationPathById(id: Int? ): String{
 
@@ -236,7 +260,8 @@ class LocalizationListComponent {
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
 
-        ) {
+        )
+        {
 
             Spacer(modifier = Modifier
                 .height(10.dp))
@@ -263,6 +288,33 @@ class LocalizationListComponent {
                         contentDescription = "Favorite",
                         modifier = Modifier.size(30.dp),
                         tint= AppBlue,)
+                }
+
+                Column (
+                    modifier = Modifier
+                        .height(80.dp)
+                        .width(250.dp)
+                ){
+
+                    IconButton(onClick = {
+                        var l: Localization = Localization(
+                            name = localizationInput,
+                            rootLocalizationId = localizationId.value,
+                            numberOfLevel = localizationLevel + 1
+                        );
+
+                        Log.d(TAG, "LEVEL VON NEUEM ELEMENT:" + l.numberOfLevel.toString())
+                        onEvent(LocalizationEvent.SaveLocalization(l))
+                        localizationInput = ""
+                        selectedText = ""
+                        cleanTextInput = ""
+
+                    }) {
+                        Icon(imageVector = Icons.Default.Add,
+                            contentDescription = "Favorite",
+                            modifier = Modifier.size(40.dp),
+                            tint= AppBlue,)
+                    }
                 }
             }
 
@@ -299,9 +351,209 @@ class LocalizationListComponent {
                         tint= AppBlue,)
                 }
             }
+            //////////////////////////////////////////////////////
+            // Der neue Code für das Texteingabefeld.
 
 
 
+            LaunchedEffect(selectedItem) {
+                selectedText = selectedItem
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 36.dp, vertical = 2.dp)
+            )
+
+            {
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = {
+                        expanded = !expanded
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                        .background(Color.Red)
+                ) {
+                    OutlinedTextField(
+                        value = selectedText,
+                        label = { Text(label) },
+                        onValueChange = {
+                            if (!expanded) {
+                                expanded = true
+                            }
+                            selectedText = it
+                            listItems = if (it.isNotEmpty()) {
+                                items.filter { x -> x.startsWith(it.lowercase(), ignoreCase = true) }
+                            } else {
+                                items.toList()
+                            }
+                        },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .menuAnchor()
+                    )
+
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        if (listItems.isEmpty()) {
+                            //DropdownMenuItem(
+                            //    text = { Text(text = "No items found") },
+                            //   onClick = {
+                            //        expanded = false
+                            //    }
+                            //)
+                        } else {
+                            listItems.forEach { item ->
+                                DropdownMenuItem(
+                                    text = { Text(text = item) },
+                                    onClick = {
+                                        selectedText = item
+                                        expanded = false
+                                        //onItemSelected(item)
+                                    }
+                                )
+                            }
+                        }
+                    }
+                    Log.d(TAG, selectedText)
+                    localizationInput = selectedText
+                }
+            }
+
+
+/////////////////////////////////////////////////////////////////////
+/*
+            DropDown(
+                items = items,
+                onItemSelected = { selectedFruit ->
+                    // Hier kannst du die ausgewählte Frucht verarbeiten
+                    println("Ausgewählte Frucht: $selectedFruit")
+                },
+                selectedItem = selectedItem,
+                label = label,
+                selectedText = cleanTextInput
+            )*/
+
+
+            ///////////////////////////////////////////////////////
+
+// der ursprüngliche Code für das Texteingabefeld
+           /* //@OptIn(ExperimentalMaterial3Api::class)
+            @ExperimentalMaterial3Api
+            @Composable
+            fun DropDown(
+                items: List<String>,
+                onItemSelected: (String) -> Unit,
+                selectedItem: String,
+                label: String,
+                selectedText: String,
+                modifier: Modifier = Modifier,
+            ) {
+                var expanded by remember { mutableStateOf(false) }
+                var listItems by remember(items, selectedItem) {
+                    mutableStateOf(
+                        if (selectedItem.isNotEmpty()) {
+                            items.filter { x -> x.startsWith(selectedItem.lowercase(), ignoreCase = true) }
+                        } else {
+                            items.toList()
+                        }
+                    )
+                }
+                var  selectedText by remember(selectedItem) { mutableStateOf(selectedItem) }
+
+                LaunchedEffect(selectedItem) {
+                    selectedText = selectedItem
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 36.dp, vertical = 2.dp)
+                ) {
+                    ExposedDropdownMenuBox(
+                        expanded = expanded,
+                        onExpandedChange = {
+                            expanded = !expanded
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                            .background(Color.Red)
+                    ) {
+                        OutlinedTextField(
+                            value = selectedText,
+                            label = { Text(label) },
+                            onValueChange = {
+                                if (!expanded) {
+                                    expanded = true
+                                }
+                                selectedText = it
+                                listItems = if (it.isNotEmpty()) {
+                                    items.filter { x -> x.startsWith(it.lowercase(), ignoreCase = true) }
+                                } else {
+                                    items.toList()
+                                }
+                            },
+                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .menuAnchor()
+                        )
+
+                        ExposedDropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            if (listItems.isEmpty()) {
+                                //DropdownMenuItem(
+                                //    text = { Text(text = "No items found") },
+                                //   onClick = {
+                                //        expanded = false
+                                //    }
+                                //)
+                            } else {
+                                listItems.forEach { item ->
+                                    DropdownMenuItem(
+                                        text = { Text(text = item) },
+                                        onClick = {
+                                            selectedText = item
+                                            expanded = false
+                                            onItemSelected(item)
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                        Log.d(TAG, selectedText)
+                        localizationInput = selectedText
+                    }
+                }
+            }
+
+            val items = listOf("Apple", "Banana", "Cherry", "Date")
+            val selectedItem = "" // Setze hier den ausgewählten Wert
+            val label = "Select a fruit" // Setze hier den Label-Text
+
+            DropDown(
+                items = items,
+                onItemSelected = { selectedFruit ->
+                    // Hier kannst du die ausgewählte Frucht verarbeiten
+                    println("Ausgewählte Frucht: $selectedFruit")
+                },
+                selectedItem = selectedItem,
+                label = label,
+                selectedText = cleanTextInput
+            )*/
+
+
+
+
+            ///////////////////////////////
+
+
+/*
             Box(modifier = Modifier
                 .width(270.dp)
                 .height(70.dp)
@@ -328,39 +580,6 @@ class LocalizationListComponent {
                                 onValueChange = {localizationInput= it}, // it ist der Wert im Texteingabefeld
                                 label = { Text("neuer Ort") },
                             )
-                        }
-
-                        Column (
-                            modifier = Modifier
-                                .height(80.dp)
-                                .width(250.dp)
-                        ){
-
-                            IconButton(onClick = {
-                                var l: Localization = Localization(
-                                    name = localizationInput,
-                                    rootLocalizationId = localizationId.value,
-                                    numberOfLevel = localizationLevel + 1
-
-
-
-                                );
-
-                                Log.d(TAG, "LEVEL VON NEUEM ELEMENT:" + l.numberOfLevel.toString())
-                                onEvent(LocalizationEvent.SaveLocalization(l))
-                                localizationInput = ""
-
-                            }) {
-                                Icon(imageVector = Icons.Default.Add,
-                                    contentDescription = "Favorite",
-                                    modifier = Modifier.size(40.dp),
-                                    tint= AppBlue,)
-                            }
-
-
-
-
-
                         }
                     }
                 }
@@ -411,25 +630,19 @@ class LocalizationListComponent {
 
                     }
                 }
-
-            }
+            }*/
 
 
             Log.d(ContentValues.TAG,building_element)
 ///////////////////////////////////////////////////////////////////
 
+            Spacer(modifier = Modifier
+                .height(15.dp))
 
-
-
-
-
-
-
-            ///////////////////////////////////////////////////////////////
 
             Column (modifier = Modifier
                 .clip(RoundedCornerShape(5.dp))
-                .height(500.dp)
+                .height(220.dp)
                 .width(330.dp)
                 //.height(28.dp)
                 .background(AppBlue)){
@@ -460,9 +673,6 @@ class LocalizationListComponent {
                                         .width(220.dp),
 
                                     verticalArrangement = Arrangement.Center
-
-
-
                                 ){
                                     Text(text = ""+it.name
                                         //+ it.number,
@@ -502,126 +712,16 @@ class LocalizationListComponent {
                                             tint= AppBlue,)
                                     }
                                 }
-
-                            /*
-
-                                Column {
-                                    Box(modifier = Modifier
-                                        .width(30.dp)
-                                        .heightIn(10.dp),
-                                        contentAlignment = Alignment.Center)
-                                    {
-                                        BadgedBox(badge = {
-
-                                        }
-                                        )
-                                        {
-                                            IconButton(onClick = {onNavigateDamageLocalization()}) {
-                                                Icon(imageVector = Icons.Default.Add,
-                                                    contentDescription = "Favorite",
-                                                    modifier = Modifier.size(40.dp),
-                                                    tint= AppBlue,)
-                                            }
-                                        }
-                                    }
-
-                                    Box(modifier = Modifier
-                                        .width(30.dp)
-                                        .heightIn(30.dp),
-                                        contentAlignment = Alignment.Center)
-                                    {
-                                        BadgedBox(badge = {
-
-                                        }
-                                        )
-                                        {
-                                            IconButton(onClick = {  }) {
-                                                Icon(imageVector = Icons.Default.Create,
-                                                    contentDescription = "Favorite",
-                                                    modifier = Modifier.size(40.dp),
-                                                    tint= AppBlue,)
-                                            }
-                                        }
-                                    }
-
-                                    Box(modifier = Modifier
-                                        .width(30.dp)
-                                        .heightIn(30.dp),
-                                        contentAlignment = Alignment.Center)
-                                    {
-                                        BadgedBox(badge = {
-
-                                        }
-                                        )
-                                        {
-                                            IconButton(onClick = {  }) {
-                                                Icon(imageVector = Icons.Default.Delete,
-                                                    contentDescription = "Favorite",
-                                                    modifier = Modifier.size(40.dp),
-                                                    tint= AppBlue,)
-                                            }
-                                        }
-                                    }
-
-                                }*/
-
                             }
-
-                            /*
-                                                        Icon(
-                                                            modifier = Modifier.size(20.dp),
-                                                            tint= Color.Cyan,
-                                                            painter = painterResource(id = androidx.core.R.drawable.ic_call_answer), contentDescription = "Icon")
-                                                        Icon(
-                                                            modifier = Modifier.size(20.dp),
-                                                            tint= AppBlue,
-                                                            painter = painterResource(id = androidx.core.R.drawable.ic_call_decline_low), contentDescription = "Icon")
-
-
-                                                        Button(onClick = {
-
-
-
-                                                        },
-                                                            colors = ButtonDefaults.buttonColors
-                                                                (contentColor = Color.White,   //pre-created colour
-                                                                containerColor = AppBlue),
-
-                                                            modifier = Modifier
-                                                                .size(170.dp, 40.dp))
-
-                                                        {
-                                                            Text(text = "Delete", fontSize = 12.sp)
-                                                        }
-
-                                                        Box(modifier = Modifier
-                                                            .width(70.dp)
-                                                            .heightIn(70.dp),
-                                                            contentAlignment = Alignment.Center)
-                                                        {
-                                                            BadgedBox(badge = {
-                                                                Badge {
-                                                                    Text(text = "99+")
-                                                                }
-                                                            }
-                                                            )
-                                                            {
-                                                                Icon(imageVector = Icons.Default.Favorite,
-                                                                    contentDescription = "Favorite",
-                                                                    modifier = Modifier.size(40.dp))
-                                                            }
-                                                        }*/
-
                         }
                     }
 
-                    Divider(color = AppBlue, thickness = 2.5.dp)
+                    Divider(color = AppBlue, thickness = 1.5.dp)
                 }
                 }
-
-
-
-        }
+            }
+            ////////////////////////////////////////////////////
     }
 }}
+
 
