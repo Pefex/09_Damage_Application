@@ -84,15 +84,7 @@ class LocalizationListComponent {
         dao: LocalizationDao,  // "dao ist die lokale Variable für das "LocalizationDao"
         rootLocalizationId: Int? = 0,
         onNavigateDamage: () ->Unit,
-
-       // onNavigateLocalization: (id: Int)  ->Unit
         ) {
-
-        //var selectedTypeOfDamage: MutableState<Type_Of_Level>
-
-
-
-        ////////////////////////////////////////////////////////////////
 
 
 
@@ -122,7 +114,6 @@ class LocalizationListComponent {
 
         var localizationLevel by remember {
             mutableStateOf<Int>(0)
-
         }
 
         var path by remember {
@@ -136,9 +127,9 @@ class LocalizationListComponent {
         var cleanTextInput = ""
 
         /////////////////////////////////////////////////////////
-        val items = listOf("Apple", "Banana", "Cherry", "Date")
+        val items = listOf("", "EG", "1. OG", "2. OG", "3. OG", "KG")
         val selectedItem = "" // Setze hier den ausgewählten Wert
-        val label = "Select a fruit" // Setze hier den Label-Text
+        val label = "Select a Localization" // Setze hier den Label-Text
 
         var expanded by remember { mutableStateOf(false) }
         var listItems by remember(items, selectedItem) {
@@ -150,7 +141,18 @@ class LocalizationListComponent {
                 }
             )
         }
-        var  selectedText by remember(selectedItem) { mutableStateOf(selectedItem) }
+
+        var listItemsNew by remember(items, selectedItem) {
+            mutableStateOf(
+                if (selectedItem.isNotEmpty()) {
+                    items.filter { x -> x.startsWith(selectedItem.lowercase(), ignoreCase = true) }
+                } else {
+                    items.toList()
+                }
+            )
+        }
+        //var  selectedText by remember(selectedItem) { mutableStateOf(selectedItem) }
+        //var  selectedText by remember { mutableStateOf(selectedItem) }
 
         ///////////////////////////////////////////////////////////
 
@@ -198,8 +200,6 @@ class LocalizationListComponent {
                             // Behandle den Fehler
                             Log.e("MyViewModel", "Datenbankabfrage fehlgeschlagen: $e")
                         }}
-
-
                 }
                 else {
                     localizationName = null
@@ -223,9 +223,6 @@ class LocalizationListComponent {
         Log.d("", localizationSubs.toString())
 
 
-
-
-
         fun onEvent(event: LocalizationEvent){
             when(event){
                 is LocalizationEvent.SaveLocalization  -> {
@@ -237,491 +234,361 @@ class LocalizationListComponent {
                 }
 
                 else -> {}
-
             }
         }
-
+/////////////////////////////////////////////////////////////////
         var localizationInput by remember {
             mutableStateOf("")
         }
-
+////////////////////////////////////////////////////////////////////
         val numbers = listOf("Felix", "Peter", "Walter", "Frank", "Jürgen")
 
-        Column(
-            modifier = Modifier
+        Column (  modifier = Modifier
 
 
-                .height(800.dp)
-                .width(400.dp)
-                .padding(5.dp)
-                .background(Color.Green)
+            .height(780.dp)
+            .width(400.dp)
+            .padding(5.dp)
+            .background(Color.Cyan)
             //.verticalScroll(rememberScrollState()).fillMaxSize(),
             ,
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
 
-        )
-        {
+        ){
+            Column(  modifier = Modifier
 
-            Spacer(modifier = Modifier
-                .height(10.dp))
-            Row (modifier = Modifier
+
+                .height(60.dp)
                 .width(400.dp)
-                .height(40.dp)
-
+                .padding(5.dp)
+                .background(Color.LightGray)
+                //.verticalScroll(rememberScrollState()).fillMaxSize(),
+                ,
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
 
             ){
-                Button(onClick = {
-                    onNavigateDamage()}) {
-                    Text(text = "Zu Schäden", fontSize = 14.sp)
-
-                }
-
-                IconButton(onClick = {
-                    //localizationId.value = rootId
-                    //localizationId.value = rootID
-
-                    Log.d("", localizationSubs.toString())
-                    //var pathLocalization = getLocalizationPathById()
-                }) {
-                    Icon(imageVector = Icons.Default.Check,
-                        contentDescription = "Favorite",
-                        modifier = Modifier.size(30.dp),
-                        tint= AppBlue,)
-                }
-
-                Column (
-                    modifier = Modifier
-                        .height(80.dp)
-                        .width(250.dp)
+                Row (modifier = Modifier
+                    .width(400.dp)
+                    .height(40.dp)
                 ){
+                    Button(onClick = {
+                        onNavigateDamage()}) {
+                        Text(text = "Zu Schäden", fontSize = 14.sp)
+                    }
+                }
+            }
+
+
+            Column(
+                modifier = Modifier
+
+
+                    .height(700.dp)
+                    .width(400.dp)
+                    .padding(5.dp)
+                    .background(Color.Green)
+                //.verticalScroll(rememberScrollState()).fillMaxSize(),
+                ,
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
+
+            )
+            {
+
+                Spacer(modifier = Modifier
+                    .height(10.dp))
+
+
+                Spacer(modifier = Modifier
+                    .height(10.dp))
+
+                Row (modifier = Modifier
+                    .width(350.dp)
+                    .height(60.dp)
+                ){
+                    Column (modifier = Modifier
+                        .width(320.dp)
+                        .background(Color.Yellow)){
+                        Text(text = localizationName ?: "Liegenschaft")  //"?:" bedeutet, wenn der Wert link null ist, dann nehmen wir stattdessen den rechten Wert "Liegenschaft".
+
+                        val pic1 = "He"
+                        val pic2 = "llo World"
+                        val pic3 = pic1 + pic2
+                        Text(path?:"LIEGENSCHAFT")
+                        Log.d(TAG, path?:"LIEGENSCHAFT")
+                        Log.d(TAG, localizationId.value.toString())
+                        //Text("")
+                    }
 
                     IconButton(onClick = {
-                        var l: Localization = Localization(
-                            name = localizationInput,
-                            rootLocalizationId = localizationId.value,
-                            numberOfLevel = localizationLevel + 1
-                        );
-
-                        Log.d(TAG, "LEVEL VON NEUEM ELEMENT:" + l.numberOfLevel.toString())
-                        onEvent(LocalizationEvent.SaveLocalization(l))
-                        localizationInput = ""
-                        selectedText = ""
-                        cleanTextInput = ""
+                        localizationId.value = rootId
 
                     }) {
-                        Icon(imageVector = Icons.Default.Add,
+                        Icon(imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Favorite",
-                            modifier = Modifier.size(40.dp),
+                            modifier = Modifier.size(30.dp),
                             tint= AppBlue,)
                     }
                 }
-            }
 
-            Spacer(modifier = Modifier
-                .height(10.dp))
-
-            Row (modifier = Modifier
-                .width(350.dp)
-                .height(60.dp)
+                //////////////////////////////////////////////////////
+                // Der neue Code für das Texteingabefeld.
 
 
-            ){
-                Column (modifier = Modifier
-                    .width(320.dp)
-                    .background(Color.Yellow)){
-                    Text(text = localizationName ?: "Liegenschaft")  //"?:" bedeutet, wenn der Wert link null ist, dann nehmen wir stattdessen den rechten Wert "Liegenschaft".
-
-                    val pic1 = "He"
-                    val pic2 = "llo World"
-                    val pic3 = pic1 + pic2
-                    Text(path?:"LIEGENSCHAFT")
-                    Log.d(TAG, path?:"LIEGENSCHAFT")
-                    Log.d(TAG, localizationId.value.toString())
-                    //Text("")
-                }
-
-                IconButton(onClick = {
-                    localizationId.value = rootId
-
-                }) {
-                    Icon(imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Favorite",
-                        modifier = Modifier.size(30.dp),
-                        tint= AppBlue,)
-                }
-            }
-            //////////////////////////////////////////////////////
-            // Der neue Code für das Texteingabefeld.
-
-
-
-            LaunchedEffect(selectedItem) {
-                selectedText = selectedItem
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 36.dp, vertical = 2.dp)
-            )
-
-            {
-                ExposedDropdownMenuBox(
-                    expanded = expanded,
-                    onExpandedChange = {
-                        expanded = !expanded
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                        .background(Color.Red)
-                ) {
-                    OutlinedTextField(
-                        value = selectedText,
-                        label = { Text(label) },
-                        onValueChange = {
-                            if (!expanded) {
-                                expanded = true
-                            }
-                            selectedText = it
-                            listItems = if (it.isNotEmpty()) {
-                                items.filter { x -> x.startsWith(it.lowercase(), ignoreCase = true) }
-                            } else {
-                                items.toList()
-                            }
-                        },
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .menuAnchor()
-                    )
-
-                    ExposedDropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
-                    ) {
-                        if (listItems.isEmpty()) {
-                            //DropdownMenuItem(
-                            //    text = { Text(text = "No items found") },
-                            //   onClick = {
-                            //        expanded = false
-                            //    }
-                            //)
-                        } else {
-                            listItems.forEach { item ->
-                                DropdownMenuItem(
-                                    text = { Text(text = item) },
-                                    onClick = {
-                                        selectedText = item
-                                        expanded = false
-                                        //onItemSelected(item)
-                                    }
-                                )
-                            }
-                        }
-                    }
-                    Log.d(TAG, selectedText)
-                    localizationInput = selectedText
-                }
-            }
-
-
-/////////////////////////////////////////////////////////////////////
-/*
-            DropDown(
-                items = items,
-                onItemSelected = { selectedFruit ->
-                    // Hier kannst du die ausgewählte Frucht verarbeiten
-                    println("Ausgewählte Frucht: $selectedFruit")
-                },
-                selectedItem = selectedItem,
-                label = label,
-                selectedText = cleanTextInput
-            )*/
-
-
-            ///////////////////////////////////////////////////////
-
-// der ursprüngliche Code für das Texteingabefeld
-           /* //@OptIn(ExperimentalMaterial3Api::class)
-            @ExperimentalMaterial3Api
-            @Composable
-            fun DropDown(
-                items: List<String>,
-                onItemSelected: (String) -> Unit,
-                selectedItem: String,
-                label: String,
-                selectedText: String,
-                modifier: Modifier = Modifier,
-            ) {
-                var expanded by remember { mutableStateOf(false) }
-                var listItems by remember(items, selectedItem) {
-                    mutableStateOf(
-                        if (selectedItem.isNotEmpty()) {
-                            items.filter { x -> x.startsWith(selectedItem.lowercase(), ignoreCase = true) }
-                        } else {
-                            items.toList()
-                        }
-                    )
-                }
-                var  selectedText by remember(selectedItem) { mutableStateOf(selectedItem) }
-
-                LaunchedEffect(selectedItem) {
-                    selectedText = selectedItem
-                }
 
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 36.dp, vertical = 2.dp)
-                ) {
-                    ExposedDropdownMenuBox(
-                        expanded = expanded,
-                        onExpandedChange = {
-                            expanded = !expanded
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                            .background(Color.Red)
-                    ) {
-                        OutlinedTextField(
-                            value = selectedText,
-                            label = { Text(label) },
-                            onValueChange = {
-                                if (!expanded) {
-                                    expanded = true
-                                }
-                                selectedText = it
-                                listItems = if (it.isNotEmpty()) {
-                                    items.filter { x -> x.startsWith(it.lowercase(), ignoreCase = true) }
-                                } else {
-                                    items.toList()
-                                }
-                            },
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .menuAnchor()
-                        )
+                )
 
-                        ExposedDropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false }
-                        ) {
-                            if (listItems.isEmpty()) {
-                                //DropdownMenuItem(
-                                //    text = { Text(text = "No items found") },
-                                //   onClick = {
-                                //        expanded = false
-                                //    }
-                                //)
-                            } else {
-                                listItems.forEach { item ->
-                                    DropdownMenuItem(
-                                        text = { Text(text = item) },
-                                        onClick = {
-                                            selectedText = item
-                                            expanded = false
-                                            onItemSelected(item)
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                        Log.d(TAG, selectedText)
-                        localizationInput = selectedText
-                    }
-                }
-            }
-
-            val items = listOf("Apple", "Banana", "Cherry", "Date")
-            val selectedItem = "" // Setze hier den ausgewählten Wert
-            val label = "Select a fruit" // Setze hier den Label-Text
-
-            DropDown(
-                items = items,
-                onItemSelected = { selectedFruit ->
-                    // Hier kannst du die ausgewählte Frucht verarbeiten
-                    println("Ausgewählte Frucht: $selectedFruit")
-                },
-                selectedItem = selectedItem,
-                label = label,
-                selectedText = cleanTextInput
-            )*/
-
-
-
-
-            ///////////////////////////////
-
-
-/*
-            Box(modifier = Modifier
-                .width(270.dp)
-                .height(70.dp)
-                .background(Color.White)
-
-            ){
-                Column (modifier = Modifier
-                    .width(270.dp)){
+                {
                     Row {
+
+                        Column (modifier = Modifier
+                                .width(220.dp)
+                            .background(Color.Yellow)){
+
+
+
+                            ExposedDropdownMenuBox(
+                                expanded = expanded,
+                                onExpandedChange = {
+                                    expanded = !expanded
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(Color.Red)
+                            ) {
+
+                                //LaunchedEffect(selectedItem) {
+                                //    selectedText = selectedItem
+                                //}
+
+                                LaunchedEffect(selectedItem) {
+                                    //selectedText = selectedItem
+                                    localizationInput = selectedItem
+                                }
+
+
+                                OutlinedTextField(
+                                    //readOnly = true,
+                                    //value = selectedText,
+                                    value = localizationInput,
+                                    //value = "Wähle die Localization",
+
+
+
+                                    label = { Text(label) },
+                                    onValueChange = {
+                                        //localizationInput = ""
+                                        //localizationInput = localizationInput
+                                        if (!expanded) {
+                                            expanded = true
+                                        }
+                                        //selectedText = it
+                                        localizationInput = it
+
+                                        listItems = if (it.isNotEmpty()) {
+                                            items.filter { x -> x.startsWith(it.lowercase(), ignoreCase = true) }
+                                        } else {
+                                            items.toList()
+                                        }
+                                    },
+                                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .menuAnchor()
+                                )
+
+                                Log.d(TAG, "TEXT AUS TEXTEINGABEFELD:   " + localizationInput)
+
+                                ExposedDropdownMenu(
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = false }  // false
+                                ) {
+                                    if (listItems.isEmpty()) {
+                                        DropdownMenuItem(
+                                            text = { Text(text = "No items found") },
+                                           onClick = {
+                                                expanded = false
+                                            }
+                                        )
+                                    } else {
+                                        listItems.forEach { item ->
+                                            DropdownMenuItem(
+                                                text = { Text(text = item) },
+                                                onClick = {
+                                                   //selectedText = item
+                                                    localizationInput = item
+///////////////////////////////////////////////////////////////////////////////////
+                                                    //expanded = false
+                                                    expanded = false
+                                                    //onItemSelected(item)
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                                //Log.d(TAG, selectedText)
+                                //localizationInput = selectedText
+                            }
+
+                        }
+
                         Column (
                             modifier = Modifier
-                                .height(70.dp)
-                                .width(200.dp)
-                                .background(Color.Yellow)
+                                .height(80.dp)
+                                .width(50.dp)
                         ){
-                            OutlinedTextField(modifier = Modifier
-                                .background(color = Color(255, 255, 255))
-                                .border(
-                                    3.dp,
-                                    Color(37, 150, 190, 150),
-                                    shape = RoundedCornerShape(5.dp)
-                                )
-                                .fillMaxWidth(), value = localizationInput,
-                                onValueChange = {localizationInput= it}, // it ist der Wert im Texteingabefeld
-                                label = { Text("neuer Ort") },
-                            )
+
+                            IconButton(onClick = {
+                                var l: Localization = Localization(
+                                    name = localizationInput,
+                                    rootLocalizationId = localizationId.value,
+                                    numberOfLevel = localizationLevel + 1
+                                );
+
+                                Log.d(TAG, "LEVEL VON NEUEM ELEMENT:" + l.numberOfLevel.toString())
+                                onEvent(LocalizationEvent.SaveLocalization(l))
+                                localizationInput = ""
+
+                                //selectedText = ""
+                                //cleanTextInput = ""
+                                //listItems = listItems
+                                //selectedItem = ""
+
+                                listItems =listItemsNew
+
+
+                            }) {
+                                Icon(imageVector = Icons.Default.Add,
+                                    contentDescription = "Favorite",
+                                    modifier = Modifier.size(40.dp),
+                                    tint= AppBlue,)
+                            }
                         }
-                    }
-                }
-            }
 
+                        Column (
+                            modifier = Modifier
+                                .height(80.dp)
+                                .width(50.dp)
+                        ){
 
-            Spacer(modifier = Modifier
-                .height(5.dp))
+                            IconButton(onClick = {
 
-            //////////////////////////////////////////////////////////////
+                                localizationInput = ""
+                                //selectedText = ""
+                                //cleanTextInput = ""
+                                //listItems = listItems
+                                //selectedItem = ""
 
-            Box(modifier = Modifier
-                .width(270.dp)
-                .height(90.dp),
-                contentAlignment = Alignment.Center){
-                ExposedDropdownMenuBox(expanded = isExpanded, onExpandedChange = {isExpanded = it}) {
-
-                    TextField(value = building_element, onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = {
-                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
-                        },
-                        colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                        modifier = Modifier.menuAnchor())
-
-                    ExposedDropdownMenu(
-                        expanded = isExpanded,
-                        onDismissRequest = {isExpanded = false }) {
-
-                        DropdownMenuItem(
-                            text = { Text(text = "Stiege 1") },
-                            onClick = { building_element = "Stiege 1";
-                                localizationInput = "Stiege 1"
-
-                                isExpanded = false })
-
-                        DropdownMenuItem(
-                            text = { Text(text = "Stiege 2") },
-                            onClick = { building_element = "Stiege 2";
-                                localizationInput = "Stiege 2"
-                                isExpanded = false })
-
-                        DropdownMenuItem(
-                            text = { Text(text = "Stiege 3") },
-                            onClick = { building_element = "Stiege 3";
-                                localizationInput = "Stiege 3"
-                                isExpanded = false })
-
-                    }
-                }
-            }*/
-
-
-            Log.d(ContentValues.TAG,building_element)
-///////////////////////////////////////////////////////////////////
-
-            Spacer(modifier = Modifier
-                .height(15.dp))
-
-
-            Column (modifier = Modifier
-                .clip(RoundedCornerShape(5.dp))
-                .height(220.dp)
-                .width(330.dp)
-                //.height(28.dp)
-                .background(AppBlue)){
-                LazyColumn(modifier = Modifier
-                    .clip(shape = RoundedCornerShape(0.5.dp))
-                    .padding(1.5.dp)
-                    .clip(RoundedCornerShape(1.5.dp))
-
-                    .padding(1.5.dp)
-                    //.border(2.dp, color = Color.Red)
-                    .background(Color(37, 150, 190, 150), shape = RoundedCornerShape(5.dp))
-
-                ){ items(items=localizationSubs)
-                {
-
-
-                    Box(modifier = Modifier
-                        .clickable { localizationId.value = it.localizationId }
-                        .background(Color.White),
-                        //BoxRounded().boxRounded
-                    ){
-                        Column {
-                            Row (verticalAlignment = Alignment.CenterVertically){
-                                Column (
-                                    modifier = Modifier
-                                        .padding(10.dp, 5.dp, 10.dp, 5.dp)
-                                        .height(50.dp)
-                                        .width(220.dp),
-
-                                    verticalArrangement = Arrangement.Center
-                                ){
-                                    Text(text = ""+it.name
-                                        //+ it.number,
-                                        ,fontSize = 18.sp,
-                                        color = AppBlue
-                                    )
-                                }
-
-                                Column  (
-                                    modifier = Modifier
-                                        .height(50.dp)
-                                        .width(45.dp)
-                                ){
-                                    IconButton(onClick = {
-                                        onEvent(LocalizationEvent.DeleteLocalization(it))
-
-                                    }) {
-                                        Icon(imageVector = Icons.Default.Delete,
-                                            contentDescription = "Favorite",
-                                            modifier = Modifier.size(30.dp),
-                                            tint= AppBlue,)
-                                    }
-                                }
-
-                                Column  (
-                                    modifier = Modifier
-                                        .height(50.dp)
-                                        .width(45.dp)
-                                ){
-                                    IconButton(onClick = {
-                                        onEvent(LocalizationEvent.DeleteLocalization(it))
-
-                                    }) {
-                                        Icon(imageVector = Icons.Default.Create,
-                                            contentDescription = "Favorite",
-                                            modifier = Modifier.size(30.dp),
-                                            tint= AppBlue,)
-                                    }
-                                }
+                            }) {
+                                Icon(imageVector = Icons.Default.Delete,
+                                    contentDescription = "Favorite",
+                                    modifier = Modifier.size(40.dp),
+                                    tint= AppBlue,)
                             }
                         }
                     }
 
-                    Divider(color = AppBlue, thickness = 1.5.dp)
                 }
+
+///////////////////////////////////////////////////////////////////
+
+                Spacer(modifier = Modifier
+                    .height(15.dp))
+
+
+                Column (modifier = Modifier
+                    .clip(RoundedCornerShape(5.dp))
+                    .height(220.dp)
+                    .width(330.dp)
+                    //.height(28.dp)
+                    .background(AppBlue)){
+                    LazyColumn(modifier = Modifier
+                        .clip(shape = RoundedCornerShape(0.5.dp))
+                        .padding(1.5.dp)
+                        .clip(RoundedCornerShape(1.5.dp))
+
+                        .padding(1.5.dp)
+                        //.border(2.dp, color = Color.Red)
+                        .background(Color(37, 150, 190, 150), shape = RoundedCornerShape(5.dp))
+
+                    ){ items(items=localizationSubs)
+                    {
+
+
+                        Box(modifier = Modifier
+                            .clickable { localizationId.value = it.localizationId }
+                            .background(Color.White),
+                            //BoxRounded().boxRounded
+                        ){
+                            Column {
+                                Row (verticalAlignment = Alignment.CenterVertically){
+                                    Column (
+                                        modifier = Modifier
+                                            .padding(10.dp, 5.dp, 10.dp, 5.dp)
+                                            .height(50.dp)
+                                            .width(220.dp),
+
+                                        verticalArrangement = Arrangement.Center
+                                    ){
+                                        Text(text = ""+it.name
+                                            //+ it.number,
+                                            ,fontSize = 18.sp,
+                                            color = AppBlue
+                                        )
+                                    }
+
+                                    Column  (
+                                        modifier = Modifier
+                                            .height(50.dp)
+                                            .width(45.dp)
+                                    ){
+                                        IconButton(onClick = {
+                                            onEvent(LocalizationEvent.DeleteLocalization(it))
+
+                                        }) {
+                                            Icon(imageVector = Icons.Default.Delete,
+                                                contentDescription = "Favorite",
+                                                modifier = Modifier.size(30.dp),
+                                                tint= AppBlue,)
+                                        }
+                                    }
+
+                                    Column  (
+                                        modifier = Modifier
+                                            .height(50.dp)
+                                            .width(45.dp)
+                                    ){
+                                        IconButton(onClick = {
+                                            onEvent(LocalizationEvent.DeleteLocalization(it))
+
+                                        }) {
+                                            Icon(imageVector = Icons.Default.Create,
+                                                contentDescription = "Favorite",
+                                                modifier = Modifier.size(30.dp),
+                                                tint= AppBlue,)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        Divider(color = AppBlue, thickness = 1.5.dp)
+                    }
+                    }
                 }
+                ////////////////////////////////////////////////////
             }
-            ////////////////////////////////////////////////////
-    }
+
+        }
+
+
+
 }}
 
 
