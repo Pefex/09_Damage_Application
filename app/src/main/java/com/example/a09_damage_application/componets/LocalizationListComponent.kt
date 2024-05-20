@@ -1,10 +1,8 @@
 package com.example.a09_damage_application.componets
 
-import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,28 +10,23 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -45,7 +38,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -56,22 +48,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.Observer
+import androidx.room.Dao
 import com.example.a09_damage_application.componets.events.LocalizationEvent
 import com.example.a09_damage_application.data.entities.Localization
-import com.example.a09_damage_application.data.enums.TypeOfTitle
-import com.example.a09_damage_application.data.enums.Type_Of_Level
 import com.example.a09_damage_application.data.interfaces.LocalizationDao
 import com.example.a09_damage_application.ui.theme.AppBlue
-import com.example.a09_damage_application.ui.theme.BoxRounded
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class LocalizationListComponent {
@@ -87,15 +73,14 @@ class LocalizationListComponent {
         ) {
 
 
-
         var isExpanded by remember{
             mutableStateOf(false)
         }
 
-        var building_element by remember{
-            mutableStateOf("")
+        var typeOfInspection by remember{
+            mutableStateOf("Select a Type of Inspection")
         }
-        //////////////////////////////////////////////////////////////////
+
 
         val coroutineScope = rememberCoroutineScope()
 
@@ -124,38 +109,62 @@ class LocalizationListComponent {
             mutableStateListOf<Localization>()
         }
 
-        var cleanTextInput = ""
-
         /////////////////////////////////////////////////////////
-        val items = listOf("", "EG", "1. OG", "2. OG", "3. OG", "KG")
-        val selectedItem = "" // Setze hier den ausgewählten Wert
-        val label = "Select a Localization" // Setze hier den Label-Text
+        val items_localization = listOf("", "EG", "1. OG", "2. OG", "3. OG", "KG")
+        val selectedItem_localization = "" // Setze hier den ausgewählten Wert
+        val label_localization = "Select a Localization" // Setze hier den Label-Text
+        //val label_buildingElement = "Select a Localization" // Setze hier den Label-Text
 
-        var expanded by remember { mutableStateOf(false) }
-        var listItems by remember(items, selectedItem) {
+        var expanded_localization by remember { mutableStateOf(false) }
+        var listItems_localizazion by remember(items_localization, selectedItem_localization) {
             mutableStateOf(
-                if (selectedItem.isNotEmpty()) {
-                    items.filter { x -> x.startsWith(selectedItem.lowercase(), ignoreCase = true) }
+                if (selectedItem_localization.isNotEmpty()) {
+                    items_localization.filter { x -> x.startsWith(selectedItem_localization.lowercase(), ignoreCase = true) }
                 } else {
-                    items.toList()
+                    items_localization.toList()
                 }
             )
         }
 
-        var listItemsNew by remember(items, selectedItem) {
+        var listItemsNew_localization by remember(items_localization, selectedItem_localization) {
             mutableStateOf(
-                if (selectedItem.isNotEmpty()) {
-                    items.filter { x -> x.startsWith(selectedItem.lowercase(), ignoreCase = true) }
+                if (selectedItem_localization.isNotEmpty()) {
+                    items_localization.filter { x -> x.startsWith(selectedItem_localization.lowercase(), ignoreCase = true) }
                 } else {
-                    items.toList()
+                    items_localization.toList()
                 }
             )
         }
-        //var  selectedText by remember(selectedItem) { mutableStateOf(selectedItem) }
-        //var  selectedText by remember { mutableStateOf(selectedItem) }
 
         ///////////////////////////////////////////////////////////
 
+        val items_buildingElement = listOf("", "EG", "1. OG", "2. OG", "3. OG", "KG")
+        val selectedItem_buildingElement = "" // Setze hier den ausgewählten Wert
+        val label_buildingElement = "Select a Building-Element" // Setze hier den Label-Text
+
+        var expanded_buildingElement by remember { mutableStateOf(false) }
+        var listItems_buildingElement by remember(items_localization, selectedItem_localization) {
+            mutableStateOf(
+                if (selectedItem_buildingElement.isNotEmpty()) {
+                    items_buildingElement.filter { x -> x.startsWith(selectedItem_localization.lowercase(), ignoreCase = true) }
+                } else {
+                    items_buildingElement.toList()
+                }
+            )
+        }
+
+        var listItemsNew_buildingElement by remember(items_localization, selectedItem_localization) {
+            mutableStateOf(
+                if (selectedItem_buildingElement.isNotEmpty()) {
+                    items_buildingElement.filter { x -> x.startsWith(selectedItem_localization.lowercase(), ignoreCase = true) }
+                } else {
+                    items_buildingElement.toList()
+                }
+            )
+        }
+
+
+        //////////////////////////////////////////////////////////////
         fun getLocalizationPathById(id: Int? ): String{
 
 
@@ -181,7 +190,6 @@ class LocalizationListComponent {
                 }
             }
             return path.toString()
-
         }
 
         dao.getLocalizationById(localizationId.value).observe(
@@ -240,12 +248,13 @@ class LocalizationListComponent {
         var localizationInput by remember {
             mutableStateOf("")
         }
-////////////////////////////////////////////////////////////////////
-        val numbers = listOf("Felix", "Peter", "Walter", "Frank", "Jürgen")
+        var buildingElementInput by remember {
+            mutableStateOf("")
+        }
+
+        ////////////////////////////////////////////////////////////////
 
         Column (  modifier = Modifier
-
-
             .height(780.dp)
             .width(400.dp)
             .padding(5.dp)
@@ -257,9 +266,7 @@ class LocalizationListComponent {
 
         ){
             Column(  modifier = Modifier
-
-
-                .height(60.dp)
+                .height(55.dp)
                 .width(400.dp)
                 .padding(5.dp)
                 .background(Color.LightGray)
@@ -283,26 +290,18 @@ class LocalizationListComponent {
 
             Column(
                 modifier = Modifier
-
-
                     .height(700.dp)
                     .width(400.dp)
                     .padding(5.dp)
                     .background(Color.Green)
+                    .verticalScroll(rememberScrollState()),
                 //.verticalScroll(rememberScrollState()).fillMaxSize(),
-                ,
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
-
-            )
-            {
+            ) {
 
                 Spacer(modifier = Modifier
-                    .height(10.dp))
-
-
-                Spacer(modifier = Modifier
-                    .height(10.dp))
+                    .height(3.dp))
 
                 Row (modifier = Modifier
                     .width(350.dp)
@@ -336,12 +335,10 @@ class LocalizationListComponent {
                 //////////////////////////////////////////////////////
                 // Der neue Code für das Texteingabefeld.
 
-
-
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 36.dp, vertical = 2.dp)
+                        .padding(horizontal = 6.dp, vertical = 2.dp)
                 )
 
                 {
@@ -351,12 +348,10 @@ class LocalizationListComponent {
                                 .width(220.dp)
                             .background(Color.Yellow)){
 
-
-
                             ExposedDropdownMenuBox(
-                                expanded = expanded,
+                                expanded = expanded_localization,
                                 onExpandedChange = {
-                                    expanded = !expanded
+                                    expanded_localization = !expanded_localization
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -367,37 +362,33 @@ class LocalizationListComponent {
                                 //    selectedText = selectedItem
                                 //}
 
-                                LaunchedEffect(selectedItem) {
+                                LaunchedEffect(selectedItem_localization) {
                                     //selectedText = selectedItem
-                                    localizationInput = selectedItem
+                                    localizationInput = selectedItem_localization
                                 }
-
 
                                 OutlinedTextField(
                                     //readOnly = true,
                                     //value = selectedText,
                                     value = localizationInput,
                                     //value = "Wähle die Localization",
-
-
-
-                                    label = { Text(label) },
+                                    label = { Text(label_localization) },
                                     onValueChange = {
                                         //localizationInput = ""
                                         //localizationInput = localizationInput
-                                        if (!expanded) {
-                                            expanded = true
+                                        if (!expanded_localization) {
+                                            expanded_localization = true
                                         }
                                         //selectedText = it
                                         localizationInput = it
 
-                                        listItems = if (it.isNotEmpty()) {
-                                            items.filter { x -> x.startsWith(it.lowercase(), ignoreCase = true) }
+                                        listItems_localizazion = if (it.isNotEmpty()) {
+                                            items_localization.filter { x -> x.startsWith(it.lowercase(), ignoreCase = true) }
                                         } else {
-                                            items.toList()
+                                            items_localization.toList()
                                         }
                                     },
-                                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded_localization) },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .menuAnchor()
@@ -406,18 +397,18 @@ class LocalizationListComponent {
                                 Log.d(TAG, "TEXT AUS TEXTEINGABEFELD:   " + localizationInput)
 
                                 ExposedDropdownMenu(
-                                    expanded = expanded,
-                                    onDismissRequest = { expanded = false }  // false
+                                    expanded = expanded_localization,
+                                    onDismissRequest = { expanded_localization = false }  // false
                                 ) {
-                                    if (listItems.isEmpty()) {
+                                    if (listItems_localizazion.isEmpty()) {
                                         DropdownMenuItem(
                                             text = { Text(text = "No items found") },
                                            onClick = {
-                                                expanded = false
+                                                expanded_localization = false
                                             }
                                         )
                                     } else {
-                                        listItems.forEach { item ->
+                                        listItems_localizazion.forEach { item ->
                                             DropdownMenuItem(
                                                 text = { Text(text = item) },
                                                 onClick = {
@@ -425,7 +416,7 @@ class LocalizationListComponent {
                                                     localizationInput = item
 ///////////////////////////////////////////////////////////////////////////////////
                                                     //expanded = false
-                                                    expanded = false
+                                                    expanded_localization = false
                                                     //onItemSelected(item)
                                                 }
                                             )
@@ -460,9 +451,7 @@ class LocalizationListComponent {
                                 //listItems = listItems
                                 //selectedItem = ""
 
-                                listItems =listItemsNew
-
-
+                              listItems_localizazion =listItemsNew_localization
                             }) {
                                 Icon(imageVector = Icons.Default.Add,
                                     contentDescription = "Favorite",
@@ -470,36 +459,13 @@ class LocalizationListComponent {
                                     tint= AppBlue,)
                             }
                         }
-
-                        Column (
-                            modifier = Modifier
-                                .height(80.dp)
-                                .width(50.dp)
-                        ){
-
-                            IconButton(onClick = {
-
-                                localizationInput = ""
-                                //selectedText = ""
-                                //cleanTextInput = ""
-                                //listItems = listItems
-                                //selectedItem = ""
-
-                            }) {
-                                Icon(imageVector = Icons.Default.Delete,
-                                    contentDescription = "Favorite",
-                                    modifier = Modifier.size(40.dp),
-                                    tint= AppBlue,)
-                            }
-                        }
                     }
-
                 }
 
 ///////////////////////////////////////////////////////////////////
 
                 Spacer(modifier = Modifier
-                    .height(15.dp))
+                    .height(2.dp))
 
 
                 Column (modifier = Modifier
@@ -583,12 +549,191 @@ class LocalizationListComponent {
                     }
                 }
                 ////////////////////////////////////////////////////
+                // entry building element
+
+                Spacer(modifier = Modifier
+                    .height(3.dp))
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 36.dp, vertical = 2.dp)
+                )
+
+                {
+                    Row {
+
+                        Column (modifier = Modifier
+                            .width(220.dp)
+                            .background(Color.Yellow)){
+
+
+
+                            ExposedDropdownMenuBox(
+                                expanded = expanded_buildingElement,
+                                onExpandedChange = {
+                                    expanded_buildingElement = !expanded_buildingElement
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(Color.LightGray)
+                            ) {
+
+                                //LaunchedEffect(selectedItem) {
+                                //    selectedText = selectedItem
+                                //}
+
+                                LaunchedEffect(selectedItem_buildingElement) {
+                                    //selectedText = selectedItem
+                                    buildingElementInput = selectedItem_buildingElement
+                                }
+
+
+                                OutlinedTextField(
+                                    //readOnly = true,
+                                    //value = selectedText,
+                                    value = buildingElementInput,
+                                    //value = "Wähle die Localization",
+
+
+
+                                    label = { Text(label_buildingElement) },
+                                    onValueChange = {
+                                        //localizationInput = ""
+                                        //localizationInput = localizationInput
+                                        if (!expanded_buildingElement) {
+                                            expanded_buildingElement = true
+                                        }
+                                        //selectedText = it
+                                        buildingElementInput = it
+
+                                        listItems_buildingElement = if (it.isNotEmpty()) {
+                                            items_buildingElement.filter { x -> x.startsWith(it.lowercase(), ignoreCase = true) }
+                                        } else {
+                                            items_buildingElement.toList()
+                                        }
+                                    },
+                                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded_buildingElement) },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .menuAnchor()
+                                )
+
+                                Log.d(TAG, "TEXT AUS TEXTEINGABEFELD:   " + localizationInput)
+
+                                ExposedDropdownMenu(
+                                    expanded = expanded_buildingElement,
+                                    onDismissRequest = { expanded_buildingElement = false }  // false
+                                ) {
+                                    if (listItems_buildingElement.isEmpty()) {
+                                        DropdownMenuItem(
+                                            text = { Text(text = "No items found") },
+                                            onClick = {
+                                                expanded_buildingElement = false
+                                            }
+                                        )
+                                    } else {
+                                        listItems_buildingElement.forEach { item ->
+                                            DropdownMenuItem(
+                                                text = { Text(text = item) },
+                                                onClick = {
+                                                    buildingElementInput = item
+                                                    expanded_buildingElement = false
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                                //Log.d(TAG, selectedText)
+                                //localizationInput = selectedText
+                            }
+                        }
+
+                        //////////////////////////////////// add building element
+
+                        Column (
+                            modifier = Modifier
+                                .height(80.dp)
+                                .width(50.dp)
+                        ){
+
+                            IconButton(onClick = {
+                                var l: Localization = Localization(
+                                    name = localizationInput,
+                                    rootLocalizationId = localizationId.value,
+                                    numberOfLevel = localizationLevel + 1
+                                );
+
+                                Log.d(TAG, "LEVEL VON NEUEM ELEMENT:" + l.numberOfLevel.toString())
+                                onEvent(LocalizationEvent.SaveLocalization(l))
+                                localizationInput = ""
+
+                                //selectedText = ""
+                                //cleanTextInput = ""
+                                //listItems = listItems
+                                //selectedItem = ""
+
+                                listItems_localizazion =listItemsNew_localization
+
+
+                            }) {
+                                Icon(imageVector = Icons.Default.Add,
+                                    contentDescription = "Favorite",
+                                    modifier = Modifier.size(40.dp),
+                                    tint= AppBlue,)
+                            }
+                        }
+                    }
+
+                }
+
+                Box(modifier = Modifier
+                    .width(300.dp)
+                    .height(60.dp)
+                    .background(Color.Yellow),
+                    contentAlignment = Alignment.Center){
+                    ExposedDropdownMenuBox(expanded = isExpanded, onExpandedChange = {isExpanded = it}) {
+
+                        TextField(value = typeOfInspection, onValueChange = {},
+                            readOnly = true,
+                            trailingIcon = {
+                                ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
+                            },
+                            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                            modifier = Modifier.menuAnchor())
+
+                        ExposedDropdownMenu(
+                            expanded = isExpanded,
+                            onDismissRequest = {isExpanded = false }) {
+
+                            DropdownMenuItem(
+                                text = { Text(text = "Brandschutztür-Überprüfung") },
+                                onClick = { typeOfInspection = "Brandschutztür-Überprüfung"
+                                    isExpanded = false })
+
+                            DropdownMenuItem(
+                                text = { Text(text = "Feuerlöscher-Überprüfung") },
+                                onClick = { typeOfInspection = "Feuerlöscher-Überprüfung"
+                                    isExpanded = false })
+
+                            DropdownMenuItem(
+                                text = { Text(text = "Dachsicherungssystem-Überprüfung") },
+                                onClick = { typeOfInspection = "Dachsicherungssystem-Überprüfung"
+                                    isExpanded = false })
+
+                        }
+                    }
+
+
+                }
+
+
+
+
+
+            ////////////////////////////////////////////////////
             }
-
         }
-
-
-
-}}
+    }}
 
 
