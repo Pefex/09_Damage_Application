@@ -52,9 +52,11 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
-import androidx.room.Dao
+import com.example.a09_damage_application.componets.events.BuildingElementEvent
 import com.example.a09_damage_application.componets.events.LocalizationEvent
+import com.example.a09_damage_application.data.entities.BuildingElement
 import com.example.a09_damage_application.data.entities.Localization
+import com.example.a09_damage_application.data.interfaces.BuildingElementDao
 import com.example.a09_damage_application.data.interfaces.LocalizationDao
 import com.example.a09_damage_application.ui.theme.AppBlue
 import kotlinx.coroutines.Dispatchers
@@ -67,8 +69,9 @@ class LocalizationListComponent {
 
     fun LocalizationListComposable(
         //selectedTypeOfLevel: MutableState<Type_Of_Level>,
-        dao: LocalizationDao,  // "dao ist die lokale Variable für das "LocalizationDao"
-        rootLocalizationId: Int? = 0,
+        daoLocalization: LocalizationDao,  // "dao ist die lokale Variable für das "LocalizationDao"
+        daoBuildingElement: BuildingElementDao,
+        rootLocalizationId: Int? = 0,  // Warum notwendig?
         onNavigateDamage: () ->Unit,
         ) {
 
@@ -109,6 +112,10 @@ class LocalizationListComponent {
             mutableStateListOf<Localization>()
         }
 
+        var buildingElementSubs =  remember {  // mit .value
+            mutableStateListOf<BuildingElement>()
+        }
+
         /////////////////////////////////////////////////////////
         val items_localization = listOf("", "EG", "1. OG", "2. OG", "3. OG", "KG")
         val selectedItem_localization = "" // Setze hier den ausgewählten Wert
@@ -138,30 +145,49 @@ class LocalizationListComponent {
 
         ///////////////////////////////////////////////////////////
 
-        val items_buildingElement = listOf("", "EG", "1. OG", "2. OG", "3. OG", "KG")
+        var localizationIdBuildingElement by remember {
+            mutableStateOf(rootLocalizationId)
+        }
+
+        var localizationLevelBuildingElement by remember {
+            mutableStateOf<Int>(0)
+        }
+
+        val items_buildingElement = listOf("Wand", "Decke", "Boden", "Haustür", "Trenntür", "Wohnungstür", "Feuerlöscher", "Dach", "Rauchabzugsklappe", "Fenster")
         val selectedItem_buildingElement = "" // Setze hier den ausgewählten Wert
         val label_buildingElement = "Select a Building-Element" // Setze hier den Label-Text
 
         var expanded_buildingElement by remember { mutableStateOf(false) }
-        var listItems_buildingElement by remember(items_localization, selectedItem_localization) {
+        var listItems_buildingElement by remember(items_buildingElement, selectedItem_buildingElement) {
             mutableStateOf(
                 if (selectedItem_buildingElement.isNotEmpty()) {
-                    items_buildingElement.filter { x -> x.startsWith(selectedItem_localization.lowercase(), ignoreCase = true) }
+                    items_buildingElement.filter { x -> x.startsWith(selectedItem_buildingElement.lowercase(), ignoreCase = true) }
                 } else {
                     items_buildingElement.toList()
                 }
             )
         }
 
-        var listItemsNew_buildingElement by remember(items_localization, selectedItem_localization) {
+        var listItemsNew_buildingElement by remember(items_buildingElement, selectedItem_buildingElement) {
             mutableStateOf(
                 if (selectedItem_buildingElement.isNotEmpty()) {
-                    items_buildingElement.filter { x -> x.startsWith(selectedItem_localization.lowercase(), ignoreCase = true) }
+                    items_buildingElement.filter { x -> x.startsWith(selectedItem_buildingElement.lowercase(), ignoreCase = true) }
                 } else {
                     items_buildingElement.toList()
                 }
             )
         }
+
+        var buildingElementName by remember(){  //ohne .value
+            //Log.d("", "localizationId:" + localizationId)
+            mutableStateOf<String?>(null)
+        }
+
+        var localizationSubsBuildingElement =  remember {  // mit .value
+            mutableStateListOf<BuildingElement>()
+        }
+
+
 
 
         //////////////////////////////////////////////////////////////
@@ -172,7 +198,7 @@ class LocalizationListComponent {
             var currentId = id
 
             while (currentId != null) {
-                val localization = dao.getLocalizationByIdOnce(currentId)
+                val localization = daoLocalization.getLocalizationByIdOnce(currentId)
                 if (localization != null) {
                     Log.d(TAG, "localization:  " +localization.name  )
                 }else{
@@ -191,12 +217,13 @@ class LocalizationListComponent {
             }
             return path.toString()
         }
-
-        dao.getLocalizationById(localizationId.value).observe(
+// Dieser Observer aktualisiert nur die aktuelle localization in der UI und leert das Texteingabefeld
+        daoLocalization.getLocalizationById(localizationId.value).observe(
             LocalLifecycleOwner.current,
             Observer{localization ->
                 if (localization!= null){
-                    localizationName = localization.name
+                    localizationName = localization.name  // Auf der rechten Seite sind die Variablen aus der
+                    // entity, diese werden den remember-Variablen übergeben und damit Anzeige aktualisiert.
                     rootId = localization.rootLocalizationId
                     localizationLevel = localization.numberOfLevel
                     coroutineScope.launch (Dispatchers.IO){
@@ -218,7 +245,8 @@ class LocalizationListComponent {
         )
 
 
-        dao.getSubLocalizationsById(localizationId.value).observe( //Wenn sich Werte in der Liste ändern,
+
+        daoLocalization.getSubLocalizationsById(localizationId.value).observe( //Wenn sich Werte in der Liste ändern,
             // dann wird die Liste gelöscht und neu befüllt.
             LocalLifecycleOwner.current, //Es wird nur solange der aktuelle Lifecycle
             // (Screen) läuft, beobachtet, ob sich die Einträge in der Schadenstabelle
@@ -228,17 +256,41 @@ class LocalizationListComponent {
                 localizationSubs.addAll(allSubs)
             })
 
-        Log.d("", localizationSubs.toString())
+        daoBuildingElement.getSubBuildingElementsById(localizationId.value).observe( //Wenn sich Werte in der Liste ändern,
+            // dann wird die Liste gelöscht und neu befüllt.
+            LocalLifecycleOwner.current, //Es wird nur solange der aktuelle Lifecycle
+            // (Screen) läuft, beobachtet, ob sich die Einträge in der Schadenstabelle
+            // der Datenbank verändert haben.
+            Observer { allSubs ->
+                buildingElementSubs.clear()
+                buildingElementSubs.addAll(allSubs)
+            })
+
+        Log.d("", buildingElementSubs.toString())
 
 
         fun onEvent(event: LocalizationEvent){
             when(event){
                 is LocalizationEvent.SaveLocalization  -> {
-                    coroutineScope.launch {dao.upsertLocalization(event.localization)  }
+                    coroutineScope.launch {daoLocalization.upsertLocalization(event.localization)  }
                 }
 
                 is LocalizationEvent.DeleteLocalization  -> {
-                    coroutineScope.launch {dao.deleteLocalization(event.localization)  }
+                    coroutineScope.launch {daoLocalization.deleteLocalization(event.localization)  }
+                }
+
+                else -> {}
+            }
+        }
+
+        fun onEvent(event: BuildingElementEvent){
+            when(event){
+                is BuildingElementEvent.SaveBuildingElement -> {
+                    coroutineScope.launch {daoBuildingElement.upsertBuildingElement(event.building_element)  }
+                }
+
+                is BuildingElementEvent.DeleteBuildingElement  -> {
+                    coroutineScope.launch {daoBuildingElement.deleteBuildingElement(event.building_element)  }
                 }
 
                 else -> {}
@@ -462,7 +514,7 @@ class LocalizationListComponent {
                     }
                 }
 
-///////////////////////////////////////////////////////////////////
+///////////////////////////LazyColumn
 
                 Spacer(modifier = Modifier
                     .height(2.dp))
@@ -547,10 +599,11 @@ class LocalizationListComponent {
                         Divider(color = AppBlue, thickness = 1.5.dp)
                     }
                     }
-                }
-                ////////////////////////////////////////////////////
-                // entry building element
+                }  ////////////////////end LazyColumn
 
+                ////////////////////////////////////////////////////
+
+                //  /////////////////start select building Element
                 Spacer(modifier = Modifier
                     .height(3.dp))
 
@@ -658,22 +711,23 @@ class LocalizationListComponent {
                         ){
 
                             IconButton(onClick = {
-                                var l: Localization = Localization(
-                                    name = localizationInput,
-                                    rootLocalizationId = localizationId.value,
-                                    numberOfLevel = localizationLevel + 1
+                                var b: BuildingElement = BuildingElement(
+                                    name = buildingElementInput,
+                                    rootLocalizationId = localizationIdBuildingElement,
+                                    inspectionType =  typeOfInspection,
+
                                 );
 
-                                Log.d(TAG, "LEVEL VON NEUEM ELEMENT:" + l.numberOfLevel.toString())
-                                onEvent(LocalizationEvent.SaveLocalization(l))
-                                localizationInput = ""
+                                //Log.d(TAG, "LEVEL VON NEUEM ELEMENT:" + b.numberOfLevelBuildingElement.toString())
+                                onEvent(BuildingElementEvent.SaveBuildingElement(b))
+                                buildingElementInput = ""
 
                                 //selectedText = ""
                                 //cleanTextInput = ""
                                 //listItems = listItems
                                 //selectedItem = ""
 
-                                listItems_localizazion =listItemsNew_localization
+                                listItems_buildingElement =listItemsNew_buildingElement
 
 
                             }) {
@@ -685,8 +739,9 @@ class LocalizationListComponent {
                         }
                     }
 
-                }
+                }  /////////////////end select building Element
 
+                ///////////////start select Type of inspection
                 Box(modifier = Modifier
                     .width(300.dp)
                     .height(60.dp)
@@ -723,15 +778,96 @@ class LocalizationListComponent {
 
                         }
                     }
+                } ///////////////end select Type of inspection
+
+                ///////////////////////////start LazyColumn BuildingElement
+
+                Spacer(modifier = Modifier
+                    .height(2.dp))
 
 
-                }
+                Column (modifier = Modifier
+                    .clip(RoundedCornerShape(5.dp))
+                    .height(220.dp)
+                    .width(330.dp)
+                    //.height(28.dp)
+                    .background(AppBlue)){
+                    LazyColumn(modifier = Modifier
+                        .clip(shape = RoundedCornerShape(0.5.dp))
+                        .padding(1.5.dp)
+                        .clip(RoundedCornerShape(1.5.dp))
+
+                        .padding(1.5.dp)
+                        //.border(2.dp, color = Color.Red)
+                        .background(Color(37, 150, 190, 150), shape = RoundedCornerShape(5.dp))
+
+                    ){ items(items=buildingElementSubs)
+                    {
 
 
+                        Box(modifier = Modifier
+                            .clickable { localizationIdBuildingElement = it.localizationIdBuildingElement }
+                            .background(Color.White),
+                            //BoxRounded().boxRounded
+                        ){
+                            Column {
+                                Row (verticalAlignment = Alignment.CenterVertically){
+                                    Column (
+                                        modifier = Modifier
+                                            .padding(10.dp, 5.dp, 10.dp, 5.dp)
+                                            .height(50.dp)
+                                            .width(220.dp),
+
+                                        verticalArrangement = Arrangement.Center
+                                    ){
+                                        Text(text = ""+it.name
+                                            //+ it.number,
+                                            ,fontSize = 18.sp,
+                                            color = AppBlue
+                                        )
+                                    }
+
+                                    Column  (
+                                        modifier = Modifier
+                                            .height(50.dp)
+                                            .width(45.dp)
+                                    ){
+                                        IconButton(onClick = {
+                                            onEvent(BuildingElementEvent.DeleteBuildingElement(it))
+
+                                        }) {
+                                            Icon(imageVector = Icons.Default.Delete,
+                                                contentDescription = "Favorite",
+                                                modifier = Modifier.size(30.dp),
+                                                tint= AppBlue,)
+                                        }
+                                    }
+
+                                    Column  (
+                                        modifier = Modifier
+                                            .height(50.dp)
+                                            .width(45.dp)
+                                    ){
+                                        IconButton(onClick = {
+                                            onEvent(BuildingElementEvent.DeleteBuildingElement(it))
+
+                                        }) {
+                                            Icon(imageVector = Icons.Default.Create,
+                                                contentDescription = "Favorite",
+                                                modifier = Modifier.size(30.dp),
+                                                tint= AppBlue,)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        Divider(color = AppBlue, thickness = 1.5.dp)
+                    }
+                    }
+                }  ////////////////////end LazyColumn BuildingElement
 
 
-
-            ////////////////////////////////////////////////////
             }
         }
     }}

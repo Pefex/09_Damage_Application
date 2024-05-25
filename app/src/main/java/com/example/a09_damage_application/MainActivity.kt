@@ -106,7 +106,7 @@ fun Mainscreen(db: AppDatabase) {
 
         composable("LocalizationList") {
             LocalizationListComponent().LocalizationListComposable(
-                db.localizationDao,
+                db.localizationDao, db.buildingElementDao,
                 onNavigateDamage = { navController.navigate("damageCreation") }
 
                 )

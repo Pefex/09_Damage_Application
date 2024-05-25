@@ -240,8 +240,6 @@ class DamageCreationComponent {
                             }
                         }
                     }
-
-
                 }
                 }
             }

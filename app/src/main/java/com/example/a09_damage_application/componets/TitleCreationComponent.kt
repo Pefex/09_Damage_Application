@@ -100,21 +100,12 @@ class TitleCreationComponent {
                             onClick = { nameTitle = "Dr.";
                                 selectedTypeOfTitle.value = TypeOfTitle.DOCTOR
                                 titleDropdownMenuIsExpanded = false })
-
                     }
                 }
-
             }
-
-
         }
-
-
-
         Log.d(ContentValues.TAG,"Hallo")
         Log.d(ContentValues.TAG,nameTitle)
         //selectedTypeOfTitle.value = nameTitle
     }
-
-
 }

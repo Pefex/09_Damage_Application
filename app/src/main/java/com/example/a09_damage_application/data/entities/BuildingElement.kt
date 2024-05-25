@@ -8,11 +8,11 @@ data class BuildingElement(
     val buildingElementId: Int? = null,
     val name: String,
     val rootLocalizationId: Int? = null,
-    val categories: List<String>,  //Brandschutztür-Überprüfung: mechanische Überüprüfung, elektrische Überprüfung
-    val checkIds: List<Int>,  //Die Überprüfungen zu diesem Bauelement - jede Überprüfung/Begehung hat eine bestimmte Id
-    val damageIds: List<Int>,
-    val localizationId: Int,
-    val maintenanceProtocolIds: List<Int>
+    val inspectionType: String?,  //Brandschutztür-Überprüfung: mechanische Überüprüfung, elektrische Überprüfung
+    val checkIds: Int? = null,  //Die Überprüfungen zu diesem Bauelement - jede Überprüfung/Begehung hat eine bestimmte Id
+    val damageIds: Int? = null,
+    val rootBuildingElementId: Int?  = null, //Wenn es ein Unter-Bauelemnt ist.
+    val maintenanceProtocolIds: Int? = null, //Hier kann man Wartungsprotokolle anhängen
 
 
     )
