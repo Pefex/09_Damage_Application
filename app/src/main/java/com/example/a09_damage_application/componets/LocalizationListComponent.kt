@@ -266,7 +266,9 @@ class LocalizationListComponent {
                 buildingElementSubs.addAll(allSubs)
             })
 
-        Log.d("", buildingElementSubs.toString())
+        val myList =  buildingElementSubs
+
+        //Log.d("INHALT LISTE:    ", myList[1].toString() )
 
 
         fun onEvent(event: LocalizationEvent){
@@ -713,14 +715,15 @@ class LocalizationListComponent {
                             IconButton(onClick = {
                                 var b: BuildingElement = BuildingElement(
                                     name = buildingElementInput,
-                                    rootLocalizationId = localizationIdBuildingElement,
+                                    //rootLocalizationId = localizationIdBuildingElement,  // rootLocalizationId = localizationId.value,
+                                    rootLocalizationId = localizationId.value,
                                     inspectionType =  typeOfInspection,
 
                                 );
 
                                 //Log.d(TAG, "LEVEL VON NEUEM ELEMENT:" + b.numberOfLevelBuildingElement.toString())
                                 onEvent(BuildingElementEvent.SaveBuildingElement(b))
-                                buildingElementInput = ""
+                                //buildingElementInput = ""
 
                                 //selectedText = ""
                                 //cleanTextInput = ""
@@ -728,6 +731,10 @@ class LocalizationListComponent {
                                 //selectedItem = ""
 
                                 listItems_buildingElement =listItemsNew_buildingElement
+
+                                Log.d("", "NAME:  " + b.name +"  " +"rootID: " + b.rootLocalizationId + "  "+"inspectionType:  " + b.inspectionType)
+
+
 
 
                             }) {
@@ -804,9 +811,18 @@ class LocalizationListComponent {
                     ){ items(items=buildingElementSubs)
                     {
 
+                        Log.d(TAG, "BAUELEMENTE:  " + buildingElementSubs.toString())
+                        //Log.d(TAG, "BAUELEMENTE:  " + buildingElementSubs.forEach {it.name  })
+                        //Log.d(TAG, "BAUELEMENTE:  " + items)
+
+                        val myList =  buildingElementSubs
+
+                       // Log.d("", "INHALT LISTE:  "  +    myList[1].toString() )
+                        //Log.d("", "Name Listenelement 1:  "  +    myList[1].name )
+
 
                         Box(modifier = Modifier
-                            .clickable { localizationIdBuildingElement = it.localizationIdBuildingElement }
+                            //.clickable {  localizationId.value = it.l }
                             .background(Color.White),
                             //BoxRounded().boxRounded
                         ){
@@ -820,13 +836,15 @@ class LocalizationListComponent {
 
                                         verticalArrangement = Arrangement.Center
                                     ){
-                                        Text(text = ""+it.name
+                                        Text(text = ""+it.name + " " + it.inspectionType
+
                                             //+ it.number,
                                             ,fontSize = 18.sp,
                                             color = AppBlue
                                         )
                                     }
 
+                                    //Log.d("","INHALT DER LISTE" + it.name)
                                     Column  (
                                         modifier = Modifier
                                             .height(50.dp)
