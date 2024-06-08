@@ -18,6 +18,7 @@ import com.example.a09_damage_application.componets.AddAndEditItemComponent
 import com.example.a09_damage_application.componets.LocalizationCreationComponent
 import com.example.a09_damage_application.componets.LocalizationListComponent
 import com.example.a09_damage_application.componets.OwnerCreationComponent
+import com.example.a09_damage_application.componets.StructureElementAndBuildingElementListComponent
 import com.example.a09_damage_application.data.AppDatabase
 import com.example.a09_damage_application.ui.theme._09_Damage_ApplicationTheme
 
@@ -107,9 +108,19 @@ fun Mainscreen(db: AppDatabase) {
         composable("LocalizationList") {
             LocalizationListComponent().LocalizationListComposable(
                 db.localizationDao, db.buildingElementDao,
-                onNavigateDamage = { navController.navigate("damageCreation") }
+                onNavigateDamage = { navController.navigate("damageCreation") },
+                onNavigateStructureElementAndBuildingElementList = { navController.navigate("structureElementAndBuildingElementListCreation") }
+            )
+        }
 
-                )
+        composable("StructureElementAndBuildingElementListCreation"){
+            StructureElementAndBuildingElementListComponent().StructureElementAndBuildingElementListComposable(
+                db.localizationDao,
+                db.buildingElementDao,
+
+                onNavigateDamage = { navController.navigate("damageCreation")/*TODO*/ },
+            onNavigateLocalizationList ={ navController.navigate("LocalizationList")}
+            )
         }
 
 

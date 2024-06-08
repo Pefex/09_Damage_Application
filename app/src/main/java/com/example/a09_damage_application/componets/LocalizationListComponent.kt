@@ -71,8 +71,9 @@ class LocalizationListComponent {
         //selectedTypeOfLevel: MutableState<Type_Of_Level>,
         daoLocalization: LocalizationDao,  // "dao ist die lokale Variable für das "LocalizationDao"
         daoBuildingElement: BuildingElementDao,
-        rootLocalizationId: Int? = 0,  // Warum notwendig?
+        rootLocalizationId: Int? = 0,  // Warum notwendig? Wird momentan nicht benutzt
         onNavigateDamage: () ->Unit,
+        onNavigateStructureElementAndBuildingElementList: () ->Unit,
         ) {
 
 
@@ -319,6 +320,12 @@ class LocalizationListComponent {
             horizontalAlignment = Alignment.CenterHorizontally
 
         ){
+            ////////////////////////////////////////////////////////
+         /*  StructureListComponent().StructureListComposable(
+                daoLocalization = daoLocalization,
+                daoBuildingElement = daoBuildingElement
+            )*/
+            ////////////////////////////////////////////////////////
             Column(  modifier = Modifier
                 .height(55.dp)
                 .width(400.dp)
@@ -337,6 +344,11 @@ class LocalizationListComponent {
                     Button(onClick = {
                         onNavigateDamage()}) {
                         Text(text = "Zu Schäden", fontSize = 14.sp)
+                    }
+
+                    Button(onClick = {
+                        onNavigateStructureElementAndBuildingElementList()}) {
+                        Text(text = "Zu Strukture", fontSize = 14.sp)
                     }
                 }
             }
@@ -399,7 +411,7 @@ class LocalizationListComponent {
                     Row {
 
                         Column (modifier = Modifier
-                                .width(220.dp)
+                            .width(220.dp)
                             .background(Color.Yellow)){
 
                             ExposedDropdownMenuBox(
