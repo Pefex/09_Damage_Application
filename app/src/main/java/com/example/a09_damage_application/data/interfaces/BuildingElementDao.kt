@@ -20,7 +20,7 @@ interface BuildingElementDao {
     @Delete
     suspend fun deleteBuildingElement (buildingElement: BuildingElement)
 
-   @Query("SELECT * FROM buildingElement ORDER BY name ASC")
+   @Query("SELECT * FROM buildingElement ORDER BY name ASC")// by positionID
    fun getBuildingElementsOrderByName(): LiveData<List<BuildingElement>>
 
     @Query("SELECT * FROM buildingElement WHERE buildingElementId = :id")

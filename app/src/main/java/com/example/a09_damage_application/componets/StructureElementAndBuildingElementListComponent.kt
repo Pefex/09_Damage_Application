@@ -1,5 +1,6 @@
 package com.example.a09_damage_application.componets
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.a09_damage_application.data.entities.Localization
@@ -36,7 +38,9 @@ class StructureElementAndBuildingElementListComponent {
         Column (modifier = Modifier
             .fillMaxSize()
             .heightIn(100.dp)
+            .background(Color.Yellow)
             .padding(2.dp),
+
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally){
             //Texteingabe für Titel

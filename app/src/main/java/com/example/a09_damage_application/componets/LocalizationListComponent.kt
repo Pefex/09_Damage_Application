@@ -60,6 +60,7 @@ import com.example.a09_damage_application.data.interfaces.BuildingElementDao
 import com.example.a09_damage_application.data.interfaces.LocalizationDao
 import com.example.a09_damage_application.ui.theme.AppBlue
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class LocalizationListComponent {
@@ -412,7 +413,7 @@ class LocalizationListComponent {
 
                         Column (modifier = Modifier
                             .width(220.dp)
-                            .background(Color.Yellow)){
+                            .background(Color.Red)){
 
                             ExposedDropdownMenuBox(
                                 expanded = expanded_localization,
@@ -499,6 +500,7 @@ class LocalizationListComponent {
                             modifier = Modifier
                                 .height(80.dp)
                                 .width(50.dp)
+                                .background(Color.Blue)
                         ){
 
                             IconButton(onClick = {
@@ -524,6 +526,46 @@ class LocalizationListComponent {
                                     modifier = Modifier.size(40.dp),
                                     tint= AppBlue,)
                             }
+                            /////////////////////////////  Test Performance
+
+                            IconButton(onClick = {
+
+                                //var i = 0
+
+                                for(i in 1..50 step 2){
+                                    var l: Localization = Localization(
+                                        name = i.toString(),
+                                        rootLocalizationId = localizationId.value,
+                                        numberOfLevel = localizationLevel + 1
+                                    );
+
+                                   // delay(1000)
+
+                                    Log.d(TAG, "LEVEL VON NEUEM ELEMENT:" + l.numberOfLevel.toString())
+                                    onEvent(LocalizationEvent.SaveLocalization(l))
+                                    localizationInput = ""
+
+                                    //selectedText = ""
+                                    //cleanTextInput = ""
+                                    //listItems = listItems
+                                    //selectedItem = ""
+
+                                    listItems_localizazion =listItemsNew_localization
+
+
+
+                                }
+
+                            }) {
+                                Icon(imageVector = Icons.Default.Add,
+                                    contentDescription = "Favorite",
+                                    modifier = Modifier.size(40.dp),
+                                    tint= AppBlue,)
+                            }
+
+                            //////////////////////////////
+
+
                         }
                     }
                 }

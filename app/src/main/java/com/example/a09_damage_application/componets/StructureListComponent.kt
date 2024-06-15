@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -48,6 +50,7 @@ import com.example.a09_damage_application.data.interfaces.BuildingElementDao
 import com.example.a09_damage_application.data.interfaces.LocalizationDao
 import com.example.a09_damage_application.ui.theme.AppBlue
 import com.example.a09_damage_application.ui.theme.BoxRounded
+import com.example.a09_damage_application.ui.theme.Pink40
 
 class StructureListComponent {
 
@@ -95,68 +98,104 @@ class StructureListComponent {
 
         Box(
             modifier = Modifier
+                .width(550.dp)
 
-                .background(Color.White),
+                .background(Color.Magenta),
             //BoxRounded().boxRounded
         ) {
-            Column {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+            Column (modifier = Modifier
+                .fillMaxWidth()){
+                Row(modifier = Modifier
+                    //.fillMaxWidth()
+                    , verticalAlignment = Alignment.CenterVertically) {
+
                     Column(
                         modifier = Modifier
-                            .padding(10.dp, 5.dp, 10.dp, 5.dp)
+                            .padding(10.dp, 5.dp, 0.dp, 5.dp)
                             // .fillMaxHeight()
-                            .fillMaxSize()
+                            //.fillMaxSize()
 
                             //.height(45.dp)
-                            .width(220.dp),
+                            //.width(220.dp)
+                            .background(Color.Yellow),
 
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Text(
-                            text = "" + localization.name
-                            //+ it.number,
-                            , fontSize = 18.sp,
-                            color = Color.Red
-                        )
-                        Divider(color = AppBlue, thickness = 1.5.dp)
+                        Box (modifier = Modifier
+                            .height(30.dp)
+                            //.width(250.dp)
+                            //.weight(1f)
+                            .fillMaxWidth()
+
+
+                            .background(Color.LightGray)){
+                            Row {
+
+                            }
+                            Text(
+                                text = "" + localization.name
+                                //+ it.number,
+                                , fontSize = 18.sp,
+                                color = Color.Red
+                            )
+                            //Divider(color = AppBlue, thickness = 4.dp)
+
+                        }
+
+
+
+                    }
+
+                    Box (modifier = Modifier
+                        .padding(0.dp, 0.dp, 50.dp, 0.dp)
+                        .height(30.dp)
+                        .width(50.dp).weight(0.25f)
+                        //.fillMaxWidth()
+                        .background(Color.Gray)){
+
                     }
                 }
                 ///////////////////////// Liste der untergeordneten Localizations
-                Column(modifier = Modifier
-                    //.height((30 + 80 * localizationSubs.size).dp)
-                    .offset(x = 5.dp)
-                    .clip(shape = RoundedCornerShape(0.5.dp))
-                    .padding(1.5.dp)
-                    .clip(RoundedCornerShape(1.5.dp))
-                    //.padding(1.5.dp)
-                    //.border(2.dp, color = Color.Red)
-                    .background(Color.Red, shape = RoundedCornerShape(5.dp)),
-                    //userScrollEnabled = false
-                )
-                {
-                   /* items(items=localizationSubs){
-                        LocalizationBoxComposable(daoLocalization, it,
-                        )
-                    }*/
 
-                    localizationSubs.forEach { localization->
-                        LocalizationBoxComposable(daoLocalization, daoBuildingElement, localization)
+
+                    Column(modifier = Modifier
+                        //.height((30 + 80 * localizationSubs.size).dp)
+                        .offset(x = 5.dp)
+                        .clip(shape = RoundedCornerShape(0.5.dp))
+                        .padding(0.dp)
+                        .clip(RoundedCornerShape(1.5.dp))
+                        //.padding(1.5.dp)
+                        //.border(2.dp, color = Color.Red)
+                        .background(Color.Red, shape = RoundedCornerShape(5.dp)),
+                        //userScrollEnabled = false
+                    )
+                    {
+                        /* items(items=localizationSubs){
+                             LocalizationBoxComposable(daoLocalization, it,
+                             )
+                         }*/
+
+                        localizationSubs.forEach { localization->
+                            LocalizationBoxComposable(daoLocalization, daoBuildingElement, localization)
+                        }
                     }
-                }
+
+
 
                 //////////////////////////////// Liste der angehängten Bauelemente
                 ///////// Momentan kann ich nur eine Ebene von Bauelementen anzeigen.
 
                 Column(modifier = Modifier
                     //.height((30 + 80 * localizationSubs.size).dp)
-                    .padding(10.dp, 5.dp, 10.dp, 5.dp)
-                    .offset(x = 5.dp)
+                    .offset(x = 20.dp)
+                    .padding(0.dp, 0.dp, 0.dp, 0.dp)
+
                     .clip(shape = RoundedCornerShape(0.5.dp))
                     .padding(1.5.dp)
                     .clip(RoundedCornerShape(1.5.dp))
-                    .padding(1.5.dp)
+                    .padding(0.5.dp)
                     //.border(2.dp, color = Color.Red)
-                    .background(Color.Green, shape = RoundedCornerShape(5.dp)),
+                    .background(Color.DarkGray, shape = RoundedCornerShape(5.dp)),
                     //userScrollEnabled = false
                 )
                 {
@@ -218,7 +257,7 @@ class StructureListComponent {
                 .height(320.dp)
                 .width(330.dp)
                 //.height(28.dp)
-                .background(AppBlue)
+                .background(Color.Gray)
                 .verticalScroll(rememberScrollState())
         ) {
 
@@ -237,7 +276,7 @@ class StructureListComponent {
 
                     .padding(1.5.dp)
                     //.border(2.dp, color = Color.Red)
-                    .background(Color(37, 150, 190, 150), shape = RoundedCornerShape(5.dp))
+                    .background(Color.LightGray, shape = RoundedCornerShape(5.dp))
 
             ) {
                 items(items = localizationSubs)
@@ -252,7 +291,7 @@ class StructureListComponent {
         }
 
         Spacer(modifier = Modifier
-            .height(20.dp)
+            .height(40.dp)
             .background(Color.Black))
 
         Column (modifier = Modifier
@@ -268,7 +307,7 @@ class StructureListComponent {
 
                 .padding(1.5.dp)
                 //.border(2.dp, color = Color.Red)
-                .background(Color(37, 150, 190, 150), shape = RoundedCornerShape(5.dp))
+                .background(Color.Magenta, shape = RoundedCornerShape(5.dp))
 
             ){ items(items=buildingElements)
             {
@@ -285,7 +324,8 @@ class StructureListComponent {
 
                 Box(modifier = Modifier
                     //.clickable {  localizationId.value = it.l }
-                    .background(Color.White),
+                    .background(Color.White)
+                    ,
                     //BoxRounded().boxRounded
                 ){
                     Column {
@@ -294,7 +334,8 @@ class StructureListComponent {
                                 modifier = Modifier
                                     .padding(10.dp, 5.dp, 10.dp, 5.dp)
                                     .height(50.dp)
-                                    .width(220.dp),
+                                    .width(220.dp)
+                                    .background(Color.Magenta),
 
                                 verticalArrangement = Arrangement.Center
                             ){
@@ -344,7 +385,9 @@ class StructureListComponent {
 
                 Divider(color = AppBlue, thickness = 1.5.dp)
             }
+
             }
+            Divider(color = Pink40, thickness = 1.5.dp)
         }
     }
 }
