@@ -26,6 +26,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -98,15 +100,20 @@ class StructureListComponent {
 
         Box(
             modifier = Modifier
+                //.padding(0.dp, 0.dp, 30.dp, 0.dp)
                 .width(550.dp)
 
                 .background(Color.Magenta),
             //BoxRounded().boxRounded
         ) {
             Column (modifier = Modifier
-                .fillMaxWidth()){
+                //.padding(0.dp, 5.dp, 60.dp, 5.dp)
+                .fillMaxWidth()
+                .background(Color.Cyan)){
                 Row(modifier = Modifier
-                    //.fillMaxWidth()
+                    .background(Color.Red)
+                    .fillMaxWidth()
+
                     , verticalAlignment = Alignment.CenterVertically) {
 
                     Column(
@@ -114,9 +121,11 @@ class StructureListComponent {
                             .padding(10.dp, 5.dp, 0.dp, 5.dp)
                             // .fillMaxHeight()
                             //.fillMaxSize()
+                            //.fillMaxWidth()
 
                             //.height(45.dp)
                             //.width(220.dp)
+                            .weight(0.25f)
                             .background(Color.Yellow),
 
                         verticalArrangement = Arrangement.Center
@@ -125,7 +134,7 @@ class StructureListComponent {
                             .height(30.dp)
                             //.width(250.dp)
                             //.weight(1f)
-                            .fillMaxWidth()
+                            //.fillMaxWidth()
 
 
                             .background(Color.LightGray)){
@@ -146,12 +155,79 @@ class StructureListComponent {
 
                     }
 
-                    Box (modifier = Modifier
-                        .padding(0.dp, 0.dp, 50.dp, 0.dp)
+                    Column (modifier = Modifier
+                        .padding(0.dp, 0.dp, 10.dp, 0.dp)
+
                         .height(30.dp)
-                        .width(50.dp).weight(0.25f)
+                        .width(100.dp)
+                        //.weight(1f)
+                        //.weight(0.25f)
                         //.fillMaxWidth()
-                        .background(Color.Gray)){
+                        .background(Color.LightGray)){
+                        Row {
+
+                            Box (modifier = Modifier
+                                .weight(1f)){
+                                IconButton(onClick = {
+                                    //onEvent(BuildingElementEvent.DeleteBuildingElement(it))
+
+                                }) {
+                                    Icon(imageVector = Icons.Default.Create,
+                                        contentDescription = "Favorite",
+                                        modifier = Modifier.size(30.dp),
+                                        tint= AppBlue,)
+                                }
+                            }
+
+                            Box (modifier = Modifier
+                                .weight(1f)){
+                                IconButton(onClick = {
+                                    //onEvent(BuildingElementEvent.DeleteBuildingElement(it))
+
+                                }) {
+                                    Icon(imageVector = Icons.Default.Delete,
+                                        contentDescription = "Favorite",
+                                        modifier = Modifier.size(30.dp),
+                                        tint= AppBlue,)
+                                }
+                            }
+
+                            Box (modifier = Modifier
+                                .weight(1f)){
+                                IconButton(onClick = {
+                                    //onEvent(BuildingElementEvent.DeleteBuildingElement(it))
+
+                                }) {
+                                    Icon(imageVector = Icons.Default.KeyboardArrowUp,
+                                        contentDescription = "Favorite",
+                                        modifier = Modifier.size(30.dp),
+                                        tint= AppBlue,)
+                                }
+                            }
+
+                            Box (modifier = Modifier
+                                .weight(1f)){
+                                IconButton(onClick = {
+                                    //onEvent(BuildingElementEvent.DeleteBuildingElement(it))
+
+                                }) {
+                                    Icon(imageVector = Icons.Default.KeyboardArrowDown,
+                                        contentDescription = "Favorite",
+                                        modifier = Modifier.size(30.dp),
+                                        tint= AppBlue,)
+                                }
+                            }
+                        }
+                        IconButton(onClick = {
+                            //onEvent(BuildingElementEvent.DeleteBuildingElement(it))
+
+                        }) {
+                            Icon(imageVector = Icons.Default.KeyboardArrowUp,
+                                contentDescription = "Favorite",
+                                modifier = Modifier.size(30.dp),
+                                tint= AppBlue,)
+                        }
+
 
                     }
                 }
@@ -162,7 +238,7 @@ class StructureListComponent {
                         //.height((30 + 80 * localizationSubs.size).dp)
                         .offset(x = 5.dp)
                         .clip(shape = RoundedCornerShape(0.5.dp))
-                        .padding(0.dp)
+                        .padding(0.dp, 0.dp, 5.dp, 0.dp)
                         .clip(RoundedCornerShape(1.5.dp))
                         //.padding(1.5.dp)
                         //.border(2.dp, color = Color.Red)
