@@ -39,7 +39,7 @@ import com.example.a09_damage_application.data.entities.Localization
         @Query("SELECT * FROM localization WHERE localizationId = :id")
         fun getLocalizationByIdOnce(id: Int?): Localization //wird nur einmal auf Aufruf ausgeführt und nicht ständig aktualisiert, ansonsten wie obere Query
 
-        @Query("SELECT * FROM localization WHERE rootLocalizationId = :id ORDER BY name ASC")
+        @Query("SELECT * FROM localization WHERE rootLocalizationId = :id ORDER BY position ASC")
         fun getSubLocalizationsById(id: Int?): LiveData<List<Localization>>  // LiveData
 
 

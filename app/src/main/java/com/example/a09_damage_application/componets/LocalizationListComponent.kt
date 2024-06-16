@@ -507,7 +507,8 @@ class LocalizationListComponent {
                                 var l: Localization = Localization(
                                     name = localizationInput,
                                     rootLocalizationId = localizationId.value,
-                                    numberOfLevel = localizationLevel + 1
+                                    numberOfLevel = localizationLevel + 1,
+                                    position = localizationSubs.size + 1
                                 );
 
                                 Log.d(TAG, "LEVEL VON NEUEM ELEMENT:" + l.numberOfLevel.toString())
@@ -563,7 +564,7 @@ class LocalizationListComponent {
                                     tint= AppBlue,)
                             }
 
-                            //////////////////////////////
+                            ////////////////////////////// End Test Performance
 
 
                         }
@@ -574,6 +575,17 @@ class LocalizationListComponent {
 
                 Spacer(modifier = Modifier
                     .height(2.dp))
+
+               ////////////////////////////////////////// Auslesen der Anzahl der Sub-Elemente
+                var sizeSubs = localizationSubs.size
+                
+                Box(modifier = Modifier
+                    .width(100.dp)
+                    .height(30.dp)
+                    .background(Color.Yellow)){
+                    Text(text = sizeSubs.toString())
+                }
+                ////////////////////////////////////////// Auslesen der Anzahl der Sub-Elemente End
 
 
                 Column (modifier = Modifier
@@ -610,7 +622,7 @@ class LocalizationListComponent {
 
                                         verticalArrangement = Arrangement.Center
                                     ){
-                                        Text(text = ""+it.name
+                                        Text(text = ""+it.name + "->   Position:  " + it.position
                                             //+ it.number,
                                             ,fontSize = 18.sp,
                                             color = AppBlue
