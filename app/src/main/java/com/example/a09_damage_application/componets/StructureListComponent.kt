@@ -35,8 +35,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,6 +55,8 @@ import com.example.a09_damage_application.data.interfaces.LocalizationDao
 import com.example.a09_damage_application.ui.theme.AppBlue
 import com.example.a09_damage_application.ui.theme.BoxRounded
 import com.example.a09_damage_application.ui.theme.Pink40
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class StructureListComponent {
 
@@ -67,15 +71,31 @@ class StructureListComponent {
                                   ){
 
         var localizationSubs =  remember {  // mit .value
-            mutableStateListOf<Localization>()
+            mutableListOf<Localization>()
         }
 
         var buildingElements =  remember {  // mit .value
-            mutableStateListOf<BuildingElement>()
+            mutableListOf<BuildingElement>()
         }
 
+        val coroutineScope = rememberCoroutineScope()
+
+        fun loadData() {
+            coroutineScope.launch(Dispatchers.IO) {
+
+                localizationSubs =
+                    daoLocalization.getSubLocalizationsByIdOnce(localization.localizationId)
+                        .toMutableList()
+
+                buildingElements =
+                    daoBuildingElement.getSubBuildingElementsByIdOnce(localization.localizationId)
+                        .toMutableList()
+            }
+        }
+        loadData()
 
 
+/*
         daoLocalization.getSubLocalizationsById(localization.localizationId).observe( //Wenn sich Werte in der Liste ändern,
             // dann wird die Liste gelöscht und neu befüllt.
             LocalLifecycleOwner.current, //Es wird nur solange der aktuelle Lifecycle
@@ -94,7 +114,7 @@ class StructureListComponent {
             Observer { allSubs ->
                 buildingElements.clear()
                 buildingElements.addAll(allSubs)
-            })
+            })  */
 
 ///////////////////////////////////////////////////////
 
@@ -296,14 +316,33 @@ class StructureListComponent {
         daoLocalization: LocalizationDao,  // "dao ist die lokale Variable für das "LocalizationDao"
         daoBuildingElement: BuildingElementDao,
         localizationId: Int,
+
     ) {
         var localizationSubs =  remember {  // mit .value
-            mutableStateListOf<Localization>()
+            mutableListOf<Localization>()
         }
 
         var buildingElements =  remember {  // mit .value
-            mutableStateListOf<BuildingElement>()
+            mutableListOf<BuildingElement>()
         }
+
+        val coroutineScope2 = rememberCoroutineScope()
+
+        fun loadData2() {
+            coroutineScope2.launch(Dispatchers.IO) {
+
+                localizationSubs =
+                    daoLocalization.getSubLocalizationsByIdOnce(localizationId).toMutableList()
+
+
+                buildingElements =
+                    daoBuildingElement.getSubBuildingElementsByIdOnce(localizationId)
+                        .toMutableList()
+            }
+        }
+        loadData2()
+
+        /*
 
         daoLocalization.getSubLocalizationsById(0).observe( //Wenn sich Werte in der Liste ändern,
             // dann wird die Liste gelöscht und neu befüllt.
@@ -325,7 +364,9 @@ class StructureListComponent {
             Observer { allSubs ->
                 buildingElements.clear()
                 buildingElements.addAll(allSubs)
-            })
+            })*/
+
+
         Column(
             modifier = Modifier
                 .clip(RoundedCornerShape(5.dp))
@@ -466,5 +507,7 @@ class StructureListComponent {
             Divider(color = Pink40, thickness = 1.5.dp)
         }
     }
+
+
 }
 

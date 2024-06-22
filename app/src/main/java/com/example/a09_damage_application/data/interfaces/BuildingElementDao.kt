@@ -33,5 +33,8 @@ interface BuildingElementDao {
     @Query("SELECT * FROM buildingElement WHERE rootLocalizationId = :id ORDER BY name ASC")
     fun getSubBuildingElementsById(id: Int?): LiveData<List<BuildingElement>>
 
+    @Query("SELECT * FROM buildingElement WHERE rootLocalizationId = :id ORDER BY name ASC")
+    fun getSubBuildingElementsByIdOnce(id: Int?): List<BuildingElement>
+
 
 }

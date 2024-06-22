@@ -461,7 +461,7 @@ class LocalizationListComponent {
                                         .menuAnchor()
                                 )
 
-                                Log.d(TAG, "TEXT AUS TEXTEINGABEFELD:   " + localizationInput)
+                               // Log.d(TAG, "TEXT AUS TEXTEINGABEFELD:   " + localizationInput)
 
                                 ExposedDropdownMenu(
                                     expanded = expanded_localization,
@@ -740,7 +740,7 @@ class LocalizationListComponent {
                                         .menuAnchor()
                                 )
 
-                                Log.d(TAG, "TEXT AUS TEXTEINGABEFELD:   " + localizationInput)
+                                //Log.d(TAG, "TEXT AUS TEXTEINGABEFELD:   " + localizationInput)
 
                                 ExposedDropdownMenu(
                                     expanded = expanded_buildingElement,

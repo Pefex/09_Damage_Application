@@ -48,8 +48,6 @@ class StructureElementAndBuildingElementListComponent {
             Row (modifier = Modifier
                 .width(400.dp)
                 .height(50.dp)
-
-
             ){
 
                 Button(onClick = {
@@ -60,16 +58,14 @@ class StructureElementAndBuildingElementListComponent {
                     Text(text = "Zur Schadensverortung", fontSize = 12.sp)
 
                 }
-
-
-
             }
 
        StructureListComponent().StructureListComposable(
             daoLocalization = daoLocalization,
             daoBuildingElement = daoBuildingElement,
-            localizationId = 0
-            )
+            localizationId = 0,
+
+           )
 
     }
 
