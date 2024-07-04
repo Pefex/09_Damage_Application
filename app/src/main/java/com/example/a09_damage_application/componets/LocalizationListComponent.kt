@@ -511,7 +511,7 @@ class LocalizationListComponent {
                                     position = localizationSubs.size + 1
                                 );
 
-                                Log.d(TAG, "LEVEL VON NEUEM ELEMENT:" + l.numberOfLevel.toString())
+                              //  Log.d(TAG, "LEVEL VON NEUEM ELEMENT:" + l.numberOfLevel.toString())
                                 onEvent(LocalizationEvent.SaveLocalization(l))
                                 localizationInput = ""
 
@@ -542,7 +542,7 @@ class LocalizationListComponent {
 
                                    // delay(1000)
 
-                                    Log.d(TAG, "LEVEL VON NEUEM ELEMENT:" + l.numberOfLevel.toString())
+                                   // Log.d(TAG, "LEVEL VON NEUEM ELEMENT:" + l.numberOfLevel.toString())
                                     onEvent(LocalizationEvent.SaveLocalization(l))
                                     localizationInput = ""
 
@@ -668,6 +668,19 @@ class LocalizationListComponent {
                     }
                     }
                 }  ////////////////////end LazyColumn
+
+                //Log.d(TAG, "L O C A L I Z A T I O N S:  " + localizationSubs.toList())
+
+                var localizationList = localizationSubs.toList()
+
+                //Log.d(TAG, "L O C A L I Z A T I O N S:  "  + localizationList)
+
+                localizationList.forEach{localization ->
+                    Log.d(TAG, "Ort-Name: " + localization.name)
+
+                }
+
+
 
                 ////////////////////////////////////////////////////
 
@@ -798,7 +811,7 @@ class LocalizationListComponent {
 
                                 listItems_buildingElement =listItemsNew_buildingElement
 
-                                Log.d("", "NAME:  " + b.name +"  " +"rootID: " + b.rootLocalizationId + "  "+"inspectionType:  " + b.inspectionType)
+                               // Log.d("", "NAME:  " + b.name +"  " +"rootID: " + b.rootLocalizationId + "  "+"inspectionType:  " + b.inspectionType)
 
 
 
@@ -877,7 +890,7 @@ class LocalizationListComponent {
                     ){ items(items=buildingElementSubs)
                     {
 
-                        Log.d(TAG, "BAUELEMENTE:  " + buildingElementSubs.toString())
+                        //Log.d(TAG, "BAUELEMENTE:  " + buildingElementSubs.toString())
                         //Log.d(TAG, "BAUELEMENTE:  " + buildingElementSubs.forEach {it.name  })
                         //Log.d(TAG, "BAUELEMENTE:  " + items)
 

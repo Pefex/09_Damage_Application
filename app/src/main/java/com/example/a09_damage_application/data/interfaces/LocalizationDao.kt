@@ -5,7 +5,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import androidx.room.Upsert
 import com.example.a09_damage_application.data.entities.Localization
 
@@ -44,6 +46,29 @@ import com.example.a09_damage_application.data.entities.Localization
 
         @Query("SELECT * FROM localization WHERE rootLocalizationId = :id ORDER BY position ASC")
         fun getSubLocalizationsByIdOnce(id: Int?): List<Localization>  // LiveData
+
+
+        ////////////// new methods
+
+        @Insert
+        suspend fun insert(localization: Localization)
+
+        @Delete
+        suspend fun delete(localization: Localization)
+
+        @Update
+        suspend fun update(localization: Localization)
+
+        @Query("SELECT * FROM localization WHERE localizationId = :id")
+        fun getLocalization(id: Int?): Localization  //Gibt nur ein komplettes
+    // Localization-Element zurück mit dem die Id bereinstimmt
+
+        @Query("SELECT * FROM localization")
+        suspend fun getAllLocalizations(): List<Localization>
+
+
+
+
 
 
 

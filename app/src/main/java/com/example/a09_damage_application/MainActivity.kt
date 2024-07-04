@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -21,6 +22,8 @@ import com.example.a09_damage_application.componets.OwnerCreationComponent
 import com.example.a09_damage_application.componets.StructureElementAndBuildingElementListComponent
 import com.example.a09_damage_application.data.AppDatabase
 import com.example.a09_damage_application.ui.theme._09_Damage_ApplicationTheme
+import com.example.a09_damage_application.viewmodelfactoies.LocalizationViewModelFactory
+import com.example.a09_damage_application.viewmodels.LocalizationViewModel
 
 class MainActivity : ComponentActivity() {
     private val appDatabase by lazy {
@@ -64,6 +67,7 @@ fun Mainscreen(db: AppDatabase) {
 
 
     //NameCreationComponent().NameCreationComposable(db.nameDao)
+    //val viewModel: LocalizationViewModel = viewModel(factory = LocalizationViewModelFactory(repository))
 
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "damageCreation") {
@@ -118,8 +122,10 @@ fun Mainscreen(db: AppDatabase) {
                 db.localizationDao,
                 db.buildingElementDao,
 
+
                 onNavigateDamage = { navController.navigate("damageCreation")/*TODO*/ },
-            onNavigateLocalizationList ={ navController.navigate("LocalizationList")}
+            onNavigateLocalizationList ={ navController.navigate("LocalizationList")},
+
             )
         }
 

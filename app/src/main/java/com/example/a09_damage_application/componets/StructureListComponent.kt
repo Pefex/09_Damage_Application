@@ -95,7 +95,7 @@ class StructureListComponent {
         loadData()
 
 
-/*
+
         daoLocalization.getSubLocalizationsById(localization.localizationId).observe( //Wenn sich Werte in der Liste ändern,
             // dann wird die Liste gelöscht und neu befüllt.
             LocalLifecycleOwner.current, //Es wird nur solange der aktuelle Lifecycle
@@ -114,7 +114,7 @@ class StructureListComponent {
             Observer { allSubs ->
                 buildingElements.clear()
                 buildingElements.addAll(allSubs)
-            })  */
+            })
 
 ///////////////////////////////////////////////////////
 
@@ -342,7 +342,7 @@ class StructureListComponent {
         }
         loadData2()
 
-        /*
+
 
         daoLocalization.getSubLocalizationsById(0).observe( //Wenn sich Werte in der Liste ändern,
             // dann wird die Liste gelöscht und neu befüllt.
@@ -364,7 +364,7 @@ class StructureListComponent {
             Observer { allSubs ->
                 buildingElements.clear()
                 buildingElements.addAll(allSubs)
-            })*/
+            })
 
 
         Column(
